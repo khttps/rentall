@@ -9,12 +9,6 @@
 .history
 .svn/
 
-# Firebase 
-lib/firebase_options.dart
-
-# Image Assets
-**.png
-
 # IntelliJ related
 *.iml
 *.ipr
