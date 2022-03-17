@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:rentall/src/screens/screens.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ),
+  );
   runApp(const RentallApp());
 }
 
@@ -14,7 +21,7 @@ class RentallApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Rentall',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.blueGrey,
       ),
       initialRoute: Home.routeName,
       onGenerateRoute: _onGenerateRoute,
