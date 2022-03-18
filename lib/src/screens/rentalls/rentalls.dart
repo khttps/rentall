@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class Rentalls extends StatelessWidget {
   const Rentalls({Key? key}) : super(key: key);
 
+  static const _options = ['Verified', 'Sort', 'Region', 'Price', 'Rent Type'];
+
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
@@ -10,79 +12,53 @@ class Rentalls extends StatelessWidget {
         SliverAppBar(
           floating: true,
           snap: true,
-          toolbarHeight: 42.0,
+          toolbarHeight: 48.0,
           forceElevated: true,
-          titleSpacing: 8.0,
-          title: Row(
-            children: [
-              GestureDetector(
-                onTap: () async => await _showRegionDialog(context),
-                child: Row(
-                  children: const [
-                    Text(
-                      'Choose Region',
-                      style: TextStyle(fontSize: 15.0),
-                    ),
-                    Icon(Icons.arrow_drop_down),
-                  ],
+          titleSpacing: 0.0,
+          title: SizedBox(
+            height: 42.0,
+            child: ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (BuildContext context, int index) => ActionChip(
+                labelPadding: const EdgeInsetsDirectional.only(end: 8.0),
+                avatar: const Icon(
+                  Icons.arrow_drop_down,
+                  color: Colors.black,
                 ),
-              ),
-              const Expanded(child: SizedBox.shrink()),
-              IconButton(
-                onPressed: () async => await _showFiltersDialog(context),
-                icon: const Icon(Icons.filter_list_rounded),
-              ),
-              IconButton(
+                label: Text(_options[index]),
                 onPressed: () {},
-                icon: const Icon(Icons.sort_rounded),
               ),
-            ],
+              itemCount: _options.length,
+              separatorBuilder: (c, i) => const SizedBox(width: 4.0),
+            ),
           ),
         ),
-        SliverPadding(
-          padding: const EdgeInsets.all(8.0),
-          sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return const _Rentall();
-              },
-              childCount: 25,
-            ),
+        SliverToBoxAdapter(
+          child: ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(8.0),
+            shrinkWrap: true,
+            itemCount: 25,
+            itemBuilder: (context, index) {
+              return const _Rentall();
+            },
           ),
         ),
       ],
     );
   }
 
-  Future<void> _showRegionDialog(BuildContext context) async => showDialog(
+  Future<void> _showDialog(BuildContext context) async => showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Choose Region'),
+          title: const Text('Choose'),
           content: ListView(
             shrinkWrap: true,
-            children: [
-              Text('Cairo'),
-              Text('Cairo'),
-              Text('Cairo'),
-            ],
+            children: const [],
           ),
-          actions: [TextButton(onPressed: () {}, child: Text('Confirm'))],
-        ),
-      );
-
-  Future<void> _showFiltersDialog(BuildContext context) async => showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Choose Rental Type'),
-          content: ListView(
-            shrinkWrap: true,
-            children: [
-              Text('Apartment'),
-              Text('Apartment'),
-              Text('Apartment'),
-            ],
-          ),
-          actions: [TextButton(onPressed: () {}, child: Text('Confirm'))],
+          actions: [TextButton(onPressed: () {}, child: const Text('Confirm'))],
         ),
       );
 }
@@ -146,30 +122,6 @@ class _Rentall extends StatelessWidget {
                 ],
               ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 10.0),
-            //   child: Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: const [
-            //       Text(
-            //         'Hello haha',
-            //         style: TextStyle(
-            //           fontSize: 13.0,
-            //           height: 1.7,
-            //           fontWeight: FontWeight.w400,
-            //         ),
-            //       ),
-            //       Text(
-            //         'Hello haha',
-            //         style: TextStyle(
-            //           fontSize: 13.0,
-            //           height: 1.7,
-            //           fontWeight: FontWeight.w400,
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
           ],
         ),
       ),

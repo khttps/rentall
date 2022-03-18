@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rentall/src/widgets/widgets.dart';
+import '../../widgets/widgets.dart';
 import '../screens.dart';
 
 class Home extends StatefulWidget {
@@ -14,7 +14,6 @@ class _HomeState extends State<Home> {
   final _searchController = TextEditingController();
   var _currentIndex = 0;
   final _screens = const [
-    // Categories(),
     Rentalls(),
     Notifications(),
     SizedBox.shrink(),
@@ -33,7 +32,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(title: const Search()),
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        selectedFontSize: 0.0,
+        selectedFontSize: 8.0,
         unselectedFontSize: 0.0,
         iconSize: 28.0,
         elevation: 5.0,
