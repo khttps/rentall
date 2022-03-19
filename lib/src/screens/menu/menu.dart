@@ -5,10 +5,8 @@ class Menu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text('Menu'),
-      ),
+    return const Center(
+      child: Text('Menu'),
     );
   }
 }

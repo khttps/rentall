@@ -1,24 +1,28 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'core/injector.dart' as di;
+import 'src/core/injector.dart' as di;
 import 'firebase_options.dart';
 import 'src/screens/blocs.dart';
 import 'src/screens/screens.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+  await EasyLocalization.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
   di.init();
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
+  runApp(
+    EasyLocalization(
+      path: 'assets/translations',
+      supportedLocales: const [Locale('en'), Locale('ar'), Locale('en', 'US')],
+      child: const RentallApp(),
     ),
   );
-  runApp(const RentallApp());
 }
 
 class RentallApp extends StatelessWidget {
@@ -33,6 +37,9 @@ class RentallApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
         debugShowCheckedModeBanner: false,
         title: 'Rentall',
         theme: ThemeData(

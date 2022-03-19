@@ -10,8 +10,10 @@ abstract class RentalRepository {
     RentType? rentType,
     int? governorateId,
     int? regionId,
+    int? priceFrom,
+    int? priceTo,
   });
-  Future<void> addRental(Rental rentall);
+  Future<void> addRental(Rental rental);
 }
 
 class RentalRepositoryImpl implements RentalRepository {
@@ -30,6 +32,8 @@ class RentalRepositoryImpl implements RentalRepository {
     RentType? rentType,
     int? governorateId,
     int? regionId,
+    int? priceFrom,
+    int? priceTo,
   }) {
     return _firestore
         .collection('rentals')
@@ -38,6 +42,11 @@ class RentalRepositoryImpl implements RentalRepository {
         .where('rentType', isEqualTo: rentType?.index)
         .where('governorateId', isEqualTo: governorateId)
         .where('regionId', isEqualTo: regionId)
+        .where(
+          'rentPrice',
+          isGreaterThanOrEqualTo: priceFrom,
+          isLessThanOrEqualTo: priceTo,
+        )
         .snapshots()
         .map(
       (snapshot) {
@@ -64,7 +73,7 @@ class RentalRepositoryImpl implements RentalRepository {
         }
       }
     } on FirebaseException catch (err) {
-      print((err as dynamic).message);
+      throw Exception(err);
     }
 
     await _firestore.collection('rentals').add(Rental.toMap(rental));

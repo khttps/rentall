@@ -42,7 +42,7 @@ class Rental extends Equatable {
 
   factory Rental.fromSnapshot(DocumentSnapshot snap) => Rental(
         title: snap['title'],
-        images: snap['images'],
+        images: List.from(snap['images']),
         description: snap['description'],
         address: snap['address'],
         location: snap['location'],
@@ -53,7 +53,7 @@ class Rental extends Equatable {
         regionId: snap['regionId'],
         rentPrice: snap['rentPrice'],
         createdAt: snap['createdAt'],
-        publishStatus: PublishStatus.values[snap[' publishStatus']],
+        publishStatus: PublishStatus.values[snap['publishStatus']],
         rentType: RentType.values[snap['rentType']],
         propertyType: PropertyType.values[snap['propertyType']],
       );

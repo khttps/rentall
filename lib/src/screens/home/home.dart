@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../widgets/widgets.dart';
 import '../screens.dart';
 
@@ -14,8 +15,9 @@ class _HomeState extends State<Home> {
   final _searchController = TextEditingController();
   var _currentIndex = 0;
   final _screens = const [
-    Rentalls(),
+    Rentals(),
     Notifications(),
+    SizedBox.shrink(),
     SizedBox.shrink(),
     Menu(),
   ];
@@ -33,9 +35,8 @@ class _HomeState extends State<Home> {
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         selectedFontSize: 8.0,
-        unselectedFontSize: 0.0,
-        iconSize: 28.0,
-        elevation: 5.0,
+        unselectedFontSize: 8.0,
+        elevation: 12.0,
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
         type: BottomNavigationBarType.fixed,
@@ -50,12 +51,17 @@ class _HomeState extends State<Home> {
             label: 'Notifications',
           ),
           BottomNavigationBarItem(
-            icon: FloatingActionButton.small(
+            icon: FloatingActionButton(
+              mini: true,
               elevation: 0,
-              onPressed: () {},
               child: const Icon(Icons.add_rounded),
+              onPressed: () {},
             ),
             label: '',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.person_rounded),
+            label: 'Profile',
           ),
           const BottomNavigationBarItem(
             icon: Icon(Icons.menu_rounded),
