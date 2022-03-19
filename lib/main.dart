@@ -1,9 +1,18 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'core/injector.dart' as di;
+import 'firebase_options.dart';
+import 'src/screens/blocs.dart';
 import 'src/screens/screens.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  di.init();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -17,14 +26,21 @@ class RentallApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Rentall',
-      theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<RentalsBloc>(
+          create: (context) => di.sl()..add(const GetRentals()),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Rentall',
+        theme: ThemeData(
+          primarySwatch: Colors.blueGrey,
+        ),
+        initialRoute: Home.routeName,
+        onGenerateRoute: _onGenerateRoute,
       ),
-      initialRoute: Home.routeName,
-      onGenerateRoute: _onGenerateRoute,
     );
   }
 
