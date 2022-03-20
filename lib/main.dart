@@ -13,13 +13,13 @@ void main() async {
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+    const SystemUiOverlayStyle(statusBarColor: Colors.blueGrey),
   );
   di.init();
   runApp(
     EasyLocalization(
       path: 'assets/translations',
-      supportedLocales: const [Locale('en'), Locale('ar'), Locale('en', 'US')],
+      supportedLocales: const [Locale('en'), Locale('ar')],
       child: const RentallApp(),
     ),
   );
@@ -57,6 +57,8 @@ class RentallApp extends StatelessWidget {
         switch (settings.name) {
           case Home.routeName:
             return const Home();
+          case RentalEdit.routeName:
+            return const RentalEdit();
           default:
             return const SizedBox.shrink();
         }

@@ -1,1 +1,1 @@
-export 'search.dart';
+export '../screens/home/widgets/search_bar.dart';

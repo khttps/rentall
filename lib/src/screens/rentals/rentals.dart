@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentall/src/data/enums/enums.dart';
-import '../../data/models/models.dart';
 import '../blocs.dart';
+import 'widgets/filter_action_chip.dart';
+import 'widgets/rental_card.dart';
 
 class Rentals extends StatelessWidget {
   const Rentals({Key? key}) : super(key: key);
@@ -18,12 +18,12 @@ class Rentals extends StatelessWidget {
       child: NestedScrollView(
         headerSliverBuilder: (c, i) => [
           SliverAppBar(
-            backgroundColor: Colors.blueGrey.shade300,
-            floating: true,
             snap: true,
+            floating: true,
+            titleSpacing: 0.0,
             toolbarHeight: 48.0,
             forceElevated: true,
-            titleSpacing: 0.0,
+            backgroundColor: Colors.blueGrey.shade300,
             title: SizedBox(
               height: 42.0,
               child: ListView(
@@ -31,23 +31,25 @@ class Rentals extends StatelessWidget {
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   children: [
-                    _FilterChip(
+                    FilterActionChip(
                       label: 'Region',
-                      onPressed: () async => await _showRegionDialog(context),
+                      onPressed: _showRegionDialog,
                     ),
                     const SizedBox(width: 8.0),
-                    _FilterChip(
+                    FilterActionChip(
                       label: 'Property Type',
-                      onPressed: () async =>
-                          await _showPropertyTypeDialog(context),
+                      onPressed: _showPropertyTypeDialog,
                     ),
                   ]),
             ),
           ),
         ],
         body: RefreshIndicator(
-          onRefresh: () async =>
-              BlocProvider.of<RentalsBloc>(context).add(const GetRentals()),
+          onRefresh: () async {
+            BlocProvider.of<RentalsBloc>(context).add(
+              const GetRentals(),
+            );
+          },
           child: BlocBuilder<RentalsBloc, RentalsState>(
             builder: (context, state) {
               if (state is RentalsLoading) {
@@ -59,7 +61,7 @@ class Rentals extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: state.rentals.length,
                   itemBuilder: (context, index) {
-                    return _Rental(rental: state.rentals[index]);
+                    return RentalCard(rental: state.rentals[index]);
                   },
                 );
               } else {
@@ -122,95 +124,4 @@ class Rentals extends StatelessWidget {
           ),
         ),
       );
-}
-
-class _FilterChip extends StatelessWidget {
-  final String label;
-  final Function() onPressed;
-  const _FilterChip({
-    required this.label,
-    required this.onPressed,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ActionChip(
-      labelPadding: const EdgeInsetsDirectional.only(end: 8.0),
-      avatar: const Icon(
-        Icons.arrow_drop_down,
-        color: Colors.black,
-      ),
-      label: Text(label),
-      onPressed: onPressed,
-    );
-  }
-}
-
-class _Rental extends StatelessWidget {
-  final Rental rental;
-  const _Rental({required this.rental, Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4.0),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(4.0),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black38,
-                offset: Offset(0.0, 1.0),
-                blurRadius: 3,
-              )
-            ]),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(4.0)),
-              child: CachedNetworkImage(
-                imageUrl: rental.images[0],
-                placeholder: (c, u) => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                height: 180.0,
-                fit: BoxFit.cover,
-              ),
-            ),
-            ListTile(
-              title: Text(
-                rental.title,
-                style: const TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              trailing: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '${rental.regionId}, ${rental.governorateId}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  Text(
-                    DateFormat('d/M/yyyy').format(rental.createdAt!.toDate()),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

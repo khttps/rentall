@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Search extends StatefulWidget {
-  const Search({Key? key}) : super(key: key);
+class SearchBar extends StatefulWidget {
+  const SearchBar({Key? key}) : super(key: key);
 
   @override
-  State<Search> createState() => _SearchState();
+  State<SearchBar> createState() => _SearchBarState();
 }
 
-class _SearchState extends State<Search> {
+class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
