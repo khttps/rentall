@@ -1,6 +1,8 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+
 import '../enums/enums.dart';
 
 class Rental extends Equatable {
@@ -16,6 +18,7 @@ class Rental extends Equatable {
   final int governorateId;
   final int regionId;
   final int rentPrice;
+  final String hostPhoneNumber;
   final Timestamp? createdAt;
   final PublishStatus publishStatus;
   final RentType rentType;
@@ -34,6 +37,7 @@ class Rental extends Equatable {
     required this.governorateId,
     required this.regionId,
     required this.rentPrice,
+    required this.hostPhoneNumber,
     this.createdAt,
     this.publishStatus = PublishStatus.pending,
     this.rentType = RentType.monthly,
@@ -52,6 +56,7 @@ class Rental extends Equatable {
         governorateId: snap['governorateId'],
         regionId: snap['regionId'],
         rentPrice: snap['rentPrice'],
+        hostPhoneNumber: snap['hostPhoneNumber'],
         createdAt: snap['createdAt'],
         publishStatus: PublishStatus.values[snap['publishStatus']],
         rentType: RentType.values[snap['rentType']],
@@ -70,6 +75,7 @@ class Rental extends Equatable {
         'governorateId': r.governorateId,
         'regionId': r.regionId,
         'rentPrice': r.rentPrice,
+        'hostPhoneNumber': r.hostPhoneNumber,
         'createdAt': r.createdAt ?? Timestamp.now(),
         'publishStatus': r.publishStatus.index,
         'rentType': r.rentType.index,
@@ -88,6 +94,7 @@ class Rental extends Equatable {
         governorateId,
         regionId,
         rentPrice,
+        hostPhoneNumber,
         createdAt,
         publishStatus,
         rentType,

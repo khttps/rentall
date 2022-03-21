@@ -3,8 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'src/core/injector.dart' as di;
+
 import 'firebase_options.dart';
+import 'src/core/injector.dart' as di;
+import 'src/core/router.dart' as router;
 import 'src/screens/blocs.dart';
 import 'src/screens/screens.dart';
 
@@ -37,32 +39,17 @@ class RentallApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        localizationsDelegates: context.localizationDelegates,
-        supportedLocales: context.supportedLocales,
-        locale: context.locale,
-        debugShowCheckedModeBanner: false,
         title: 'Rentall',
+        debugShowCheckedModeBanner: false,
+        locale: context.locale,
+        supportedLocales: context.supportedLocales,
+        localizationsDelegates: context.localizationDelegates,
         theme: ThemeData(
           primarySwatch: Colors.blueGrey,
         ),
         initialRoute: Home.routeName,
-        onGenerateRoute: _onGenerateRoute,
+        onGenerateRoute: router.onGenerateRoute,
       ),
-    );
-  }
-
-  MaterialPageRoute<dynamic> _onGenerateRoute(RouteSettings settings) {
-    return MaterialPageRoute(
-      builder: (context) {
-        switch (settings.name) {
-          case Home.routeName:
-            return const Home();
-          case RentalEdit.routeName:
-            return const RentalEdit();
-          default:
-            return const SizedBox.shrink();
-        }
-      },
     );
   }
 }

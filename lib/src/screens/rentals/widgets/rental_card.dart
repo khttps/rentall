@@ -17,7 +17,6 @@ class RentalCard extends StatelessWidget {
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(5.0),
-            border: Border.all(width: 0.5, color: Colors.blueGrey),
             boxShadow: const [
               BoxShadow(
                 color: Colors.black38,

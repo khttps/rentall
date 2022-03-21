@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rentall/src/data/enums/enums.dart';
+import '../../data/enums/enums.dart';
 import '../blocs.dart';
 import 'widgets/filter_action_chip.dart';
 import 'widgets/rental_card.dart';
