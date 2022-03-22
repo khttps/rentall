@@ -11,13 +11,13 @@ class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      textInputAction: TextInputAction.search,
       decoration: const InputDecoration(
         hintText: 'Search...',
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding: EdgeInsets.symmetric(horizontal: 4.0),
-        border: OutlineInputBorder(),
         prefixIcon: Icon(Icons.search),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(3.0)),
+        ),
       ),
     );
   }

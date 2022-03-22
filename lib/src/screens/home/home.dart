@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../widgets/widgets.dart';
 import '../screens.dart';
+import 'widgets/search_bar.dart';
 
 class Home extends StatefulWidget {
   static const routeName = 'home';
@@ -15,8 +15,8 @@ class _HomeState extends State<Home> {
   var _currentIndex = 0;
   final _screens = const [
     Rentals(),
-    Notifications(),
-    Menu(),
+    Center(child: Text('Notifications')),
+    Center(child: Text('Menu')),
   ];
 
   @override

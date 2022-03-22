@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'firebase_options.dart';
 import 'src/core/injector.dart' as di;
 import 'src/core/router.dart' as router;
+import 'src/core/style.dart' as style;
 import 'src/screens/blocs.dart';
 import 'src/screens/screens.dart';
 
@@ -44,9 +45,7 @@ class RentallApp extends StatelessWidget {
         locale: context.locale,
         supportedLocales: context.supportedLocales,
         localizationsDelegates: context.localizationDelegates,
-        theme: ThemeData(
-          primarySwatch: Colors.blueGrey,
-        ),
+        theme: style.themeData,
         initialRoute: Home.routeName,
         onGenerateRoute: router.onGenerateRoute,
       ),

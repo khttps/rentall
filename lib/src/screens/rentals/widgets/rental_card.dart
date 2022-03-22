@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/models/models.dart';
+import '../../screens.dart';
 
 class RentalCard extends StatelessWidget {
   final Rental rental;
@@ -11,7 +12,7 @@ class RentalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () => Navigator.pushNamed(context, RentalDetails.routeName),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4.0),
         decoration: BoxDecoration(

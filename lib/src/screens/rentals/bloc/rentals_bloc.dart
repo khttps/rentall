@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import '../../../data/enums/enums.dart';
-import '../../../data/repositories/rental_repository.dart';
 
+import '../../../data/enums/enums.dart';
 import '../../../data/models/models.dart';
+import '../../../data/repositories/rental_repository.dart';
 
 part 'rentals_event.dart';
 part 'rentals_state.dart';
