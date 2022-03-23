@@ -12,19 +12,24 @@ class RentalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.pushNamed(context, RentalDetails.routeName),
+      onTap: () => Navigator.pushNamed(
+        context,
+        RentalDetails.routeName,
+        arguments: rental,
+      ),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4.0),
         decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(5.0),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black38,
-                offset: Offset(0.0, 1.0),
-                blurRadius: 3,
-              )
-            ]),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5.0),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black38,
+              offset: Offset(0.0, 1.0),
+              blurRadius: 3,
+            )
+          ],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
