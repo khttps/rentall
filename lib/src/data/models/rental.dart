@@ -14,7 +14,9 @@ class Rental extends Equatable {
   final GeoPoint? location;
   final int? floorNumber;
   final int? numberOfRooms;
-  final int? numberOFBathrooms;
+  final int? numberOfBathrooms;
+  final bool? furnished;
+  final int? area;
   final int governorateId;
   final int regionId;
   final int rentPrice;
@@ -33,7 +35,9 @@ class Rental extends Equatable {
     this.location,
     this.floorNumber,
     this.numberOfRooms,
-    this.numberOFBathrooms,
+    this.numberOfBathrooms,
+    this.furnished,
+    this.area,
     required this.governorateId,
     required this.regionId,
     required this.rentPrice,
@@ -52,7 +56,9 @@ class Rental extends Equatable {
         location: snap['location'],
         floorNumber: snap['floorNumber'],
         numberOfRooms: snap['numberOfRooms'],
-        numberOFBathrooms: snap['numberOfBathrooms'],
+        numberOfBathrooms: snap['numberOfBathrooms'],
+        furnished: snap['furnished'],
+        area: snap['area'],
         governorateId: snap['governorateId'],
         regionId: snap['regionId'],
         rentPrice: snap['rentPrice'],
@@ -71,7 +77,7 @@ class Rental extends Equatable {
         'location': r.location,
         'floorNumber': r.floorNumber,
         'numberOfRooms': r.numberOfRooms,
-        'numberOfBathrooms': r.numberOFBathrooms,
+        'numberOfBathrooms': r.numberOfBathrooms,
         'governorateId': r.governorateId,
         'regionId': r.regionId,
         'rentPrice': r.rentPrice,
@@ -90,8 +96,10 @@ class Rental extends Equatable {
         address,
         floorNumber,
         numberOfRooms,
-        numberOFBathrooms,
+        numberOfBathrooms,
         governorateId,
+        furnished,
+        area,
         regionId,
         rentPrice,
         hostPhoneNumber,

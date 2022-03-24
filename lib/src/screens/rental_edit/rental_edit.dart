@@ -1,11 +1,7 @@
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:easy_localization/easy_localization.dart' as ezl;
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:rentall/src/screens/rental_edit/widgets/carousel_item.dart';
 
 import 'widgets/rental_form.dart';
 
@@ -38,7 +34,7 @@ class _RentalEditState extends State<RentalEdit> {
           children: [
             Container(
               padding: const EdgeInsets.all(8.0),
-              height: 180.0,
+              width: double.infinity,
               child: CarouselSlider.builder(
                 itemCount: 1 + _pickedImages.length,
                 itemBuilder: (BuildContext context, int index, int realIndex) {
@@ -61,7 +57,7 @@ class _RentalEditState extends State<RentalEdit> {
                 options: CarouselOptions(
                   enableInfiniteScroll: false,
                   enlargeCenterPage: true,
-                  aspectRatio: 16 / 10,
+                  aspectRatio: 1.0,
                   viewportFraction: 0.5,
                 ),
               ),

@@ -18,44 +18,47 @@ class RentalCard extends StatelessWidget {
         arguments: rental,
       ),
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4.0),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(5.0),
+          borderRadius: BorderRadius.circular(4.0),
           boxShadow: const [
             BoxShadow(
               color: Colors.black38,
-              offset: Offset(0.0, 1.0),
+              offset: Offset(0.0, 2.0),
               blurRadius: 3,
             )
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
               borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(4.0)),
+                  const BorderRadius.horizontal(left: Radius.circular(3.0)),
               child: CachedNetworkImage(
                 imageUrl: rental.images[0],
                 placeholder: (c, u) => const Center(
                   child: CircularProgressIndicator(),
                 ),
-                height: 180.0,
+                height: 100,
+                width: 100,
                 fit: BoxFit.cover,
               ),
             ),
-            ListTile(
-              title: Text(
-                rental.title,
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              trailing: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(
+                    rental.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   Text(
                     '${rental.regionId}, ${tr('governorates.${rental.governorateId}')}',
                     style: const TextStyle(
@@ -63,17 +66,82 @@ class RentalCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    DateFormat('d/M/yyyy').format(rental.createdAt!.toDate()),
+                    DateFormat('d MMM, yyyy')
+                        .format(rental.createdAt!.toDate()),
                     style: const TextStyle(
                       fontWeight: FontWeight.w400,
                     ),
                   ),
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),
     );
+    // return InkWell(
+    // onTap: () => Navigator.pushNamed(
+    //   context,
+    //   RentalDetails.routeName,
+    //   arguments: rental,
+    // ),
+    //   child: Container(
+    //     margin: const EdgeInsets.symmetric(vertical: 4.0),
+    // decoration: BoxDecoration(
+    //   color: Colors.white,
+    //   borderRadius: BorderRadius.circular(5.0),
+    //   boxShadow: const [
+    //     BoxShadow(
+    //       color: Colors.black38,
+    //       offset: Offset(0.0, 1.0),
+    //       blurRadius: 3,
+    //     )
+    //   ],
+    // ),
+    //     child: Column(
+    //       crossAxisAlignment: CrossAxisAlignment.stretch,
+    //       children: [
+    //         ClipRRect(
+    //           borderRadius:
+    //               const BorderRadius.vertical(top: Radius.circular(4.0)),
+    // child: CachedNetworkImage(
+    //   imageUrl: rental.images[0],
+    //   placeholder: (c, u) => const Center(
+    //     child: CircularProgressIndicator(),
+    //   ),
+    //   height: 180.0,
+    //   fit: BoxFit.cover,
+    // ),
+    //         ),
+    //         ListTile(
+    //           title: Text(
+    //             rental.title,
+    //             style: const TextStyle(
+    //               fontSize: 16.0,
+    //               fontWeight: FontWeight.w600,
+    //             ),
+    //           ),
+    //           trailing: Column(
+    //             mainAxisAlignment: MainAxisAlignment.center,
+    //             children: [
+    // Text(
+    //   '${rental.regionId}, ${tr('governorates.${rental.governorateId}')}',
+    //   style: const TextStyle(
+    //     fontWeight: FontWeight.w400,
+    //   ),
+    // ),
+    // Text(
+    //   DateFormat('d/M/yyyy').format(rental.createdAt!.toDate()),
+    //   style: const TextStyle(
+    //     fontWeight: FontWeight.w400,
+    //   ),
+    // ),
+    //             ],
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 }

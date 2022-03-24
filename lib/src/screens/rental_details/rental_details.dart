@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/models/models.dart';
+import 'widgets/carousel_indicator.dart';
 
 class RentalDetails extends StatefulWidget {
   static const routeName = '/rental_details';
@@ -24,95 +26,126 @@ class _RentalDetailsState extends State<RentalDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) => const [
-          SliverAppBar(
-            title: Text('Rental'),
-            forceElevated: true,
-            floating: true,
-            snap: true,
-          ),
-        ],
-        body: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            Stack(
-              children: [
-                CarouselSlider.builder(
-                  carouselController: _carouselController,
-                  itemCount: widget.rental.images.length,
-                  itemBuilder: (context, index, realIndex) =>
-                      CachedNetworkImage(
-                    imageUrl: widget.rental.images[index],
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                  options: CarouselOptions(
-                      enableInfiniteScroll: false,
-                      viewportFraction: 1.0,
-                      aspectRatio: 1.0,
-                      onPageChanged: (index, reason) {
-                        setState(() {
-                          _current = index;
-                        });
-                      }),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: widget.rental.images.asMap().entries.map((entry) {
-                      return GestureDetector(
-                        onTap: () =>
-                            _carouselController.animateToPage(entry.key),
-                        child: Container(
-                          width: 12.0,
-                          height: 12.0,
-                          margin: const EdgeInsets.symmetric(
-                            vertical: 8.0,
-                            horizontal: 4.0,
-                          ),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: (Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black)
-                                .withOpacity(_current == entry.key ? 1.0 : 0.4),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
+      appBar: AppBar(
+        title: Text(widget.rental.title),
+      ),
+      // headerSliverBuilder: (context, innerBoxIsScrolled) => [
+      //   SliverAppBar(
+      //     title: Text(widget.rental.title),
+      //     forceElevated: true,
+      //     floating: true,
+      //     snap: true,
+      //   ),
+      // ],
+      body: ListView(
+        padding: const EdgeInsets.all(10.0),
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black38,
+                  offset: Offset(0.0, 1.0),
+                  blurRadius: 4,
+                )
               ],
             ),
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              color: Colors.blueGrey.shade100,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    widget.rental.title,
-                    style: const TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  FloatingActionButton.small(
-                    elevation: 1.0,
-                    onPressed: () {},
-                    child: const Icon(Icons.call),
-                  )
-                ],
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(4.0),
+              child: CarouselSlider.builder(
+                carouselController: _carouselController,
+                itemCount: widget.rental.images.length,
+                itemBuilder: (context, index, realIndex) => CachedNetworkImage(
+                  imageUrl: widget.rental.images[index],
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+                options: CarouselOptions(
+                    enableInfiniteScroll: false,
+                    viewportFraction: 1.0,
+                    aspectRatio: 1.0,
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        _current = index;
+                      });
+                    }),
               ),
             ),
-          ],
-        ),
+          ),
+          CarouselIndicator(
+            items: widget.rental.images,
+            carouselController: _carouselController,
+            current: _current,
+          ),
+          const SizedBox(height: 8.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '${widget.rental.rentPrice} EGP / ${widget.rental.rentType.name}',
+                style: const TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                '${widget.rental.regionId}, ${tr('governorates.${widget.rental.governorateId}')}',
+                style: TextStyle(
+                  color: Colors.blueGrey.shade400,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          Text(
+            tr('propertyType.${widget.rental.propertyType.index}'),
+            style: TextStyle(
+              color: Colors.blueGrey.shade400,
+              fontSize: 18.0,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Text(
+            DateFormat('hh:mma d MMM, yyy')
+                .format(widget.rental.createdAt!.toDate()),
+          ),
+          const SizedBox(height: 4.0),
+          Container(
+            padding: const EdgeInsets.all(4.0),
+            color: Colors.blueGrey.shade100,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Rooms: ${widget.rental.numberOfRooms}'),
+                Text('Bathrooms: ${widget.rental.numberOfBathrooms}'),
+                Text(
+                  'Furnished: ${widget.rental.furnished == true ? 'Yes' : 'No'}',
+                ),
+                Text('Floor: ${widget.rental.floorNumber}'),
+                Text('Area: ${widget.rental.area} m\3'),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8.0),
+          const Text('Address'),
+          Container(
+            padding: const EdgeInsets.all(4.0),
+            color: Colors.blueGrey.shade100,
+            child: Text(widget.rental.address),
+          ),
+          const SizedBox(height: 8.0),
+          const Text('Description'),
+          Container(
+            padding: const EdgeInsets.all(4.0),
+            color: Colors.blueGrey.shade100,
+            child: Text(widget.rental.description),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.call),
       ),
     );
   }
