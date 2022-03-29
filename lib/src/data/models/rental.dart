@@ -24,7 +24,7 @@ class Rental extends Equatable {
   final Timestamp? createdAt;
   final PublishStatus publishStatus;
   final RentType rentType;
-  final PropertyType propertyType;
+  final RentalType propertyType;
 
   const Rental({
     required this.title,
@@ -66,7 +66,7 @@ class Rental extends Equatable {
         createdAt: snap['createdAt'],
         publishStatus: PublishStatus.values[snap['publishStatus']],
         rentType: RentType.values[snap['rentType']],
-        propertyType: PropertyType.values[snap['propertyType']],
+        propertyType: RentalType.values[snap['propertyType']],
       );
 
   static Map<String, dynamic> toMap(Rental r) => {

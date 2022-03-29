@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../enums/enums.dart';
 import '../models/models.dart';
 
 abstract class RentalRepository {
   Stream<List<Rental>> getRentals({
-    PropertyType? propertyType,
+    RentalType? propertyType,
     RentType? rentType,
     int? governorateId,
     int? regionId,
@@ -17,18 +18,21 @@ abstract class RentalRepository {
 }
 
 class RentalRepositoryImpl implements RentalRepository {
+  final SharedPreferences _prefs;
   final FirebaseFirestore _firestore;
   final FirebaseStorage _storage;
 
   RentalRepositoryImpl({
     FirebaseFirestore? firestore,
     FirebaseStorage? storage,
+    required SharedPreferences prefs,
   })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _storage = storage ?? FirebaseStorage.instance;
+        _storage = storage ?? FirebaseStorage.instance,
+        _prefs = prefs;
 
   @override
   Stream<List<Rental>> getRentals({
-    PropertyType? propertyType,
+    RentalType? propertyType,
     RentType? rentType,
     int? governorateId,
     int? regionId,
@@ -52,6 +56,7 @@ class RentalRepositoryImpl implements RentalRepository {
       (snapshot) {
         return snapshot.docs.map(
           (doc) {
+            print(doc.data());
             return Rental.fromSnapshot(doc);
           },
         ).toList();

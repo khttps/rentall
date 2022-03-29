@@ -76,10 +76,8 @@ class _RentalEditState extends State<RentalEdit> {
     );
   }
 
-  _showBottomSheet(BuildContext context) => showBottomSheet(
+  _showBottomSheet(BuildContext context) => showModalBottomSheet(
         context: context,
-        elevation: 15.0,
-        backgroundColor: Colors.blueGrey.shade200,
         builder: (context) => Container(
           height: 180.0,
           padding: const EdgeInsets.all(8.0),
@@ -91,10 +89,10 @@ class _RentalEditState extends State<RentalEdit> {
                 onPressed: () {},
                 elevation: 0.0,
                 shape: const CircleBorder(),
-                fillColor: Colors.white,
+                fillColor: Colors.blueGrey,
                 child: const Icon(
                   Icons.camera_alt,
-                  color: Colors.blueGrey,
+                  color: Colors.white,
                   size: 50,
                 ),
               ),
@@ -103,10 +101,10 @@ class _RentalEditState extends State<RentalEdit> {
                 onPressed: () {},
                 elevation: 0.0,
                 shape: const CircleBorder(),
-                fillColor: Colors.white,
+                fillColor: Colors.blueGrey,
                 child: const Icon(
                   Icons.photo,
-                  color: Colors.blueGrey,
+                  color: Colors.white,
                   size: 50,
                 ),
               ),

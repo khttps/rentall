@@ -1,14 +1,21 @@
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/repositories/rental_repository.dart';
 import '../screens/rentals/bloc/rentals_bloc.dart';
 
-final sl = GetIt.instance;
+final di = GetIt.instance;
 
-void init() {
+Future<void> init() async {
   //! Blocs
-  sl.registerFactory(() => RentalsBloc(repository: sl()));
+  di.registerFactory(() => RentalsBloc(repository: di()));
 
   //! Repositories
-  sl.registerLazySingleton<RentalRepository>(() => RentalRepositoryImpl());
+  di.registerLazySingleton<RentalRepository>(
+    () => RentalRepositoryImpl(prefs: di()),
+  );
+
+  //! Shared Preferences
+  final prefs = await SharedPreferences.getInstance();
+  di.registerLazySingleton(() => prefs);
 }

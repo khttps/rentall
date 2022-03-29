@@ -8,32 +8,22 @@ abstract class RentalsEvent extends Equatable {
 }
 
 class GetRentals extends RentalsEvent {
-  final PropertyType? propertyType;
-  final RentType? rentType;
-  final int? governorateId;
-  final int? regionId;
-  final String? searchKeyword;
-  final int? priceFrom;
-  final int? priceTo;
+  const GetRentals();
+}
 
-  const GetRentals({
-    this.propertyType,
-    this.rentType,
-    this.governorateId,
-    this.regionId,
-    this.searchKeyword,
-    this.priceFrom,
-    this.priceTo,
-  }) : assert(!((priceTo == null) ^ (priceFrom == null)));
+class FilterRentals extends RentalsEvent {
+  final int? governorateId;
+  final RentalType? propertyType;
+  const FilterRentals({this.governorateId, this.propertyType});
 
   @override
-  List<Object?> get props => [
-        propertyType,
-        rentType,
-        governorateId,
-        regionId,
-        searchKeyword,
-        priceFrom,
-        priceTo,
-      ];
+  List<Object?> get props => [governorateId, propertyType];
+}
+
+class ClearRegionFilter extends RentalsEvent {
+  const ClearRegionFilter();
+}
+
+class ClearPropertyTypeFilter extends RentalsEvent {
+  const ClearPropertyTypeFilter();
 }

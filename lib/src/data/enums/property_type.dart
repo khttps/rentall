@@ -1,1 +1,1 @@
-enum PropertyType { apartment, vacationHome, retailStore, villa, other }
+enum RentalType { apartment, vacationHome, retailStore, villa, other }

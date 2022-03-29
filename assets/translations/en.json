@@ -1,5 +1,7 @@
 {
 "governorates" : {
+    "null" : "Whole Country",
+    "0" : "Whole Country",
     "1":"Cairo",
     "2":"Giza",
     "3":"Alexandria",
@@ -29,6 +31,8 @@
     "27":"Sohag"
 },
 "propertyType" : {
+    "null" : "Type",
+    "0" : "All",
     "1": "Apartment",
     "2": "Vacation Home",
     "3": "Retail Store",

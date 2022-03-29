@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'firebase_options.dart';
-import 'src/core/injector.dart' as di;
+import 'src/core/injector.dart' as injector;
 import 'src/core/router.dart' as router;
 import 'src/core/style.dart' as style;
 import 'src/screens/blocs.dart';
@@ -14,10 +14,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await injector.init();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: Colors.blueGrey),
   );
-  di.init();
   runApp(
     EasyLocalization(
       path: 'assets/translations',
@@ -35,7 +35,7 @@ class RentallApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<RentalsBloc>(
-          create: (context) => di.sl()..add(const GetRentals()),
+          create: (context) => injector.di()..add(const GetRentals()),
         ),
       ],
       child: MaterialApp(
