@@ -3,12 +3,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'src/home/view/home_screen.dart';
 import 'firebase_options.dart';
-import 'src/core/injector.dart' as injector;
-import 'src/core/router.dart' as router;
-import 'src/core/style.dart' as style;
-import 'src/screens/blocs.dart';
-import 'src/screens/screens.dart';
+import 'src/injector.dart' as injector;
+import 'src/rentals/bloc/rentals_bloc.dart';
+import 'src/router.dart' as router;
+import 'src/theme.dart' as style;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,7 +45,7 @@ class RentallApp extends StatelessWidget {
         supportedLocales: context.supportedLocales,
         localizationsDelegates: context.localizationDelegates,
         theme: style.themeData,
-        initialRoute: Home.routeName,
+        initialRoute: HomeScreen.routeName,
         onGenerateRoute: router.onGenerateRoute,
       ),
     );
