@@ -8,7 +8,7 @@ final di = GetIt.instance;
 
 Future<void> init() async {
   //! Blocs
-  di.registerFactory(() => RentalsBloc(repository: di()));
+  di.registerFactory(() => RentalsBloc(repository: di(), preferences: di()));
 
   //! Repositories
   di.registerLazySingleton<RentalRepository>(

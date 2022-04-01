@@ -11,13 +11,20 @@ class GetRentals extends RentalsEvent {
   const GetRentals();
 }
 
-class FilterRentals extends RentalsEvent {
+class FilterRentalsByRegion extends RentalsEvent {
   final int? governorateId;
-  final RentalType? propertyType;
-  const FilterRentals({this.governorateId, this.propertyType});
+  const FilterRentalsByRegion({this.governorateId});
 
   @override
-  List<Object?> get props => [governorateId, propertyType];
+  List<Object?> get props => [governorateId];
+}
+
+class FilterRentalsByPropertyType extends RentalsEvent {
+  final RentalType? type;
+  const FilterRentalsByPropertyType({this.type});
+
+  @override
+  List<Object?> get props => [type];
 }
 
 class ClearRegionFilter extends RentalsEvent {

@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'src/home/view/home_screen.dart';
 import 'firebase_options.dart';
 import 'src/injector.dart' as injector;
@@ -32,10 +32,13 @@ class RentallApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
+    return MultiProvider(
       providers: [
-        BlocProvider<RentalsBloc>(
+        Provider<RentalsBloc>(
           create: (context) => injector.di()..add(const GetRentals()),
+          dispose: (context, bloc) {
+            bloc.dispose();
+          },
         ),
       ],
       child: MaterialApp(

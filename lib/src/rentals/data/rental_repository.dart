@@ -1,10 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:rentall/src/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'rental.dart';
 
 abstract class RentalRepository {
-  Stream<List<Rental>> getRentals({
+  // Stream<List<Rental>> watchRentals({
+  //   RentalType? propertyType,
+  //   RentType? rentType,
+  //   int? governorateId,
+  //   int? regionId,
+  //   int? priceFrom,
+  //   int? priceTo,
+  // });
+  Future<List<Rental>> getRentals({
     RentalType? propertyType,
     RentType? rentType,
     int? governorateId,
@@ -28,38 +37,65 @@ class RentalRepositoryImpl implements RentalRepository {
         _storage = storage ?? FirebaseStorage.instance,
         _prefs = prefs;
 
+  // @override
+  // Stream<List<Rental>> watchRentals({
+  //   RentalType? propertyType,
+  //   RentType? rentType,
+  //   int? governorateId,
+  //   int? regionId,
+  //   int? priceFrom,
+  //   int? priceTo,
+  // }) {
+  //   return _firestore
+  //       .collection('rentals')
+  //       .where('publishStatus', isEqualTo: PublishStatus.approved.index)
+  //       .where('propertyType', isEqualTo: propertyType?.index)
+  //       .where('rentType', isEqualTo: rentType?.index)
+  //       .where('governorateId', isEqualTo: governorateId)
+  //       .where('regionId', isEqualTo: regionId)
+  //       .where(
+  //         'rentPrice',
+  //         isGreaterThanOrEqualTo: priceFrom,
+  //         isLessThanOrEqualTo: priceTo,
+  //       )
+  //       .snapshots()
+  //       .map(
+  //     (snapshot) {
+  //       return snapshot.docs.map(
+  //         (doc) {
+  //           print(doc.data());
+  //           return Rental.fromSnapshot(doc);
+  //         },
+  //       ).toList();
+  //     },
+  //   );
+  // }
+
   @override
-  Stream<List<Rental>> getRentals({
+  Future<List<Rental>> getRentals({
     RentalType? propertyType,
     RentType? rentType,
     int? governorateId,
     int? regionId,
     int? priceFrom,
     int? priceTo,
-  }) {
-    return _firestore
-        .collection('rentals')
-        .where('publishStatus', isEqualTo: PublishStatus.approved.index)
-        .where('propertyType', isEqualTo: propertyType?.index)
-        .where('rentType', isEqualTo: rentType?.index)
-        .where('governorateId', isEqualTo: governorateId)
-        .where('regionId', isEqualTo: regionId)
-        .where(
-          'rentPrice',
-          isGreaterThanOrEqualTo: priceFrom,
-          isLessThanOrEqualTo: priceTo,
-        )
-        .snapshots()
-        .map(
-      (snapshot) {
-        return snapshot.docs.map(
-          (doc) {
-            print(doc.data());
-            return Rental.fromSnapshot(doc);
-          },
-        ).toList();
-      },
-    );
+  }) async {
+    return (await _firestore
+            .collection('rentals')
+            .where('publishStatus', isEqualTo: PublishStatus.approved.index)
+            .where('propertyType', isEqualTo: propertyType?.index)
+            .where('rentType', isEqualTo: rentType?.index)
+            .where('governorateId', isEqualTo: governorateId)
+            .where('regionId', isEqualTo: regionId)
+            .where(
+              'rentPrice',
+              isGreaterThanOrEqualTo: priceFrom,
+              isLessThanOrEqualTo: priceTo,
+            )
+            .get())
+        .docs
+        .map((doc) => Rental.fromSnapshot(doc))
+        .toList();
   }
 
   @override

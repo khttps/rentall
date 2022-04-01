@@ -13,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   var _currentIndex = 0;
-  final _screens = const [
+  final _screens = [
     RentalsScreen(),
     Center(child: Text('Notifications')),
     Center(child: Text('Menu')),
