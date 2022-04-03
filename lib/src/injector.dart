@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:rentall/src/publish/bloc/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bloc.dart';
@@ -9,6 +10,7 @@ final di = GetIt.instance;
 Future<void> init() async {
   //! Blocs
   di.registerFactory(() => RentalsBloc(repository: di(), preferences: di()));
+  di.registerFactory(() => PublishBloc(repository: di()));
 
   //! Repositories
   di.registerLazySingleton<RentalRepository>(

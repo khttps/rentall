@@ -152,7 +152,7 @@ class RentalsScreen extends StatelessWidget {
             onRefresh: () async {
               bloc.add(const GetRentals());
             },
-            child: StreamBuilder<RentalsState>(
+            child: StreamBuilder<BlocState>(
               stream: bloc.rentals,
               builder: (context, snapshot) {
                 final state = snapshot.data;
@@ -170,7 +170,12 @@ class RentalsScreen extends StatelessWidget {
                     },
                   );
                 } else {
-                  return const Center(child: Text('Nothing to see here.'));
+                  return ListView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    children: [
+                      const Center(child: Text('Nothing to see here.')),
+                    ],
+                  );
                 }
               },
             ),

@@ -1,13 +1,21 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:rentall/src/rentals/data/data.dart';
 
 class RentalForm extends StatelessWidget {
-  const RentalForm({Key? key}) : super(key: key);
+  final GlobalKey<FormBuilderState> _formKey;
+  const RentalForm({
+    required GlobalKey<FormBuilderState> formKey,
+    Key? key,
+  })  : _formKey = formKey,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
-      key: GlobalKey<FormBuilderState>(),
+      key: _formKey,
       child: ListView(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -20,14 +28,31 @@ class RentalForm extends StatelessWidget {
           FormBuilderTextField(
             name: 'title',
             textInputAction: TextInputAction.next,
+            validator: FormBuilderValidators.compose([
+              FormBuilderValidators.required(context,
+                  errorText: tr('required')),
+            ]),
           ),
           const Padding(
             padding: EdgeInsets.only(top: 8.0, bottom: 3.0),
             child: Text('Property Type'),
           ),
-          FormBuilderTextField(
+          FormBuilderDropdown(
             name: 'propertyType',
-            textInputAction: TextInputAction.next,
+            initialValue: 1,
+            items: List.generate(
+              RentalType.values.length,
+              (index) => DropdownMenuItem(
+                value: index + 1,
+                child: Text(
+                  'propertyType.${index + 1}',
+                ).tr(),
+              ),
+            ),
+            validator: FormBuilderValidators.compose([
+              FormBuilderValidators.required(context,
+                  errorText: tr('required')),
+            ]),
           ),
           const Padding(
             padding: EdgeInsets.only(top: 8.0, bottom: 3.0),
@@ -38,17 +63,21 @@ class RentalForm extends StatelessWidget {
             minLines: 3,
             maxLines: 3,
             textInputAction: TextInputAction.next,
+            validator: FormBuilderValidators.compose([
+              FormBuilderValidators.required(context,
+                  errorText: tr('required')),
+            ]),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0, bottom: 3.0),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: const [
+                Expanded(child: Text('Governorate')),
+                SizedBox(width: 8.0),
                 Expanded(child: Text('Region')),
                 SizedBox(width: 8.0),
-                Expanded(child: Text('Price')),
-                SizedBox(width: 8.0),
-                Expanded(child: Text('Rent Period'))
+                Expanded(child: Text('Period'))
               ],
             ),
           ),
@@ -57,69 +86,85 @@ class RentalForm extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Flexible(
-                child: FormBuilderTextField(
+                child: FormBuilderDropdown(
                   name: 'governorateId',
-                  textInputAction: TextInputAction.next,
+                  initialValue: 1,
+                  items: List.generate(
+                    27,
+                    (index) => DropdownMenuItem(
+                      value: index + 1,
+                      child: Text(
+                        'governorates.${index + 1}',
+                      ).tr(),
+                    ),
+                  ),
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(context,
+                        errorText: tr('required')),
+                  ]),
                 ),
               ),
               const SizedBox(width: 8.0),
               Flexible(
                 child: FormBuilderTextField(
-                  name: 'rentPrice',
-                  decoration: const InputDecoration(suffix: Text('EGP')),
-                  keyboardType: TextInputType.number,
+                  readOnly: true,
+                  name: 'regionId',
+                  enabled: false,
                   textInputAction: TextInputAction.next,
                 ),
               ),
               const SizedBox(width: 8.0),
               Flexible(
-                child: FormBuilderTextField(
+                child: FormBuilderDropdown(
                   name: 'rentType',
-                  textInputAction: TextInputAction.next,
+                  initialValue: 1,
+                  items: List.generate(
+                    RentType.values.length,
+                    (index) => DropdownMenuItem(
+                      value: index + 1,
+                      child: Text(
+                        'rentPeriod.${index + 1}',
+                      ).tr(),
+                    ),
+                  ),
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(context,
+                        errorText: tr('required')),
+                  ]),
                 ),
               ),
             ],
+          ),
+          const Padding(
+            padding: EdgeInsets.only(top: 8.0, bottom: 3.0),
+            child: Text('Price'),
+          ),
+          FormBuilderTextField(
+            name: 'rentPrice',
+            valueTransformer: (String? value) {
+              if (value != null) return int.tryParse(value);
+            },
+            decoration: const InputDecoration(suffix: Text('EGP')),
+            keyboardType: TextInputType.number,
+            textInputAction: TextInputAction.next,
+            validator: FormBuilderValidators.compose([
+              FormBuilderValidators.required(
+                context,
+                errorText: tr('required'),
+              ),
+              FormBuilderValidators.numeric(context),
+            ]),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0, bottom: 3.0),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: const [
-                Expanded(child: Text('Number of Rooms')),
+                Expanded(child: Text('Floor')),
                 SizedBox(width: 8.0),
-                Expanded(child: Text('Number of Bathrooms')),
-              ],
-            ),
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Flexible(
-                child: FormBuilderTextField(
-                  name: 'numberOfRooms',
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.next,
-                ),
-              ),
-              const SizedBox(width: 8.0),
-              Flexible(
-                child: FormBuilderTextField(
-                  name: 'numberOfBathrooms',
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.next,
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0, bottom: 3.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: const [
-                Expanded(child: Text('Floor Number')),
+                Expanded(child: Text('Rooms')),
                 SizedBox(width: 8.0),
-                Expanded(child: Text('GPS Location')),
+                Expanded(child: Text('Bathrooms')),
               ],
             ),
           ),
@@ -130,6 +175,9 @@ class RentalForm extends StatelessWidget {
               Flexible(
                 child: FormBuilderTextField(
                   name: 'floorNumber',
+                  valueTransformer: (String? value) {
+                    if (value != null) return int.tryParse(value);
+                  },
                   keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.next,
                 ),
@@ -137,7 +185,21 @@ class RentalForm extends StatelessWidget {
               const SizedBox(width: 8.0),
               Flexible(
                 child: FormBuilderTextField(
-                  name: 'location',
+                  name: 'numberOfRooms',
+                  valueTransformer: (String? value) {
+                    if (value != null) return int.tryParse(value);
+                  },
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.next,
+                ),
+              ),
+              const SizedBox(width: 8.0),
+              Flexible(
+                child: FormBuilderTextField(
+                  name: 'numberOfBathrooms',
+                  valueTransformer: (String? value) {
+                    if (value != null) return int.tryParse(value);
+                  },
                   keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.next,
                 ),
@@ -152,6 +214,10 @@ class RentalForm extends StatelessWidget {
             name: 'hostPhoneNumber',
             keyboardType: TextInputType.phone,
             textInputAction: TextInputAction.next,
+            validator: FormBuilderValidators.compose([
+              FormBuilderValidators.required(context,
+                  errorText: tr('required')),
+            ]),
           ),
           const Padding(
             padding: EdgeInsets.only(top: 8.0, bottom: 3.0),

@@ -82,7 +82,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${widget.rental.rentPrice} EGP / ${widget.rental.rentType.name}',
+                '${widget.rental.rentPrice} EGP / ${widget.rental.rentType?.name}',
                 style: const TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,
@@ -99,7 +99,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             ],
           ),
           Text(
-            tr('propertyType.${widget.rental.propertyType.index}'),
+            tr('propertyType.${widget.rental.propertyType?.index}'),
             style: TextStyle(
               color: Colors.blueGrey.shade400,
               fontSize: 18.0,
@@ -139,7 +139,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           Container(
             padding: const EdgeInsets.all(4.0),
             color: Colors.blueGrey.shade100,
-            child: Text(widget.rental.description),
+            child: Text(widget.rental.description ?? ''),
           ),
         ],
       ),

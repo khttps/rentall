@@ -36,6 +36,16 @@
     "1": "Apartment",
     "2": "Vacation Home",
     "3": "Retail Store",
-    "4": "Villa"
-}
+    "4": "Villa",
+    "5" : "Other"
+},
+"rentPeriod" : {
+    "null" : "Rent Period",
+    "0" : "Rent Period",
+    "1" : "Daily",
+    "2" : "Weekly",
+    "3" : "Monthly",
+    "4" : "Other"
+},
+"required" : "Required field."
 }

@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data/data.dart';
 part 'rentals_event.dart';
-part 'rentals_state.dart';
+part '../../bloc/bloc_state.dart';
 
 class RentalsBloc {
   final RentalRepository _repository;
@@ -27,16 +27,15 @@ class RentalsBloc {
   int? _governorateId;
   RentalType? _type;
 
-  final _rentalsStateController =
-      StreamController<RentalsState<List<Rental>>>();
-  StreamSink<RentalsState<List<Rental>>> get _inRentals =>
+  final _rentalsStateController = StreamController<BlocState<List<Rental>>>();
+  StreamSink<BlocState<List<Rental>>> get _inRentals =>
       _rentalsStateController.sink;
-  Stream<RentalsState<List<Rental>>> get rentals async* {
-    yield const RentalsState();
+  Stream<BlocState<List<Rental>>> get rentals async* {
+    yield const BlocState();
     try {
       yield* _rentalsStateController.stream;
     } on Exception catch (err) {
-      yield RentalsState(
+      yield BlocState(
         status: LoadStatus.error,
         error: (err as dynamic).message,
       );
@@ -81,7 +80,7 @@ class RentalsBloc {
       governorateId: _governorateId,
       propertyType: _type,
     );
-    _inRentals.add(RentalsState(
+    _inRentals.add(BlocState(
       status: LoadStatus.loaded,
       data: _rentals,
     ));

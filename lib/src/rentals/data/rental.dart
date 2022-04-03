@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
@@ -10,8 +8,7 @@ enum RentType { daily, weekly, monthly, other }
 class Rental extends Equatable {
   final String title;
   final List<String> images;
-  final List<File?>? imageFiles;
-  final String description;
+  final String? description;
   final String address;
   final GeoPoint? location;
   final int? floorNumber;
@@ -20,19 +17,17 @@ class Rental extends Equatable {
   final bool? furnished;
   final int? area;
   final int governorateId;
-  final int regionId;
+  final int? regionId;
   final int rentPrice;
   final String hostPhoneNumber;
   final Timestamp? createdAt;
-  final PublishStatus publishStatus;
-  final RentType rentType;
-  final RentalType propertyType;
+  final RentType? rentType;
+  final RentalType? propertyType;
 
   const Rental({
     required this.title,
-    required this.images,
-    this.imageFiles,
-    required this.description,
+    this.images = const [],
+    this.description,
     required this.address,
     this.location,
     this.floorNumber,
@@ -41,34 +36,32 @@ class Rental extends Equatable {
     this.furnished,
     this.area,
     required this.governorateId,
-    required this.regionId,
+    this.regionId,
     required this.rentPrice,
     required this.hostPhoneNumber,
     this.createdAt,
-    this.publishStatus = PublishStatus.pending,
     this.rentType = RentType.monthly,
     required this.propertyType,
   });
 
-  factory Rental.fromSnapshot(DocumentSnapshot snap) => Rental(
-        title: snap['title'],
-        images: List.from(snap['images']),
-        description: snap['description'],
-        address: snap['address'],
-        location: snap['location'],
-        floorNumber: snap['floorNumber'],
-        numberOfRooms: snap['numberOfRooms'],
-        numberOfBathrooms: snap['numberOfBathrooms'],
-        furnished: snap['furnished'],
-        area: snap['area'],
-        governorateId: snap['governorateId'],
-        regionId: snap['regionId'],
-        rentPrice: snap['rentPrice'],
-        hostPhoneNumber: snap['hostPhoneNumber'],
-        createdAt: snap['createdAt'],
-        publishStatus: PublishStatus.values[snap['publishStatus']],
-        rentType: RentType.values[snap['rentType']],
-        propertyType: RentalType.values[snap['propertyType']],
+  factory Rental.fromMap(dynamic map) => Rental(
+        title: map['title'],
+        images: List.from(map['images'] ?? []),
+        description: map['description'],
+        address: map['address'],
+        location: map['location'],
+        floorNumber: map['floorNumber'],
+        numberOfRooms: map['numberOfRooms'],
+        numberOfBathrooms: map['numberOfBathrooms'],
+        furnished: map['furnished'],
+        area: map['area'],
+        governorateId: map['governorateId'],
+        regionId: map['regionId'],
+        rentPrice: map['rentPrice'],
+        hostPhoneNumber: map['hostPhoneNumber'],
+        createdAt: map['createdAt'],
+        rentType: RentType.values[map['rentType']],
+        propertyType: RentalType.values[map['propertyType']],
       );
 
   static Map<String, dynamic> toMap(Rental r) => {
@@ -85,9 +78,8 @@ class Rental extends Equatable {
         'rentPrice': r.rentPrice,
         'hostPhoneNumber': r.hostPhoneNumber,
         'createdAt': r.createdAt ?? Timestamp.now(),
-        'publishStatus': r.publishStatus.index,
-        'rentType': r.rentType.index,
-        'propertyType': r.propertyType.index
+        'rentType': r.rentType?.index,
+        'propertyType': r.propertyType?.index
       };
 
   @override
@@ -106,7 +98,6 @@ class Rental extends Equatable {
         rentPrice,
         hostPhoneNumber,
         createdAt,
-        publishStatus,
         rentType,
         propertyType,
       ];

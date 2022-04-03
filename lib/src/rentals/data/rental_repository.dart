@@ -1,6 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:rentall/src/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'rental.dart';
 
@@ -21,7 +22,7 @@ abstract class RentalRepository {
     int? priceFrom,
     int? priceTo,
   });
-  Future<void> addRental(Rental rental);
+  Future<void> addRental(Rental rental, List<File?> images);
 }
 
 class RentalRepositoryImpl implements RentalRepository {
@@ -94,25 +95,23 @@ class RentalRepositoryImpl implements RentalRepository {
             )
             .get())
         .docs
-        .map((doc) => Rental.fromSnapshot(doc))
+        .map((doc) => Rental.fromMap(doc.data()))
         .toList();
   }
 
   @override
-  Future<void> addRental(Rental rental) async {
+  Future<void> addRental(Rental rental, List<File?> images) async {
     try {
-      for (var f in rental.imageFiles!) {
+      for (var f in images) {
         if (f != null) {
-          final url = await (await _storage
-                  .ref('ads/${rental.createdAt?.millisecondsSinceEpoch}')
-                  .putFile(f))
+          final url = await (await _storage.ref('ads/img.png').putFile(f))
               .ref
               .getDownloadURL();
           rental.images.add(url);
         }
       }
     } on FirebaseException catch (err) {
-      throw Exception(err);
+      print('repo$err');
     }
 
     await _firestore.collection('rentals').add(Rental.toMap(rental));
