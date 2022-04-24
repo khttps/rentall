@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rentall/src/rentals/model/rental.dart';
+import 'package:rentall/data/model/rental.dart';
 
 void main() {
   group('Rental.fromMap group', () {

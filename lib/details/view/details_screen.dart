@@ -3,7 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../rentals/model/rental.dart';
+import '../../data/model/rental.dart';
 import 'widgets/widgets.dart';
 
 class DetailsScreen extends StatefulWidget {
@@ -89,7 +89,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 ),
               ),
               Text(
-                '${widget.rental.regionId}, ${tr('governorates.${widget.rental.governorateId}')}',
+                '${widget.rental.regionId}, ${tr('governorates.${widget.rental.governorate}')}',
                 style: TextStyle(
                   color: Colors.blueGrey.shade400,
                   fontSize: 18.0,

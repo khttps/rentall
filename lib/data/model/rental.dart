@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'governorate.dart';
+import 'property_type.dart';
 
-enum PublishStatus { pending, reviewing, approved, rejected }
-enum RentalType { apartment, vacationHome, retailStore, villa, other }
 enum RentType { daily, weekly, monthly, other }
 
 class Rental extends Equatable {
@@ -16,13 +16,13 @@ class Rental extends Equatable {
   final int? numberOfBathrooms;
   final bool? furnished;
   final int? area;
-  final int governorateId;
+  final Governorate governorate;
   final int? regionId;
   final int rentPrice;
   final String hostPhoneNumber;
   final Timestamp? createdAt;
   final RentType? rentType;
-  final RentalType? propertyType;
+  final PropertyType? propertyType;
 
   const Rental({
     required this.title,
@@ -35,7 +35,7 @@ class Rental extends Equatable {
     this.numberOfBathrooms,
     this.furnished,
     this.area,
-    required this.governorateId,
+    required this.governorate,
     this.regionId,
     required this.rentPrice,
     required this.hostPhoneNumber,
@@ -55,13 +55,13 @@ class Rental extends Equatable {
         numberOfBathrooms: map['numberOfBathrooms'],
         furnished: map['furnished'],
         area: map['area'],
-        governorateId: map['governorateId'],
+        governorate: Governorate.values[map['governorateId']],
         regionId: map['regionId'],
         rentPrice: map['rentPrice'],
         hostPhoneNumber: map['hostPhoneNumber'],
         createdAt: map['createdAt'],
         rentType: RentType.values[map['rentType']],
-        propertyType: RentalType.values[map['propertyType']],
+        propertyType: PropertyType.values[map['propertyType']],
       );
 
   static Map<String, dynamic> toMap(Rental r) => {
@@ -73,7 +73,7 @@ class Rental extends Equatable {
         'floorNumber': r.floorNumber,
         'numberOfRooms': r.numberOfRooms,
         'numberOfBathrooms': r.numberOfBathrooms,
-        'governorateId': r.governorateId,
+        'governorateId': r.governorate.index,
         'regionId': r.regionId,
         'rentPrice': r.rentPrice,
         'hostPhoneNumber': r.hostPhoneNumber,
@@ -91,7 +91,7 @@ class Rental extends Equatable {
         floorNumber,
         numberOfRooms,
         numberOfBathrooms,
-        governorateId,
+        governorate,
         furnished,
         area,
         regionId,

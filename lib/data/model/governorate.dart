@@ -1,4 +1,4 @@
-enum GovernorateFilter {
+enum Governorate {
   all,
   cairo,
   giza,
@@ -29,6 +29,6 @@ enum GovernorateFilter {
   sohag,
 }
 
-extension GovernorateFilterX on GovernorateFilter {
+extension GovernorateX on Governorate {
   int? get value => (index != 0) ? index : null;
 }

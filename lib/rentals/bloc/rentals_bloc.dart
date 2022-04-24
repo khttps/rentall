@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rentall/src/rentals/model/governorate_filter.dart';
-import 'package:rentall/src/rentals/model/property_type_filter.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../data/rental_repository.dart';
-import '../model/rental.dart';
+import '../../data/model/filters.dart';
+import '../../data/repository/rental_repository.dart';
+import '../../data/model/governorate.dart';
+import '../../data/model/property_type.dart';
+import '../../data/model/rental.dart';
 
 part 'rentals_event.dart';
 part 'rentals_state.dart';
@@ -28,13 +30,10 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
     final governorate = _preferences.getInt('governorate');
     emit(state.copyWith(
       status: LoadStatus.loading,
-      governorate: GovernorateFilter.values[governorate ?? 0],
+      governorate: Governorate.values[governorate ?? 0],
     ));
     try {
-      final rentals = await _repository.getRentals(
-        governorateId: state.governorate.value,
-        propertyType: state.type,
-      );
+      final rentals = await _repository.getRentals(state.filters);
       emit(state.copyWith(
         status: LoadStatus.success,
         rentals: rentals,
@@ -62,10 +61,7 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
     }
 
     try {
-      final rentals = await _repository.getRentals(
-        governorateId: state.governorate.value,
-        propertyType: state.type,
-      );
+      final rentals = await _repository.getRentals(state.filters);
       emit(state.copyWith(
         status: LoadStatus.success,
         rentals: rentals,
@@ -87,10 +83,7 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
       type: event.type,
     ));
     try {
-      final rentals = await _repository.getRentals(
-        governorateId: state.governorate.value,
-        propertyType: state.type,
-      );
+      final rentals = await _repository.getRentals(state.filters);
       emit(state.copyWith(
         status: LoadStatus.success,
         rentals: rentals,

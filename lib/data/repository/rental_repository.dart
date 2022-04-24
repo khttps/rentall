@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:rentall/src/rentals/model/property_type_filter.dart';
+import 'package:rentall/blocs.dart';
+import 'package:rentall/data/model/filters.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../rentals/model/rental.dart';
+import '../model/property_type.dart';
+import '../model/rental.dart';
 
 abstract class RentalRepository {
   // Stream<List<Rental>> watchRentals({
@@ -15,14 +17,15 @@ abstract class RentalRepository {
   //   int? priceFrom,
   //   int? priceTo,
   // });
-  Future<List<Rental>> getRentals({
-    PropertyTypeFilter? propertyType,
-    RentType? rentType,
-    int? governorateId,
-    int? regionId,
-    int? priceFrom,
-    int? priceTo,
-  });
+  // Future<List<Rental>> getRentals({
+  //   PropertyType? propertyType,
+  //   RentType? rentType,
+  //   int? governorateId,
+  //   int? regionId,
+  //   int? priceFrom,
+  //   int? priceTo,
+  // });
+  Future<List<Rental>> getRentals(Map<String, dynamic> filters);
   Future<void> addRental(Rental rental, List<File?> images);
 }
 
@@ -74,26 +77,19 @@ class RentalRepositoryImpl implements RentalRepository {
   // }
 
   @override
-  Future<List<Rental>> getRentals({
-    PropertyTypeFilter? propertyType,
-    RentType? rentType,
-    int? governorateId,
-    int? regionId,
-    int? priceFrom,
-    int? priceTo,
-  }) async {
+  Future<List<Rental>> getRentals(Map<String, dynamic> filters) async {
     return (await _firestore
             .collection('rentals')
-            .where('publishStatus', isEqualTo: PublishStatus.approved.index)
-            .where('propertyType', isEqualTo: propertyType?.value)
-            .where('rentType', isEqualTo: rentType?.index)
-            .where('governorateId', isEqualTo: governorateId)
-            .where('regionId', isEqualTo: regionId)
-            .where(
-              'rentPrice',
-              isGreaterThanOrEqualTo: priceFrom,
-              isLessThanOrEqualTo: priceTo,
-            )
+            .where('publishStatus', isEqualTo: 1)
+            .where('propertyType', isEqualTo: filters['propertyType']?.value)
+            .where('governorateId', isEqualTo: filters['governorate'])
+            //.where('rentType', isEqualTo: rentType?.index)
+            //.where('regionId', isEqualTo: regionId)
+            //.where(
+            //  'rentPrice',
+            //  isGreaterThanOrEqualTo: priceFrom,
+            //  isLessThanOrEqualTo: priceTo,
+            //)
             .get())
         .docs
         .map((doc) => Rental.fromMap(doc.data()))

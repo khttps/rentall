@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'rentals/model/rental.dart';
-import 'screens.dart';
+import 'details/details.dart';
+import 'home/home.dart';
+import 'publish/publish.dart';
+import 'data/model/rental.dart';
 
 MaterialPageRoute<dynamic> onGenerateRoute(RouteSettings settings) {
   return MaterialPageRoute(

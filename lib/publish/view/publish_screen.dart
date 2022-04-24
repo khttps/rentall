@@ -6,7 +6,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-import '../bloc/bloc.dart';
+import '../bloc/publish_bloc.dart';
 import 'widgets/widgets.dart';
 
 class PublishScreen extends StatefulWidget {

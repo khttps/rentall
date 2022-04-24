@@ -1,11 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rentall/src/rentals/bloc/rentals_bloc.dart';
-import 'package:rentall/src/rentals/model/governorate_filter.dart';
-import 'package:rentall/src/rentals/model/property_type_filter.dart';
 
-import '../widgets/widgets.dart';
+import '../../blocs.dart';
+import '../../data/model/governorate.dart';
+import '../../data/model/property_type.dart';
+import 'widgets/widgets.dart';
 
 class RentalsScreen extends StatelessWidget {
   const RentalsScreen({Key? key}) : super(key: key);
@@ -47,13 +47,13 @@ class RentalsScreen extends StatelessWidget {
                             onTap: () {
                               BlocProvider.of<RentalsBloc>(context).add(
                                 SetRegionFilter(
-                                  governorate: GovernorateFilter.values[index],
+                                  governorate: Governorate.values[index],
                                 ),
                               );
                               Navigator.pop(context);
                             },
                             title: Text(
-                              'governorates.${GovernorateFilter.values[index].value}',
+                              'governorates.${Governorate.values[index].value}',
                             ).tr(),
                             contentPadding: const EdgeInsetsDirectional.only(
                               start: 8.0,
@@ -83,13 +83,13 @@ class RentalsScreen extends StatelessWidget {
                             onTap: () {
                               BlocProvider.of<RentalsBloc>(context).add(
                                 SetPropertyTypeFilter(
-                                  type: PropertyTypeFilter.values[index],
+                                  type: PropertyType.values[index],
                                 ),
                               );
                               Navigator.pop(context);
                             },
                             title: Text(
-                              'propertyType.${PropertyTypeFilter.values[index].index}',
+                              'propertyType.${PropertyType.values[index].index}',
                             ).tr(),
                             contentPadding: const EdgeInsetsDirectional.only(
                               start: 8.0,

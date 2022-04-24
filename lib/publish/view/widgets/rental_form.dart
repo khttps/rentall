@@ -2,8 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:rentall/data/model/property_type.dart';
 
-import '../../../rentals/model/rental.dart';
+import '../../../data/model/rental.dart';
 
 class RentalForm extends StatelessWidget {
   final GlobalKey<FormBuilderState> _formKey;
@@ -42,7 +43,7 @@ class RentalForm extends StatelessWidget {
             name: 'propertyType',
             initialValue: 1,
             items: List.generate(
-              RentalType.values.length,
+              PropertyType.values.length - 1,
               (index) => DropdownMenuItem(
                 value: index + 1,
                 child: Text(

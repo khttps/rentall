@@ -14,7 +14,7 @@ class GetRentals extends RentalsEvent {
 }
 
 class SetRegionFilter extends RentalsEvent {
-  final GovernorateFilter governorate;
+  final Governorate governorate;
   const SetRegionFilter({required this.governorate});
 
   @override
@@ -22,7 +22,7 @@ class SetRegionFilter extends RentalsEvent {
 }
 
 class SetPropertyTypeFilter extends RentalsEvent {
-  final PropertyTypeFilter type;
+  final PropertyType type;
   const SetPropertyTypeFilter({required this.type});
 
   @override

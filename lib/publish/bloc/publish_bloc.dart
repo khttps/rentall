@@ -5,8 +5,8 @@ import 'package:equatable/equatable.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../bloc/bloc_state.dart';
-import '../../data/rental_repository.dart';
-import '../../rentals/model/rental.dart';
+import '../../data/repository/rental_repository.dart';
+import '../../data/model/rental.dart';
 
 part 'publish_event.dart';
 

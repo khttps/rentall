@@ -5,12 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
-import 'src/bloc.dart';
-import 'src/home/view/home_screen.dart';
 import 'firebase_options.dart';
-import 'src/injector.dart' as di;
-import 'src/router.dart' as router;
-import 'src/theme.dart' as theme;
+import 'blocs.dart';
+import 'injector.dart' as di;
+import 'router.dart' as router;
+import 'theme.dart' as theme;
+import 'screens.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
