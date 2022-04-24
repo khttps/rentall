@@ -9,28 +9,30 @@ abstract class RentalsEvent extends Equatable {
 
 class GetRentals extends RentalsEvent {
   const GetRentals();
+  @override
+  List<Object?> get props => [];
 }
 
-class FilterRentalsByRegion extends RentalsEvent {
-  final int? governorateId;
-  const FilterRentalsByRegion({this.governorateId});
+class SetRegionFilter extends RentalsEvent {
+  final GovernorateFilter governorate;
+  const SetRegionFilter({required this.governorate});
 
   @override
-  List<Object?> get props => [governorateId];
+  List<Object?> get props => [governorate];
 }
 
-class FilterRentalsByPropertyType extends RentalsEvent {
-  final RentalType? type;
-  const FilterRentalsByPropertyType({this.type});
+class SetPropertyTypeFilter extends RentalsEvent {
+  final PropertyTypeFilter type;
+  const SetPropertyTypeFilter({required this.type});
 
   @override
   List<Object?> get props => [type];
 }
 
-class ClearRegionFilter extends RentalsEvent {
-  const ClearRegionFilter();
-}
+// class ClearRegionFilter extends RentalsEvent {
+//   const ClearRegionFilter();
+// }
 
-class ClearPropertyTypeFilter extends RentalsEvent {
-  const ClearPropertyTypeFilter();
-}
+// class ClearPropertyTypeFilter extends RentalsEvent {
+//   const ClearPropertyTypeFilter();
+// }

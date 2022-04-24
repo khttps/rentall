@@ -3,21 +3,21 @@ import 'package:rentall/src/publish/bloc/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bloc.dart';
-import 'rentals/data/data.dart';
+import 'data/rental_repository.dart';
 
-final di = GetIt.instance;
+final sl = GetIt.instance;
 
 Future<void> init() async {
   //! Blocs
-  di.registerFactory(() => RentalsBloc(repository: di(), preferences: di()));
-  di.registerFactory(() => PublishBloc(repository: di()));
+  sl.registerFactory(() => RentalsBloc(repository: sl(), preferences: sl()));
+  sl.registerFactory(() => PublishBloc(repository: sl()));
 
   //! Repositories
-  di.registerLazySingleton<RentalRepository>(
-    () => RentalRepositoryImpl(prefs: di()),
+  sl.registerLazySingleton<RentalRepository>(
+    () => RentalRepositoryImpl(prefs: sl()),
   );
 
   //! Shared Preferences
   final prefs = await SharedPreferences.getInstance();
-  di.registerLazySingleton(() => prefs);
+  sl.registerLazySingleton(() => prefs);
 }

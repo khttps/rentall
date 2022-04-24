@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:rentall/src/bloc.dart';
-import 'package:rentall/src/rentals/data/data.dart';
+
+import '../../bloc/bloc_state.dart';
+import '../../data/rental_repository.dart';
+import '../../rentals/model/rental.dart';
 
 part 'publish_event.dart';
 
@@ -32,7 +34,6 @@ class PublishBloc {
       yield const BlocState();
       yield* _publishStateController.stream;
     } on Exception catch (err) {
-      print('bloc$err');
       yield BlocState(
         status: LoadStatus.error,
         error: (err as dynamic).message,

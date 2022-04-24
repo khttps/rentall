@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:rentall/src/rentals/model/property_type_filter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'rental.dart';
+import '../rentals/model/rental.dart';
 
 abstract class RentalRepository {
   // Stream<List<Rental>> watchRentals({
@@ -15,7 +16,7 @@ abstract class RentalRepository {
   //   int? priceTo,
   // });
   Future<List<Rental>> getRentals({
-    RentalType? propertyType,
+    PropertyTypeFilter? propertyType,
     RentType? rentType,
     int? governorateId,
     int? regionId,
@@ -74,7 +75,7 @@ class RentalRepositoryImpl implements RentalRepository {
 
   @override
   Future<List<Rental>> getRentals({
-    RentalType? propertyType,
+    PropertyTypeFilter? propertyType,
     RentType? rentType,
     int? governorateId,
     int? regionId,
@@ -84,7 +85,7 @@ class RentalRepositoryImpl implements RentalRepository {
     return (await _firestore
             .collection('rentals')
             .where('publishStatus', isEqualTo: PublishStatus.approved.index)
-            .where('propertyType', isEqualTo: propertyType?.index)
+            .where('propertyType', isEqualTo: propertyType?.value)
             .where('rentType', isEqualTo: rentType?.index)
             .where('governorateId', isEqualTo: governorateId)
             .where('regionId', isEqualTo: regionId)

@@ -1,4 +1,4 @@
-part of '../rentals/bloc/rentals_bloc.dart';
+import 'package:equatable/equatable.dart';
 
 enum LoadStatus { loading, loaded, error }
 
