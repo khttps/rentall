@@ -2,10 +2,9 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:rentall/blocs.dart';
-import 'package:rentall/data/model/filters.dart';
+import 'package:rentall/data/model/property_type.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../model/property_type.dart';
+import '../model/governorate.dart';
 import '../model/rental.dart';
 
 abstract class RentalRepository {
@@ -80,9 +79,15 @@ class RentalRepositoryImpl implements RentalRepository {
   Future<List<Rental>> getRentals(Map<String, dynamic> filters) async {
     return (await _firestore
             .collection('rentals')
-            .where('publishStatus', isEqualTo: 1)
-            .where('propertyType', isEqualTo: filters['propertyType']?.value)
-            .where('governorateId', isEqualTo: filters['governorate'])
+            .where('publishStatus', isEqualTo: 2)
+            .where(
+              'propertyType',
+              isEqualTo: (filters['propertyType'] as PropertyType?)?.value,
+            )
+            .where(
+              'governorateId',
+              isEqualTo: (filters['governorate'] as Governorate?)?.value,
+            )
             //.where('rentType', isEqualTo: rentType?.index)
             //.where('regionId', isEqualTo: regionId)
             //.where(

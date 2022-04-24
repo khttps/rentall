@@ -162,8 +162,9 @@ class RentalsScreen extends StatelessWidget {
           builder: (context, state) {
             if (state.status == LoadStatus.loading) {
               return const Center(child: CircularProgressIndicator());
-            } else if (state.status == LoadStatus.success &&
-                state.rentals!.isNotEmpty) {
+            } else if ((state.status == LoadStatus.success &&
+                    state.rentals!.isNotEmpty) ||
+                state.status == LoadStatus.reloading) {
               return ListView.separated(
                 physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.all(8.0),

@@ -22,12 +22,12 @@ class PublishBloc {
   List<XFile?> _images = [];
   Rental? _rental;
 
-  final _publishEventController = StreamController<PublishEvent>();
+  final _publishEventController = StreamController<PublishEvent>.broadcast();
   void add(PublishEvent event) {
     _publishEventController.sink.add(event);
   }
 
-  final _publishStateController = StreamController<BlocState<bool>>();
+  final _publishStateController = StreamController<BlocState<bool>>.broadcast();
   StreamSink get _inPublish => _publishStateController.sink;
   Stream<BlocState<bool>> get publish async* {
     try {
@@ -41,7 +41,7 @@ class PublishBloc {
     }
   }
 
-  final _imagesStateController = StreamController<List<XFile?>>();
+  final _imagesStateController = StreamController<List<XFile?>>.broadcast();
   StreamSink get _inImages => _imagesStateController.sink;
   Stream<List<XFile?>> get images => _imagesStateController.stream;
 

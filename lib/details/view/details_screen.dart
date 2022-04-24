@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/model/rental.dart';
 import 'widgets/widgets.dart';
@@ -25,9 +26,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final rental = widget.rental;
+    final hasDescription =
+        rental.description != null && rental.description!.isNotEmpty;
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.rental.title),
+        title: Text(rental.title),
       ),
       // headerSliverBuilder: (context, innerBoxIsScrolled) => [
       //   SliverAppBar(
@@ -38,37 +42,30 @@ class _DetailsScreenState extends State<DetailsScreen> {
       //   ),
       // ],
       body: ListView(
-        padding: const EdgeInsets.all(10.0),
         children: [
           Container(
-            decoration: const BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black38,
-                  offset: Offset(0.0, 1.0),
-                  blurRadius: 4,
-                )
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(4.0),
-              child: CarouselSlider.builder(
-                carouselController: _carouselController,
-                itemCount: widget.rental.images.length,
-                itemBuilder: (context, index, realIndex) => CachedNetworkImage(
-                  imageUrl: widget.rental.images[index],
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-                options: CarouselOptions(
-                    enableInfiniteScroll: false,
-                    viewportFraction: 1.0,
-                    aspectRatio: 1.0,
-                    onPageChanged: (index, reason) {
-                      setState(() {
-                        _current = index;
-                      });
-                    }),
+            decoration: const BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Colors.black38,
+                offset: Offset(0.0, 1.0),
+                blurRadius: 4,
+              )
+            ]),
+            child: CarouselSlider.builder(
+              carouselController: _carouselController,
+              itemCount: rental.images.length,
+              itemBuilder: (context, index, realIndex) => CachedNetworkImage(
+                fit: BoxFit.cover,
+                width: double.infinity,
+                imageUrl: rental.images[index],
+              ),
+              options: CarouselOptions(
+                enableInfiniteScroll: false,
+                viewportFraction: 1.0,
+                aspectRatio: 1.0,
+                onPageChanged: (index, reason) {
+                  setState(() => _current = index);
+                },
               ),
             ),
           ),
@@ -77,76 +74,89 @@ class _DetailsScreenState extends State<DetailsScreen> {
             carouselController: _carouselController,
             current: _current,
           ),
-          const SizedBox(height: 8.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          ListView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 24.0),
             children: [
-              Text(
-                '${widget.rental.rentPrice} EGP / ${widget.rental.rentType?.name}',
-                style: const TextStyle(
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${rental.rentPrice} EGP / ${rental.rentType?.name}',
+                    style: const TextStyle(
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    '${rental.regionId}, ${tr('governorates.${rental.governorate.index}')}',
+                    style: TextStyle(
+                      color: Colors.blueGrey.shade400,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                '${widget.rental.regionId}, ${tr('governorates.${widget.rental.governorate}')}',
-                style: TextStyle(
-                  color: Colors.blueGrey.shade400,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-          Text(
-            tr('propertyType.${widget.rental.propertyType?.index}'),
-            style: TextStyle(
-              color: Colors.blueGrey.shade400,
-              fontSize: 18.0,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          Text(
-            DateFormat('hh:mma d MMM, yyy')
-                .format(widget.rental.createdAt!.toDate()),
-          ),
-          const SizedBox(height: 4.0),
-          Container(
-            padding: const EdgeInsets.all(4.0),
-            color: Colors.blueGrey.shade100,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Rooms: ${widget.rental.numberOfRooms}'),
-                Text('Bathrooms: ${widget.rental.numberOfBathrooms}'),
+              if (rental.propertyType != null)
                 Text(
-                  'Furnished: ${widget.rental.furnished == true ? 'Yes' : 'No'}',
+                  tr('propertyType.${rental.propertyType?.index}'),
+                  style: TextStyle(
+                    color: Colors.blueGrey.shade400,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-                Text('Floor: ${widget.rental.floorNumber}'),
-                Text('Area: ${widget.rental.area} m\3'),
-              ],
-            ),
-          ),
-          const SizedBox(height: 8.0),
-          const Text('Address'),
-          Container(
-            padding: const EdgeInsets.all(4.0),
-            color: Colors.blueGrey.shade100,
-            child: Text(widget.rental.address),
-          ),
-          const SizedBox(height: 8.0),
-          const Text('Description'),
-          Container(
-            padding: const EdgeInsets.all(4.0),
-            color: Colors.blueGrey.shade100,
-            child: Text(widget.rental.description ?? ''),
-          ),
+              Text(
+                'Posted ${DateFormat('MMM d, h:mma').format(rental.createdAt!.toDate())}',
+              ),
+              const Divider(height: 16.0, thickness: 1.5),
+              if (rental.numberOfRooms != null)
+                Text('Rooms: ${rental.numberOfRooms}'),
+              if (rental.numberOfBathrooms != null)
+                Text('Bathrooms: ${rental.numberOfBathrooms}'),
+              if (rental.furnished != null)
+                Text(
+                  'Furnished: ${rental.furnished == true ? 'Yes' : 'No'}',
+                ),
+              if (rental.floorNumber != null)
+                Text('Floor: ${rental.floorNumber}'),
+              RichText(
+                text: TextSpan(
+                  text: 'Area: ${rental.area}m\u00b3',
+                  style: const TextStyle(color: Colors.black87),
+                ),
+              ),
+              const Divider(height: 16.0, thickness: 1.5),
+              const Text(
+                'Address',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(rental.address),
+              if (hasDescription) const Divider(height: 16.0, thickness: 1.5),
+              if (hasDescription)
+                const Text(
+                  'Description',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              Text(rental.description ?? ''),
+            ],
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async => _launchDialer(),
         child: const Icon(Icons.call),
       ),
     );
+  }
+
+  void _launchDialer() async {
+    final url = Uri.parse('tel:${widget.rental.hostPhoneNumber}');
+    bool canLaunch = await canLaunchUrl(url);
+    if (canLaunch) {
+      await launchUrl(url);
+    }
   }
 }

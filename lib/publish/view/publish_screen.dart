@@ -26,59 +26,62 @@ class _PublishScreenState extends State<PublishScreen> {
     return Consumer<PublishBloc>(
       builder: (context, bloc, _) {
         return Scaffold(
-          body: NestedScrollView(
-            headerSliverBuilder: (c, i) => const [
-              SliverAppBar(
-                snap: true,
-                floating: true,
-                forceElevated: true,
-                title: Text('New Rental'),
-              ),
-            ],
-            body: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8.0),
-                  width: double.infinity,
-                  child: StreamBuilder<List<XFile?>>(
-                      stream: bloc.images,
-                      builder: (context, snapshot) {
-                        final images = snapshot.data;
-                        final length = images?.length ?? 0;
-                        return CarouselSlider.builder(
-                          itemCount: 1 + length,
-                          itemBuilder:
-                              (BuildContext context, int index, int realIndex) {
-                            return ClipRRect(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(5.0)),
-                              child: index == length
-                                  ? Center(
-                                      child: FloatingActionButton(
-                                        onPressed: () =>
-                                            _showBottomSheet(context, bloc),
-                                        heroTag: 'add_photo',
-                                        child: const Icon(Icons.add_a_photo),
-                                      ),
-                                    )
-                                  : Image.file(
-                                      File(images![index]!.path),
-                                      fit: BoxFit.cover,
-                                    ),
-                            );
-                          },
-                          options: CarouselOptions(
-                            enableInfiniteScroll: false,
-                            enlargeCenterPage: true,
-                            aspectRatio: 1.0,
-                            viewportFraction: 0.7,
-                          ),
-                        );
-                      }),
+          body: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: NestedScrollView(
+              headerSliverBuilder: (c, i) => const [
+                SliverAppBar(
+                  snap: true,
+                  floating: true,
+                  forceElevated: true,
+                  title: Text('New Rental'),
                 ),
-                RentalForm(formKey: _formKey),
               ],
+              body: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: double.infinity,
+                    child: StreamBuilder<List<XFile?>>(
+                        stream: bloc.images,
+                        builder: (context, snapshot) {
+                          final images = snapshot.data;
+                          final length = images?.length ?? 0;
+                          return CarouselSlider.builder(
+                            itemCount: 1 + length,
+                            itemBuilder: (BuildContext context, int index,
+                                int realIndex) {
+                              return ClipRRect(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(5.0)),
+                                child: index == length
+                                    ? Center(
+                                        child: FloatingActionButton(
+                                          onPressed: () =>
+                                              _showBottomSheet(context, bloc),
+                                          heroTag: 'add_photo',
+                                          child: const Icon(Icons.add_a_photo),
+                                        ),
+                                      )
+                                    : Image.file(
+                                        File(images![index]!.path),
+                                        fit: BoxFit.cover,
+                                      ),
+                              );
+                            },
+                            options: CarouselOptions(
+                              enableInfiniteScroll: false,
+                              enlargeCenterPage: true,
+                              aspectRatio: 1.0,
+                              viewportFraction: 0.7,
+                            ),
+                          );
+                        }),
+                  ),
+                  RentalForm(formKey: _formKey),
+                ],
+              ),
             ),
           ),
           floatingActionButton: FloatingActionButton(

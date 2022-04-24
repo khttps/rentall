@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../data/model/filters.dart';
 import '../../data/repository/rental_repository.dart';
 import '../../data/model/governorate.dart';
 import '../../data/model/property_type.dart';
@@ -29,7 +28,9 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
   FutureOr<void> _onGetRentals(GetRentals event, emit) async {
     final governorate = _preferences.getInt('governorate');
     emit(state.copyWith(
-      status: LoadStatus.loading,
+      status: state.status != LoadStatus.loading
+          ? LoadStatus.reloading
+          : LoadStatus.loading,
       governorate: Governorate.values[governorate ?? 0],
     ));
     try {
@@ -50,7 +51,7 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
     final governorate = event.governorate;
 
     emit(state.copyWith(
-      status: LoadStatus.loading,
+      status: LoadStatus.reloading,
       governorate: governorate,
     ));
 
@@ -79,7 +80,7 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
     emit,
   ) async {
     emit(state.copyWith(
-      status: LoadStatus.loading,
+      status: LoadStatus.reloading,
       type: event.type,
     ));
     try {

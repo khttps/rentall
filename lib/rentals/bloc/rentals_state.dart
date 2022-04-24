@@ -1,6 +1,6 @@
 part of 'rentals_bloc.dart';
 
-enum LoadStatus { loading, success, failed }
+enum LoadStatus { loading, reloading, success, failed }
 
 class RentalsState extends Equatable {
   final LoadStatus status;
