@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-enum LoadStatus { loading, loaded, error }
+import 'load_status.dart';
 
 class BlocState<T> extends Equatable {
   final LoadStatus status;

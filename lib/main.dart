@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'blocs.dart';
 import 'injector.dart' as di;
@@ -34,32 +33,29 @@ class RentallApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    // Provider<PublishBloc>(
+    //   create: (context) => di.sl(),
+    //   dispose: (context, bloc) {
+    //     bloc.dispose();
+    //   },
+    // ),
+    return MultiBlocProvider(
       providers: [
-        Provider<PublishBloc>(
-          create: (context) => di.sl(),
-          dispose: (context, bloc) {
-            bloc.dispose();
-          },
+        BlocProvider<RentalsBloc>(
+          create: (context) => di.sl()..add(const GetRentals()),
         ),
+        BlocProvider<PublishBloc>(create: (context) => di.sl()),
       ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<RentalsBloc>(
-            create: (context) => di.sl()..add(const GetRentals()),
-          ),
-        ],
-        child: MaterialApp(
-          title: 'Rentall',
-          debugShowCheckedModeBanner: false,
-          locale: context.locale,
-          supportedLocales: context.supportedLocales,
-          localizationsDelegates: context.localizationDelegates
-            ..add(FormBuilderLocalizations.delegate),
-          theme: theme.themeData,
-          initialRoute: HomeScreen.routeName,
-          onGenerateRoute: router.onGenerateRoute,
-        ),
+      child: MaterialApp(
+        title: 'Rentall',
+        debugShowCheckedModeBanner: false,
+        locale: context.locale,
+        supportedLocales: context.supportedLocales,
+        localizationsDelegates: context.localizationDelegates
+          ..add(FormBuilderLocalizations.delegate),
+        theme: theme.themeData,
+        initialRoute: HomeScreen.routeName,
+        onGenerateRoute: router.onGenerateRoute,
       ),
     );
   }

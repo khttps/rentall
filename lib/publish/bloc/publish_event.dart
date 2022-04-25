@@ -9,39 +9,41 @@ abstract class PublishEvent extends Equatable {
 
 class PublishRental extends PublishEvent {
   final Map<String, dynamic> rental;
+  final List<XFile> images;
 
-  const PublishRental({required this.rental});
-
-  @override
-  List<Object?> get props => [rental];
-}
-
-class AddImages extends PublishEvent {
-  final List<XFile?> images;
-  const AddImages({required this.images});
-}
-
-class RemoveImage extends PublishEvent {
-  final int imageIndex;
-  const RemoveImage({required this.imageIndex});
+  const PublishRental({required this.rental, required this.images});
 
   @override
-  List<Object?> get props => [imageIndex];
+  List<Object?> get props => [rental, images];
 }
+
+// class AddImages extends PublishEvent {
+//   final List<XFile?> images;
+//   const AddImages({required this.images});
+// }
+
+// class RemoveImage extends PublishEvent {
+//   final int imageIndex;
+//   const RemoveImage({required this.imageIndex});
+
+//   @override
+//   List<Object?> get props => [imageIndex];
+// }
 
 class UpdateRental extends PublishEvent {
-  final Rental rental;
+  final Map<String, dynamic> rental;
+  final List<XFile?> images;
 
-  const UpdateRental({required this.rental});
+  const UpdateRental({required this.rental, required this.images});
 
   @override
-  List<Object?> get props => [rental];
+  List<Object?> get props => [rental, images];
 }
 
 class LoadRental extends PublishEvent {
-  final int id;
-  const LoadRental({required this.id});
+  final Rental rental;
+  const LoadRental({required this.rental});
 
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [rental];
 }

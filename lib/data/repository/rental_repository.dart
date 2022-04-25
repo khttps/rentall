@@ -103,17 +103,13 @@ class RentalRepositoryImpl implements RentalRepository {
 
   @override
   Future<void> addRental(Rental rental, List<File?> images) async {
-    try {
-      for (var f in images) {
-        if (f != null) {
-          final url = await (await _storage.ref('ads/img.png').putFile(f))
-              .ref
-              .getDownloadURL();
-          rental.images.add(url);
-        }
+    for (var f in images) {
+      if (f != null) {
+        final url = await (await _storage.ref('ads/img.png').putFile(f))
+            .ref
+            .getDownloadURL();
+        rental.images.add(url);
       }
-    } on FirebaseException catch (err) {
-      print('repo$err');
     }
 
     await _firestore.collection('rentals').add(Rental.toMap(rental));
