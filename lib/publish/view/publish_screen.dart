@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:rentall/bloc/load_status.dart';
+import 'package:rentall/widgets/widgets.dart';
 
 import '../bloc/publish_bloc.dart';
 import 'widgets/widgets.dart';
@@ -24,6 +24,7 @@ class _PublishScreenState extends State<PublishScreen> {
   final _picker = ImagePicker();
   final _formKey = GlobalKey<FormBuilderState>();
   final _images = <XFile>[];
+  var _currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,9 @@ class _PublishScreenState extends State<PublishScreen> {
           body: BlocConsumer<PublishBloc, PublishState>(
             listener: (context, state) {
               if (state.status == LoadStatus.failed) {
-                _showErrorSnackbar(context, message: state.error!);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  ErrorSnackbar(message: state.error!),
+                );
               }
             },
             builder: (context, state) {
@@ -52,35 +55,73 @@ class _PublishScreenState extends State<PublishScreen> {
                     padding: EdgeInsets.zero,
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
                         width: double.infinity,
                         child: CarouselSlider.builder(
                           itemCount: 1 + _images.length,
-                          itemBuilder:
-                              (BuildContext context, int index, int realIndex) {
-                            return ClipRRect(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(5.0)),
-                              child: index == _images.length
-                                  ? Center(
-                                      child: FloatingActionButton(
-                                        onPressed: () =>
-                                            _showBottomSheet(context),
-                                        heroTag: 'add_photo',
-                                        child: const Icon(Icons.add_a_photo),
+                          itemBuilder: (context, index, _) {
+                            if (index == _images.length) {
+                              return Center(
+                                child: FloatingActionButton(
+                                  heroTag: 'add_photo',
+                                  child: const Icon(Icons.add_a_photo),
+                                  onPressed: () {
+                                    _showBottomSheet(context);
+                                  },
+                                ),
+                              );
+                            } else {
+                              return Stack(
+                                alignment: Alignment.center,
+                                fit: StackFit.expand,
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.all(8.0),
+                                    child: ClipRRect(
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(5.0),
                                       ),
-                                    )
-                                  : Image.file(
-                                      File(_images[index].path),
-                                      fit: BoxFit.cover,
+                                      child: ImageBuilder(
+                                        path: _images[index].path,
+                                        aspectRatio: 16 / 9,
+                                      ),
                                     ),
-                            );
+                                  ),
+                                  if (index == _currentPage)
+                                    Positioned(
+                                      top: 0.0,
+                                      right: 0.0,
+                                      child: InkWell(
+                                        onTap: () => _showRemoveImageDialog(
+                                            context, index),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(2.0),
+                                          decoration: const BoxDecoration(
+                                              color: Colors.white,
+                                              shape: BoxShape.circle,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    offset: Offset(0.0, 1.0),
+                                                    blurRadius: 1.0)
+                                              ]),
+                                          child: const Icon(
+                                            Icons.delete,
+                                            color: Colors.blueGrey,
+                                            size: 20.0,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              );
+                            }
                           },
                           options: CarouselOptions(
                             enableInfiniteScroll: false,
-                            enlargeCenterPage: true,
                             aspectRatio: 1.0,
-                            viewportFraction: 0.7,
+                            onPageChanged: (i, _) => setState(
+                              () => _currentPage = i,
+                            ),
                           ),
                         ),
                       ),
@@ -88,28 +129,7 @@ class _PublishScreenState extends State<PublishScreen> {
                     ],
                   ),
                   if (state.status == LoadStatus.reloading)
-                    Material(
-                      child: Container(
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                offset: Offset(0.0, 1.0),
-                                blurRadius: 4.0,
-                              )
-                            ]),
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const CircularProgressIndicator(),
-                            const SizedBox(width: 16.0),
-                            const Text('loading').tr(),
-                          ],
-                        ),
-                      ),
-                    ),
+                    const LoadingWidget(),
                 ],
               );
             },
@@ -132,6 +152,32 @@ class _PublishScreenState extends State<PublishScreen> {
     );
   }
 
+  Future<dynamic> _showRemoveImageDialog(BuildContext context, int index) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Remove this image?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              setState(
+                () => _images.removeAt(index),
+              );
+              Navigator.pop(context);
+            },
+            child: const Text('Yes'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('No'),
+          )
+        ],
+      ),
+    );
+  }
+
   Future _showBottomSheet(BuildContext context) => showModalBottomSheet(
         context: context,
         builder: (context) => Container(
@@ -145,8 +191,7 @@ class _PublishScreenState extends State<PublishScreen> {
                 onPressed: () async {
                   Navigator.pop(context);
                   final image = await _picker.pickImage(
-                    source: ImageSource.camera,
-                  );
+                      source: ImageSource.camera, imageQuality: 50);
                   if (image != null) setState(() => _images.add(image));
                 },
                 elevation: 0.0,
@@ -162,13 +207,12 @@ class _PublishScreenState extends State<PublishScreen> {
                 padding: const EdgeInsets.all(20.0),
                 onPressed: () async {
                   Navigator.pop(context);
-                  final images = await _picker.pickMultiImage();
+                  final images = await _picker.pickMultiImage(imageQuality: 50);
                   if (images != null) {
                     setState(() => _images.addAll(images));
                   } else {
-                    _showErrorSnackbar(
-                      context,
-                      message: 'Failed to retrieve images.',
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      ErrorSnackbar(message: 'Failed to retrieve images.'),
                     );
                   }
                 },
@@ -185,16 +229,4 @@ class _PublishScreenState extends State<PublishScreen> {
           ),
         ),
       );
-
-  void _showErrorSnackbar(BuildContext context, {required String message}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: const TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
 }

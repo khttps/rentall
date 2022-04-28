@@ -6,6 +6,7 @@ import '../../bloc/load_status.dart';
 import '../../blocs.dart';
 import '../../data/model/governorate.dart';
 import '../../data/model/property_type.dart';
+import '../../widgets/widgets.dart';
 import 'widgets/widgets.dart';
 
 class RentalsScreen extends StatelessWidget {
@@ -114,7 +115,7 @@ class RentalsScreen extends StatelessWidget {
                         labelPadding:
                             const EdgeInsetsDirectional.only(end: 8.0),
                         onPressed: () {}),
-                    const SizedBox(width: 8.0),
+                    const SizedBox(width: 4.0),
                     ActionChip(
                         avatar: const Icon(
                           Icons.expand_more,
@@ -150,13 +151,7 @@ class RentalsScreen extends StatelessWidget {
           listener: (context, state) {
             if (state.status == LoadStatus.failed) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    state.error!,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  backgroundColor: Colors.red,
-                ),
+                ErrorSnackbar(message: state.error!),
               );
             }
           },

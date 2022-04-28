@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:rentall/data/model/property_type.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/governorate.dart';
@@ -30,16 +31,19 @@ abstract class RentalRepository {
 
 class RentalRepositoryImpl implements RentalRepository {
   final SharedPreferences _prefs;
+  final InternetConnectionChecker _connectionChecker;
   final FirebaseFirestore _firestore;
   final FirebaseStorage _storage;
 
-  RentalRepositoryImpl({
-    FirebaseFirestore? firestore,
-    FirebaseStorage? storage,
-    required SharedPreferences prefs,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
+  RentalRepositoryImpl(
+      {FirebaseFirestore? firestore,
+      FirebaseStorage? storage,
+      required SharedPreferences prefs,
+      required InternetConnectionChecker connectionChecker})
+      : _firestore = firestore ?? FirebaseFirestore.instance,
         _storage = storage ?? FirebaseStorage.instance,
-        _prefs = prefs;
+        _prefs = prefs,
+        _connectionChecker = connectionChecker;
 
   // @override
   // Stream<List<Rental>> watchRentals({
@@ -77,6 +81,9 @@ class RentalRepositoryImpl implements RentalRepository {
 
   @override
   Future<List<Rental>> getRentals(Map<String, dynamic> filters) async {
+    if (!await _connectionChecker.hasConnection) {
+      throw Exception('No internet connection');
+    }
     return (await _firestore
             .collection('rentals')
             .where('publishStatus', isEqualTo: 2)
@@ -103,6 +110,9 @@ class RentalRepositoryImpl implements RentalRepository {
 
   @override
   Future<void> addRental(Rental rental, List<File?> images) async {
+    if (!await _connectionChecker.hasConnection) {
+      throw Exception('No internet connection');
+    }
     for (var f in images) {
       if (f != null) {
         final url = await (await _storage.ref('ads/img.png').putFile(f))

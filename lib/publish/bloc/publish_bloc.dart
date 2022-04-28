@@ -5,7 +5,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../bloc/bloc_state.dart';
 import '../../data/repository/rental_repository.dart';
 import 'package:rentall/bloc/load_status.dart';
 import '../../data/model/rental.dart';
