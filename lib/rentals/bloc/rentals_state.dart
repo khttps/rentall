@@ -1,14 +1,16 @@
 part of 'rentals_bloc.dart';
 
+enum RentalsLoadStatus { loading, reloading, success, failed }
+
 class RentalsState extends Equatable {
-  final LoadStatus status;
+  final RentalsLoadStatus status;
   final List<Rental>? rentals;
   final String? error;
   final Governorate governorate;
   final PropertyType type;
 
   const RentalsState({
-    this.status = LoadStatus.loading,
+    this.status = RentalsLoadStatus.loading,
     this.rentals,
     this.error,
     this.governorate = Governorate.all,
@@ -16,7 +18,7 @@ class RentalsState extends Equatable {
   });
 
   RentalsState copyWith({
-    LoadStatus? status,
+    RentalsLoadStatus? status,
     List<Rental>? rentals,
     String? error,
     Governorate? governorate,

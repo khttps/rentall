@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../data/repository/rental_repository.dart';
-import 'package:rentall/bloc/load_status.dart';
 import '../../data/model/rental.dart';
 
 part 'publish_state.dart';
@@ -24,17 +24,26 @@ class PublishBloc extends Bloc<PublishEvent, PublishState> {
 
   FutureOr<void> _onPublishRental(PublishRental event, emit) async {
     emit(const PublishState(
-      status: LoadStatus.reloading,
+      status: PublishLoadStatus.saving,
     ));
     try {
-      await _repository.addRental(
+      final map = await _repository.addRental(
         Rental.fromMap(event.rental),
         event.images.map((img) => File(img.path)).toList(),
       );
-      emit(const PublishState(status: LoadStatus.success));
+
+      throwIf(
+        map == null,
+        Exception('Failed to save.'),
+      );
+
+      emit(PublishState(
+        status: PublishLoadStatus.published,
+        rental: Rental.fromMap(map!),
+      ));
     } on Exception catch (err) {
       emit(PublishState(
-        status: LoadStatus.failed,
+        status: PublishLoadStatus.failed,
         error: (err as dynamic).message,
       ));
     }

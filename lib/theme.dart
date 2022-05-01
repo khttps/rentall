@@ -7,8 +7,11 @@ const _inputDecoration = InputDecorationTheme(
   fillColor: Colors.white,
   isDense: true,
   contentPadding: EdgeInsets.all(8.0),
-  border:
-      OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(2.0))),
+  border: OutlineInputBorder(
+    borderRadius: BorderRadius.all(
+      Radius.circular(2.0),
+    ),
+  ),
 );
 
 get themeData {

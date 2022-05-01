@@ -40,41 +40,43 @@ class RentalCard extends StatelessWidget {
                 placeholder: (c, u) => const Center(
                   child: CircularProgressIndicator(),
                 ),
-                height: 100,
-                width: 100,
+                height: 120,
+                width: 120,
                 fit: BoxFit.cover,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    rental.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w600,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      rental.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  Text(
-                    '${rental.regionId}, '
-                    '${tr('governorates.${rental.governorate.index}')}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w400,
+                    Text(
+                      '${rental.regionId}, '
+                      '${tr('governorates.${rental.governorate.index}')}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                  ),
-                  Text(
-                    DateFormat('d MMM, yyyy').format(
-                      rental.createdAt!.toDate(),
+                    Text(
+                      DateFormat('d MMM, yyyy').format(
+                        rental.createdAt!.toDate(),
+                      ),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             )
           ],

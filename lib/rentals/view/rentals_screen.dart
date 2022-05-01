@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/load_status.dart';
 import '../../blocs.dart';
 import '../../data/model/governorate.dart';
 import '../../data/model/property_type.dart';
@@ -145,22 +144,23 @@ class RentalsScreen extends StatelessWidget {
       ],
       body: RefreshIndicator(
         onRefresh: () async {
-          BlocProvider.of<RentalsBloc>(context).add(const GetRentals());
+          final bloc = context.read<RentalsBloc>()..add(const GetRentals());
+          await bloc.stream.first;
         },
         child: BlocConsumer<RentalsBloc, RentalsState>(
           listener: (context, state) {
-            if (state.status == LoadStatus.failed) {
+            if (state.status == RentalsLoadStatus.failed) {
               ScaffoldMessenger.of(context).showSnackBar(
                 ErrorSnackbar(message: state.error!),
               );
             }
           },
           builder: (context, state) {
-            if (state.status == LoadStatus.loading) {
+            if (state.status == RentalsLoadStatus.loading) {
               return const Center(child: CircularProgressIndicator());
-            } else if ((state.status == LoadStatus.success &&
+            } else if ((state.status == RentalsLoadStatus.success &&
                     state.rentals!.isNotEmpty) ||
-                state.status == LoadStatus.reloading) {
+                state.status == RentalsLoadStatus.reloading) {
               return ListView.separated(
                 physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.all(8.0),

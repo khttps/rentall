@@ -26,11 +26,10 @@ abstract class RentalRepository {
   //   int? priceTo,
   // });
   Future<List<Rental>> getRentals(Map<String, dynamic> filters);
-  Future<void> addRental(Rental rental, List<File?> images);
+  Future<Map<String, dynamic>?> addRental(Rental rental, List<File?> images);
 }
 
 class RentalRepositoryImpl implements RentalRepository {
-  final SharedPreferences _prefs;
   final InternetConnectionChecker _connectionChecker;
   final FirebaseFirestore _firestore;
   final FirebaseStorage _storage;
@@ -42,7 +41,6 @@ class RentalRepositoryImpl implements RentalRepository {
       required InternetConnectionChecker connectionChecker})
       : _firestore = firestore ?? FirebaseFirestore.instance,
         _storage = storage ?? FirebaseStorage.instance,
-        _prefs = prefs,
         _connectionChecker = connectionChecker;
 
   // @override
@@ -86,7 +84,7 @@ class RentalRepositoryImpl implements RentalRepository {
     }
     return (await _firestore
             .collection('rentals')
-            .where('publishStatus', isEqualTo: 2)
+            .where('publishStatus', isEqualTo: PublishStatus.approved.index)
             .where(
               'propertyType',
               isEqualTo: (filters['propertyType'] as PropertyType?)?.value,
@@ -102,6 +100,7 @@ class RentalRepositoryImpl implements RentalRepository {
             //  isGreaterThanOrEqualTo: priceFrom,
             //  isLessThanOrEqualTo: priceTo,
             //)
+            .orderBy('createdAt', descending: true)
             .get())
         .docs
         .map((doc) => Rental.fromMap(doc.data()))
@@ -109,19 +108,25 @@ class RentalRepositoryImpl implements RentalRepository {
   }
 
   @override
-  Future<void> addRental(Rental rental, List<File?> images) async {
+  Future<Map<String, dynamic>?> addRental(
+      Rental rental, List<File?> images) async {
     if (!await _connectionChecker.hasConnection) {
       throw Exception('No internet connection');
     }
     for (var f in images) {
       if (f != null) {
-        final url = await (await _storage.ref('ads/img.png').putFile(f))
-            .ref
-            .getDownloadURL();
+        final url =
+            await (await _storage.ref('ads/${f.hashCode}.png').putFile(f))
+                .ref
+                .getDownloadURL();
         rental.images.add(url);
       }
     }
 
-    await _firestore.collection('rentals').add(Rental.toMap(rental));
+    return (await (await _firestore
+                .collection('rentals')
+                .add(Rental.toMap(rental)))
+            .get())
+        .data();
   }
 }

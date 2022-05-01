@@ -4,6 +4,7 @@ import 'governorate.dart';
 import 'property_type.dart';
 
 enum RentType { daily, weekly, monthly, other }
+enum PublishStatus { pending, reviewing, approved, rejected }
 
 class Rental extends Equatable {
   final String title;
@@ -23,6 +24,7 @@ class Rental extends Equatable {
   final Timestamp? createdAt;
   final RentType? rentType;
   final PropertyType? propertyType;
+  final PublishStatus? publishStatus;
 
   const Rental({
     required this.title,
@@ -42,6 +44,7 @@ class Rental extends Equatable {
     this.createdAt,
     this.rentType = RentType.monthly,
     required this.propertyType,
+    this.publishStatus,
   });
 
   factory Rental.fromMap(dynamic map) => Rental(
@@ -62,6 +65,9 @@ class Rental extends Equatable {
         createdAt: map['createdAt'],
         rentType: RentType.values[map['rentType']],
         propertyType: PropertyType.values[map['propertyType']],
+        publishStatus: map['publishStatus'] != null
+            ? PublishStatus.values[map['publishStatus']]
+            : null,
       );
 
   static Map<String, dynamic> toMap(Rental r) => {
@@ -73,13 +79,15 @@ class Rental extends Equatable {
         'floorNumber': r.floorNumber,
         'numberOfRooms': r.numberOfRooms,
         'numberOfBathrooms': r.numberOfBathrooms,
+        'area': r.area,
+        'furnished': r.furnished,
         'governorateId': r.governorate.index,
         'regionId': r.regionId,
         'rentPrice': r.rentPrice,
         'hostPhoneNumber': r.hostPhoneNumber,
         'createdAt': r.createdAt ?? Timestamp.now(),
         'rentType': r.rentType?.index,
-        'propertyType': r.propertyType?.index
+        'propertyType': r.propertyType?.index,
       };
 
   @override

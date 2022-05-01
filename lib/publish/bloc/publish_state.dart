@@ -1,12 +1,14 @@
 part of 'publish_bloc.dart';
 
+enum PublishLoadStatus { initial, loading, saving, published, failed }
+
 class PublishState extends Equatable {
-  final LoadStatus status;
+  final PublishLoadStatus status;
   final Rental? rental;
   final String? error;
 
   const PublishState({
-    this.status = LoadStatus.loading,
+    this.status = PublishLoadStatus.initial,
     this.rental,
     this.error,
   });

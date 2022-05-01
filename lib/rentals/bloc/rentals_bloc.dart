@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../bloc/load_status.dart';
 import '../../data/repository/rental_repository.dart';
 import '../../data/model/governorate.dart';
 import '../../data/model/property_type.dart';
@@ -29,9 +28,9 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
   FutureOr<void> _onGetRentals(GetRentals event, emit) async {
     final governorate = _preferences.getInt('governorate');
 
-    if (state.status != LoadStatus.loading) {
+    if (state.status != RentalsLoadStatus.loading) {
       emit(state.copyWith(
-        status: LoadStatus.reloading,
+        status: RentalsLoadStatus.reloading,
         governorate: Governorate.values[governorate ?? 0],
       ));
     }
@@ -39,12 +38,13 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
     try {
       final rentals = await _repository.getRentals(state.filters);
       emit(state.copyWith(
-        status: LoadStatus.success,
+        status: RentalsLoadStatus.success,
         rentals: rentals,
       ));
     } on Exception catch (err) {
+      // rethrow;
       emit(state.copyWith(
-        status: LoadStatus.failed,
+        status: RentalsLoadStatus.failed,
         error: (err as dynamic).message,
       ));
     }
@@ -53,7 +53,7 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
   FutureOr<void> _onSetRegionFilter(SetRegionFilter event, emit) async {
     final governorate = event.governorate;
     emit(state.copyWith(
-      status: LoadStatus.reloading,
+      status: RentalsLoadStatus.reloading,
       governorate: governorate,
     ));
 
@@ -66,12 +66,12 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
     try {
       final rentals = await _repository.getRentals(state.filters);
       emit(state.copyWith(
-        status: LoadStatus.success,
+        status: RentalsLoadStatus.success,
         rentals: rentals,
       ));
     } on Exception catch (err) {
       emit(state.copyWith(
-        status: LoadStatus.failed,
+        status: RentalsLoadStatus.failed,
         error: (err as dynamic).message,
       ));
     }
@@ -82,18 +82,18 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
     emit,
   ) async {
     emit(state.copyWith(
-      status: LoadStatus.reloading,
+      status: RentalsLoadStatus.reloading,
       type: event.type,
     ));
     try {
       final rentals = await _repository.getRentals(state.filters);
       emit(state.copyWith(
-        status: LoadStatus.success,
+        status: RentalsLoadStatus.success,
         rentals: rentals,
       ));
     } on Exception catch (err) {
       emit(state.copyWith(
-        status: LoadStatus.failed,
+        status: RentalsLoadStatus.failed,
         error: (err as dynamic).message,
       ));
     }
