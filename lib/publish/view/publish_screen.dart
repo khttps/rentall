@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:phone_number/phone_number.dart';
 import 'package:rentall/widgets/widgets.dart';
 
 import '../../data/model/property_type.dart';
@@ -25,6 +26,14 @@ class _PublishScreenState extends State<PublishScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   final _images = <XFile>[];
   var _currentPage = 0;
+  final _phoneController = TextEditingController();
+  bool _validPhone = false;
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +139,7 @@ class _PublishScreenState extends State<PublishScreen> {
                           },
                           options: CarouselOptions(
                             enableInfiniteScroll: false,
-                            aspectRatio: 1.0,
+                            aspectRatio: 16 / 9,
                             onPageChanged: (i, _) => setState(
                               () => _currentPage = i,
                             ),
@@ -144,6 +153,39 @@ class _PublishScreenState extends State<PublishScreen> {
                           physics: const NeverScrollableScrollPhysics(),
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           children: [
+                            FormBuilderField(
+                              name: 'imageValidator',
+                              builder: (state) {
+                                if (state.errorText != null) {
+                                  return Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.error,
+                                        color: Colors.red,
+                                        size: 17.0,
+                                      ),
+                                      const SizedBox(width: 6.0),
+                                      Text(
+                                        state.errorText ?? '',
+                                        style: const TextStyle(
+                                            fontSize: 13.0, color: Colors.red),
+                                      )
+                                    ],
+                                  );
+                                }
+                                return const SizedBox.shrink();
+                              },
+                              validator: (_) {
+                                if (_images.length < 3) {
+                                  return 'Please add at least 3 images of your rental.';
+                                }
+                                if (_images.length > 10) {
+                                  return 'Maximum number of images is 10';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 8.0),
                             const Padding(
                               padding: EdgeInsets.only(top: 8.0, bottom: 3.0),
                               child: Text('Title'),
@@ -393,6 +435,7 @@ class _PublishScreenState extends State<PublishScreen> {
                             ),
                             FormBuilderTextField(
                               name: 'hostPhoneNumber',
+                              controller: _phoneController,
                               decoration:
                                   const InputDecoration(prefix: Text('+20  ')),
                               keyboardType: TextInputType.phone,
@@ -403,8 +446,12 @@ class _PublishScreenState extends State<PublishScreen> {
                                   errorText: tr('required'),
                                 ),
                                 FormBuilderValidators.numeric(context),
-                                FormBuilderValidators.minLength(context, 10),
-                                FormBuilderValidators.maxLength(context, 11),
+                                (_) {
+                                  if (!_validPhone) {
+                                    return 'Invalid phone number.';
+                                  }
+                                  return null;
+                                }
                               ]),
                             ),
                             const Padding(
@@ -424,7 +471,28 @@ class _PublishScreenState extends State<PublishScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 48.0),
+                      Padding(
+                        padding: const EdgeInsetsDirectional.all(8.0),
+                        child: Align(
+                          alignment: AlignmentDirectional.bottomEnd,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              _validPhone = await PhoneNumberUtil()
+                                  .validate(_phoneController.text, 'EG');
+
+                              if (_formKey.currentState!.saveAndValidate()) {
+                                context.read<PublishBloc>().add(
+                                      PublishRental(
+                                        rental: _formKey.currentState!.value,
+                                        images: _images,
+                                      ),
+                                    );
+                              }
+                            },
+                            child: const Text('Publish'),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                   if (state.status == PublishLoadStatus.saving)
@@ -434,18 +502,6 @@ class _PublishScreenState extends State<PublishScreen> {
             },
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.check),
-        heroTag: 'save',
-        onPressed: () {
-          if (_formKey.currentState!.saveAndValidate()) {
-            BlocProvider.of<PublishBloc>(context).add(PublishRental(
-              rental: _formKey.currentState!.value,
-              images: _images,
-            ));
-          }
-        },
       ),
     );
   }
