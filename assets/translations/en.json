@@ -40,12 +40,10 @@
     "5" : "Other"
 },
 "rentPeriod" : {
-    "null" : "Rent Period",
-    "0" : "Rent Period",
-    "1" : "Daily",
+    "0" : "Daily",
+    "1" : "Monthly",
     "2" : "Weekly",
-    "3" : "Monthly",
-    "4" : "Other"
+    "3" : "Custom"
 },
 "required" : "Required field."
 }

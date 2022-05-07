@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/model/rental.dart';
+import '../../screens.dart';
 import 'widgets/widgets.dart';
 
 class DetailsScreen extends StatefulWidget {
@@ -43,34 +44,39 @@ class _DetailsScreenState extends State<DetailsScreen> {
       // ],
       body: ListView(
         children: [
-          Container(
-            decoration: const BoxDecoration(boxShadow: [
-              BoxShadow(
-                color: Colors.black38,
-                offset: Offset(0.0, 1.0),
-                blurRadius: 4,
-              )
-            ]),
-            child: CarouselSlider.builder(
-              carouselController: _carouselController,
-              itemCount: rental.images.length,
-              itemBuilder: (context, index, realIndex) => CachedNetworkImage(
-                fit: BoxFit.cover,
-                width: double.infinity,
-                imageUrl: rental.images[index],
-                placeholder: (c, _) =>
-                    const CircularProgressIndicator.adaptive(),
-              ),
-              options: CarouselOptions(
-                enableInfiniteScroll: false,
-                viewportFraction: 1.0,
-                aspectRatio: 1.0,
-                onPageChanged: (index, reason) {
-                  setState(() => _current = index);
-                },
-              ),
-            ),
-          ),
+          (rental.images.isNotEmpty)
+              ? Container(
+                  decoration: const BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black54,
+                        offset: Offset(0.0, 1.0),
+                        blurRadius: 4,
+                      )
+                    ],
+                  ),
+                  child: CarouselSlider.builder(
+                    carouselController: _carouselController,
+                    itemCount: rental.images.length,
+                    itemBuilder: (context, index, realIndex) =>
+                        CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      imageUrl: rental.images[index],
+                      placeholder: (c, _) =>
+                          const CircularProgressIndicator.adaptive(),
+                    ),
+                    options: CarouselOptions(
+                      enableInfiniteScroll: false,
+                      viewportFraction: 1.0,
+                      aspectRatio: 1.0,
+                      onPageChanged: (index, reason) {
+                        setState(() => _current = index);
+                      },
+                    ),
+                  ),
+                )
+              : const SizedBox(height: 10),
           CarouselIndicator(
             items: widget.rental.images,
             carouselController: _carouselController,
@@ -143,6 +149,16 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               Text(rental.description ?? ''),
+              TextButton(
+                child: const Text('Update'),
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    PublishScreen.routeName,
+                    arguments: rental,
+                  );
+                },
+              )
             ],
           )
         ],

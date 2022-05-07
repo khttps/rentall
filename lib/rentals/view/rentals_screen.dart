@@ -46,11 +46,9 @@ class RentalsScreen extends StatelessWidget {
                         itemBuilder: (context, index) {
                           return ListTile(
                             onTap: () {
-                              BlocProvider.of<RentalsBloc>(context).add(
-                                SetRegionFilter(
-                                  governorate: Governorate.values[index],
-                                ),
-                              );
+                              context.read<RentalsBloc>().add(SetRegionFilter(
+                                    governorate: Governorate.values[index],
+                                  ));
                               Navigator.pop(context);
                             },
                             title: Text(
@@ -82,11 +80,11 @@ class RentalsScreen extends StatelessWidget {
                         itemBuilder: (context, index) {
                           return ListTile(
                             onTap: () {
-                              BlocProvider.of<RentalsBloc>(context).add(
-                                SetPropertyTypeFilter(
-                                  type: PropertyType.values[index],
-                                ),
-                              );
+                              context.read<RentalsBloc>().add(
+                                    SetPropertyTypeFilter(
+                                      type: PropertyType.values[index],
+                                    ),
+                                  );
                               Navigator.pop(context);
                             },
                             title: Text(

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,12 @@ import '../bloc/publish_bloc.dart';
 
 class PublishScreen extends StatefulWidget {
   static const routeName = '/publish_screen';
-  const PublishScreen({Key? key}) : super(key: key);
+
+  final Rental? rental;
+  const PublishScreen({
+    this.rental,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<PublishScreen> createState() => _PublishScreenState();
@@ -24,9 +30,14 @@ class PublishScreen extends StatefulWidget {
 class _PublishScreenState extends State<PublishScreen> {
   final _picker = ImagePicker();
   final _formKey = GlobalKey<FormBuilderState>();
-  final _images = <XFile>[];
+
+  late final updating = widget.rental != null;
+  late final _images = <dynamic>[...?widget.rental?.images];
+  late final _phoneController = TextEditingController(
+    text: widget.rental?.hostPhoneNumber,
+  );
+
   var _currentPage = 0;
-  final _phoneController = TextEditingController();
   bool _validPhone = false;
 
   @override
@@ -67,6 +78,14 @@ class _PublishScreenState extends State<PublishScreen> {
                   DetailsScreen.routeName,
                   arguments: state.rental!,
                 );
+              } else if (state.status == PublishLoadStatus.deleted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Rental was successfully deleted.'),
+                    backgroundColor: Color.fromARGB(255, 47, 169, 110),
+                  ),
+                );
+                Navigator.popAndPushNamed(context, HomeScreen.routeName);
               }
             },
             builder: (context, state) {
@@ -102,10 +121,15 @@ class _PublishScreenState extends State<PublishScreen> {
                                       borderRadius: const BorderRadius.all(
                                         Radius.circular(5.0),
                                       ),
-                                      child: ImageBuilder(
-                                        path: _images[index].path,
-                                        aspectRatio: 16 / 9,
-                                      ),
+                                      child: (_images[index] is String)
+                                          ? CachedNetworkImage(
+                                              imageUrl: _images[index],
+                                              fit: BoxFit.cover,
+                                            )
+                                          : ImageBuilder(
+                                              path: _images[index].path,
+                                              aspectRatio: 16 / 9,
+                                            ),
                                     ),
                                   ),
                                   if (index == _currentPage)
@@ -113,8 +137,19 @@ class _PublishScreenState extends State<PublishScreen> {
                                       top: 0.0,
                                       right: 0.0,
                                       child: InkWell(
-                                        onTap: () => _showRemoveImageDialog(
-                                            context, index),
+                                        onTap: () async {
+                                          await _showAlertDialog(
+                                            context,
+                                            title: const Text(
+                                              'Remove this image?',
+                                            ),
+                                            onPositive: () {
+                                              setState(() {
+                                                _images.removeAt(index);
+                                              });
+                                            },
+                                          );
+                                        },
                                         child: Container(
                                           padding: const EdgeInsets.all(2.0),
                                           decoration: const BoxDecoration(
@@ -148,13 +183,15 @@ class _PublishScreenState extends State<PublishScreen> {
                       ),
                       FormBuilder(
                         key: _formKey,
+                        initialValue:
+                            updating ? Rental.toFormMap(widget.rental!) : {},
                         child: ListView(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           children: [
                             FormBuilderField(
-                              name: 'imageValidator',
+                              name: 'imgv',
                               builder: (state) {
                                 if (state.errorText != null) {
                                   return Row(
@@ -204,7 +241,7 @@ class _PublishScreenState extends State<PublishScreen> {
                             ),
                             FormBuilderDropdown(
                               name: 'propertyType',
-                              initialValue: 1,
+                              initialValue: updating ? null : 1,
                               items: List.generate(
                                 PropertyType.values.length - 1,
                                 (index) => DropdownMenuItem(
@@ -254,7 +291,7 @@ class _PublishScreenState extends State<PublishScreen> {
                                 Flexible(
                                   child: FormBuilderDropdown(
                                     name: 'governorateId',
-                                    initialValue: 1,
+                                    initialValue: updating ? null : 1,
                                     items: List.generate(
                                       27,
                                       (index) => DropdownMenuItem(
@@ -284,13 +321,13 @@ class _PublishScreenState extends State<PublishScreen> {
                                 Flexible(
                                   child: FormBuilderDropdown(
                                     name: 'rentType',
-                                    initialValue: 1,
+                                    initialValue: updating ? null : 0,
                                     items: List.generate(
                                       RentType.values.length,
                                       (index) => DropdownMenuItem(
-                                        value: index + 1,
+                                        value: index,
                                         child: Text(
-                                          'rentPeriod.${index + 1}',
+                                          'rentPeriod.$index',
                                           overflow: TextOverflow.ellipsis,
                                         ).tr(),
                                       ),
@@ -468,34 +505,74 @@ class _PublishScreenState extends State<PublishScreen> {
                               ),
                               textInputAction: TextInputAction.done,
                             ),
+                            const SizedBox(height: 8.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                if (updating)
+                                  TextButton.icon(
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                    label: const Text(
+                                      'Delete',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                    onPressed: () async =>
+                                        await _showAlertDialog(
+                                      context,
+                                      title: const Text('Delete Rental'),
+                                      content: const Text(
+                                        'Are you sure you want to delete this rental?',
+                                      ),
+                                      onPositive: () {
+                                        context.read<PublishBloc>().add(
+                                              DeleteRental(
+                                                id: widget.rental!.id!,
+                                              ),
+                                            );
+                                      },
+                                    ),
+                                  ),
+                                const SizedBox(width: 8.0),
+                                ElevatedButton(
+                                  child: Text(updating ? 'Update' : 'Publish'),
+                                  onPressed: () async {
+                                    _validPhone = await PhoneNumberUtil()
+                                        .validate(_phoneController.text, 'EG');
+
+                                    if (_formKey.currentState!
+                                        .saveAndValidate()) {
+                                      context.read<PublishBloc>().add(
+                                            widget.rental == null
+                                                ? PublishRental(
+                                                    rentalMap: _formKey
+                                                        .currentState!.value,
+                                                    images: _images
+                                                        .whereType<XFile>()
+                                                        .toList(),
+                                                  )
+                                                : UpdateRental(
+                                                    id: widget.rental!.id!,
+                                                    rental: _formKey
+                                                        .currentState!.value,
+                                                    images: _images
+                                                        .whereType<XFile>()
+                                                        .toList(),
+                                                  ),
+                                          );
+                                    }
+                                  },
+                                ),
+                              ],
+                            )
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsetsDirectional.all(8.0),
-                        child: Align(
-                          alignment: AlignmentDirectional.bottomEnd,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              _validPhone = await PhoneNumberUtil()
-                                  .validate(_phoneController.text, 'EG');
-
-                              if (_formKey.currentState!.saveAndValidate()) {
-                                context.read<PublishBloc>().add(
-                                      PublishRental(
-                                        rental: _formKey.currentState!.value,
-                                        images: _images,
-                                      ),
-                                    );
-                              }
-                            },
-                            child: const Text('Publish'),
-                          ),
-                        ),
-                      )
                     ],
                   ),
-                  if (state.status == PublishLoadStatus.saving)
+                  if (state.status == PublishLoadStatus.loading)
                     const LoadingWidget(),
                 ],
               );
@@ -506,17 +583,21 @@ class _PublishScreenState extends State<PublishScreen> {
     );
   }
 
-  Future<dynamic> _showRemoveImageDialog(BuildContext context, int index) {
+  Future _showAlertDialog(
+    BuildContext context, {
+    Widget? title,
+    Widget? content,
+    required Function() onPositive,
+  }) {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Remove this image?'),
+        title: title,
+        content: content,
         actions: [
           TextButton(
             onPressed: () {
-              setState(
-                () => _images.removeAt(index),
-              );
+              onPositive();
               Navigator.pop(context);
             },
             child: const Text('Yes'),
@@ -532,55 +613,57 @@ class _PublishScreenState extends State<PublishScreen> {
     );
   }
 
-  Future _showBottomSheet(BuildContext context) => showModalBottomSheet(
-        context: context,
-        builder: (context) => Container(
-          height: 180.0,
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              RawMaterialButton(
-                padding: const EdgeInsets.all(20.0),
-                onPressed: () async {
-                  Navigator.pop(context);
-                  final image = await _picker.pickImage(
-                      source: ImageSource.camera, imageQuality: 50);
-                  if (image != null) setState(() => _images.add(image));
-                },
-                elevation: 0.0,
-                shape: const CircleBorder(),
-                fillColor: Colors.blueGrey,
-                child: const Icon(
-                  Icons.camera_alt,
-                  color: Colors.white,
-                  size: 50,
-                ),
+  Future<void> _showBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        height: 180.0,
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            RawMaterialButton(
+              padding: const EdgeInsets.all(20.0),
+              onPressed: () async {
+                Navigator.pop(context);
+                final image = await _picker.pickImage(
+                    source: ImageSource.camera, imageQuality: 50);
+                if (image != null) setState(() => _images.add(image));
+              },
+              elevation: 0.0,
+              shape: const CircleBorder(),
+              fillColor: Colors.blueGrey,
+              child: const Icon(
+                Icons.camera_alt,
+                color: Colors.white,
+                size: 50,
               ),
-              RawMaterialButton(
-                padding: const EdgeInsets.all(20.0),
-                onPressed: () async {
-                  Navigator.pop(context);
-                  final images = await _picker.pickMultiImage(imageQuality: 50);
-                  if (images != null) {
-                    setState(() => _images.addAll(images));
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      ErrorSnackbar(message: 'Failed to retrieve images.'),
-                    );
-                  }
-                },
-                elevation: 0.0,
-                shape: const CircleBorder(),
-                fillColor: Colors.blueGrey,
-                child: const Icon(
-                  Icons.photo,
-                  color: Colors.white,
-                  size: 50,
-                ),
+            ),
+            RawMaterialButton(
+              padding: const EdgeInsets.all(20.0),
+              onPressed: () async {
+                Navigator.pop(context);
+                final images = await _picker.pickMultiImage(imageQuality: 50);
+                if (images != null) {
+                  setState(() => _images.addAll(images));
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    ErrorSnackbar(message: 'Failed to retrieve images.'),
+                  );
+                }
+              },
+              elevation: 0.0,
+              shape: const CircleBorder(),
+              fillColor: Colors.blueGrey,
+              child: const Icon(
+                Icons.photo,
+                color: Colors.white,
+                size: 50,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
+      ),
+    );
+  }
 }

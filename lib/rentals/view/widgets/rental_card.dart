@@ -35,15 +35,24 @@ class RentalCard extends StatelessWidget {
             ClipRRect(
               borderRadius:
                   const BorderRadius.horizontal(left: Radius.circular(3.0)),
-              child: CachedNetworkImage(
-                imageUrl: rental.images[0],
-                placeholder: (c, u) => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                height: 120,
-                width: 120,
-                fit: BoxFit.cover,
-              ),
+              child: rental.images.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: rental.images[0],
+                      placeholder: (c, u) => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      height: 120,
+                      width: 120,
+                      fit: BoxFit.cover,
+                    )
+                  : const Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Icon(
+                        Icons.image_not_supported,
+                        size: 100,
+                        color: Colors.grey,
+                      ),
+                    ),
             ),
             Expanded(
               child: Padding(

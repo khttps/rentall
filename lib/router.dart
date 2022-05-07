@@ -11,7 +11,9 @@ MaterialPageRoute<dynamic> onGenerateRoute(RouteSettings settings) {
         case HomeScreen.routeName:
           return const HomeScreen();
         case PublishScreen.routeName:
-          return const PublishScreen();
+          return PublishScreen(
+            rental: settings.arguments as Rental?,
+          );
         case DetailsScreen.routeName:
           return DetailsScreen(
             rental: settings.arguments as Rental,

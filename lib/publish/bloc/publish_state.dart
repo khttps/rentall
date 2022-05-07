@@ -1,6 +1,6 @@
 part of 'publish_bloc.dart';
 
-enum PublishLoadStatus { initial, loading, saving, published, failed }
+enum PublishLoadStatus { initial, loading, deleted, published, failed }
 
 class PublishState extends Equatable {
   final PublishLoadStatus status;
@@ -12,13 +12,6 @@ class PublishState extends Equatable {
     this.rental,
     this.error,
   });
-
-  // PublishState copyWith({LoadStatus? status, Rental? rental, String? error}) =>
-  //     PublishState(
-  //       status: status ?? this.status,
-  //       rental: rental ?? this.rental,
-  //       error: error ?? this.error,
-  //     );
 
   @override
   List<Object?> get props => [status, rental, error];

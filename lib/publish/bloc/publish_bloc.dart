@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../data/repository/rental_repository.dart';
@@ -19,27 +18,22 @@ class PublishBloc extends Bloc<PublishEvent, PublishState> {
         super(const PublishState()) {
     on<PublishRental>(_onPublishRental);
     on<UpdateRental>(_onUpdateRental);
-    on<LoadRental>(_onLoadRental);
+    on<DeleteRental>(_onDeleteRental);
   }
 
   FutureOr<void> _onPublishRental(PublishRental event, emit) async {
     emit(const PublishState(
-      status: PublishLoadStatus.saving,
+      status: PublishLoadStatus.loading,
     ));
     try {
-      final map = await _repository.addRental(
-        Rental.fromMap(event.rental),
+      final rental = await _repository.addRental(
+        event.rentalMap,
         event.images.map((img) => File(img.path)).toList(),
-      );
-
-      throwIf(
-        map == null,
-        Exception('Failed to save.'),
       );
 
       emit(PublishState(
         status: PublishLoadStatus.published,
-        rental: Rental.fromMap(map!),
+        rental: rental,
       ));
     } on Exception catch (err) {
       emit(PublishState(
@@ -49,72 +43,42 @@ class PublishBloc extends Bloc<PublishEvent, PublishState> {
     }
   }
 
-  FutureOr<void> _onUpdateRental(UpdateRental event, emit) {}
+  FutureOr<void> _onUpdateRental(UpdateRental event, emit) async {
+    emit(const PublishState(
+      status: PublishLoadStatus.loading,
+    ));
+    try {
+      final rental = await _repository.updateRental(
+        event.id,
+        event.rental,
+        event.images?.map((img) => File(img.path)).toList(),
+      );
 
-  FutureOr<void> _onLoadRental(LoadRental event, emit) {}
+      emit(PublishState(
+        status: PublishLoadStatus.published,
+        rental: rental,
+      ));
+    } on Exception catch (err) {
+      rethrow;
+      emit(PublishState(
+        status: PublishLoadStatus.failed,
+        error: (err as dynamic).message,
+      ));
+    }
+  }
+
+  FutureOr<void> _onDeleteRental(DeleteRental event, emit) async {
+    emit(const PublishState(
+      status: PublishLoadStatus.loading,
+    ));
+    try {
+      await _repository.deleteRental(event.id);
+      emit(const PublishState(status: PublishLoadStatus.deleted));
+    } on Exception catch (err) {
+      emit(PublishState(
+        status: PublishLoadStatus.failed,
+        error: (err as dynamic).message,
+      ));
+    }
+  }
 }
-
-// class PublishBloc {
-//   final RentalRepository _repository;
-//   PublishBloc({required RentalRepository repository})
-//       : _repository = repository {
-//     _publishEventController.stream.listen((event) {
-//       _mapStateToEvent(event);
-//     });
-//   }
-
-//   List<XFile?> _images = [];
-//   Rental? _rental;
-
-//   final _publishEventController = StreamController<PublishEvent>.broadcast();
-//   void add(PublishEvent event) {
-//     _publishEventController.sink.add(event);
-//   }
-
-//   final _publishStateController = StreamController<BlocState<bool>>.broadcast();
-//   StreamSink get _inPublish => _publishStateController.sink;
-//   Stream<BlocState<bool>> get publish async* {
-//     try {
-//       yield const BlocState();
-//       yield* _publishStateController.stream;
-//     } on Exception catch (err) {
-//       yield BlocState(
-//         status: LoadStatus.error,
-//         error: (err as dynamic).message,
-//       );
-//     }
-//   }
-
-//   final _imagesStateController = StreamController<List<XFile?>>.broadcast();
-//   StreamSink get _inImages => _imagesStateController.sink;
-//   Stream<List<XFile?>> get images => _imagesStateController.stream;
-
-//   void dispose() {
-//     _publishEventController.close();
-//     _publishStateController.close();
-//     _imagesStateController.close();
-//   }
-
-//   void _mapStateToEvent(PublishEvent event) {
-//     if (event is PublishRental) {
-//       _repository.addRental(
-//         Rental.fromMap(event.rental),
-//         _images.map((img) {
-//           if (img != null) {
-//             return File(img.path);
-//           }
-//         }).toList(),
-//       );
-//       _inPublish.add(const BlocState(
-//         status: LoadStatus.loaded,
-//         data: true,
-//       ));
-//     } else if (event is AddImages) {
-//       _images.addAll(event.images);
-//       _inImages.add(_images);
-//     } else if (event is RemoveImage) {
-//       _images.removeAt(event.imageIndex);
-//       _inImages.add(_images);
-//     }
-//   }
-// }

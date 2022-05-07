@@ -9,24 +9,17 @@ import '../model/governorate.dart';
 import '../model/rental.dart';
 
 abstract class RentalRepository {
-  // Stream<List<Rental>> watchRentals({
-  //   RentalType? propertyType,
-  //   RentType? rentType,
-  //   int? governorateId,
-  //   int? regionId,
-  //   int? priceFrom,
-  //   int? priceTo,
-  // });
-  // Future<List<Rental>> getRentals({
-  //   PropertyType? propertyType,
-  //   RentType? rentType,
-  //   int? governorateId,
-  //   int? regionId,
-  //   int? priceFrom,
-  //   int? priceTo,
-  // });
   Future<List<Rental>> getRentals(Map<String, dynamic> filters);
-  Future<Map<String, dynamic>?> addRental(Rental rental, List<File?> images);
+  Future<Rental> addRental(
+    Map<String, dynamic> rental,
+    List<File?> images,
+  );
+  Future<Rental> updateRental(
+    String id,
+    Map<String, dynamic> rental,
+    List<File?>? images,
+  );
+  Future<void> deleteRental(String id);
 }
 
 class RentalRepositoryImpl implements RentalRepository {
@@ -42,40 +35,6 @@ class RentalRepositoryImpl implements RentalRepository {
       : _firestore = firestore ?? FirebaseFirestore.instance,
         _storage = storage ?? FirebaseStorage.instance,
         _connectionChecker = connectionChecker;
-
-  // @override
-  // Stream<List<Rental>> watchRentals({
-  //   RentalType? propertyType,
-  //   RentType? rentType,
-  //   int? governorateId,
-  //   int? regionId,
-  //   int? priceFrom,
-  //   int? priceTo,
-  // }) {
-  //   return _firestore
-  //       .collection('rentals')
-  //       .where('publishStatus', isEqualTo: PublishStatus.approved.index)
-  //       .where('propertyType', isEqualTo: propertyType?.index)
-  //       .where('rentType', isEqualTo: rentType?.index)
-  //       .where('governorateId', isEqualTo: governorateId)
-  //       .where('regionId', isEqualTo: regionId)
-  //       .where(
-  //         'rentPrice',
-  //         isGreaterThanOrEqualTo: priceFrom,
-  //         isLessThanOrEqualTo: priceTo,
-  //       )
-  //       .snapshots()
-  //       .map(
-  //     (snapshot) {
-  //       return snapshot.docs.map(
-  //         (doc) {
-  //           print(doc.data());
-  //           return Rental.fromSnapshot(doc);
-  //         },
-  //       ).toList();
-  //     },
-  //   );
-  // }
 
   @override
   Future<List<Rental>> getRentals(Map<String, dynamic> filters) async {
@@ -93,40 +52,101 @@ class RentalRepositoryImpl implements RentalRepository {
               'governorateId',
               isEqualTo: (filters['governorate'] as Governorate?)?.value,
             )
-            //.where('rentType', isEqualTo: rentType?.index)
-            //.where('regionId', isEqualTo: regionId)
-            //.where(
-            //  'rentPrice',
-            //  isGreaterThanOrEqualTo: priceFrom,
-            //  isLessThanOrEqualTo: priceTo,
-            //)
-            .orderBy('createdAt', descending: true)
+            // .where(
+            //   'rentType',
+            //   isEqualTo: (filters['rentType'] as RentType?)?.value,
+            // )
+            // .where('regionId', isEqualTo: filters['regionId'])
+            // .where(
+            //   'rentPrice',
+            //   isGreaterThanOrEqualTo: filters['priceFrom'],
+            //   isLessThanOrEqualTo: filters['priceTo'],
+            // )
+            // .orderBy('createdAt', descending: true)
             .get())
         .docs
-        .map((doc) => Rental.fromMap(doc.data()))
+        .map((doc) => Rental.fromSnapshot(doc.data()))
         .toList();
   }
 
   @override
-  Future<Map<String, dynamic>?> addRental(
-      Rental rental, List<File?> images) async {
+  Future<Rental> addRental(
+    Map<String, dynamic> rental,
+    List<File?> imageFiles,
+  ) async {
     if (!await _connectionChecker.hasConnection) {
       throw Exception('No internet connection');
     }
-    for (var f in images) {
+    final imageUrls = <String>[];
+    final ref = await _firestore.collection('rentals').add(rental);
+
+    for (var f in imageFiles) {
       if (f != null) {
         final url =
-            await (await _storage.ref('ads/${f.hashCode}.png').putFile(f))
+            await (await _storage.ref('${ref.id}/${f.hashCode}.png').putFile(f))
                 .ref
                 .getDownloadURL();
-        rental.images.add(url);
+        imageUrls.add(url);
       }
     }
 
-    return (await (await _firestore
-                .collection('rentals')
-                .add(Rental.toMap(rental)))
-            .get())
-        .data();
+    await ref.update({'id': ref.id, 'images': imageUrls});
+    return Rental.fromSnapshot((await ref.get()).data());
+
+    // return (await _firestore.collection('rentals').doc(rental['id']).get())
+    //     .data();
+  }
+
+  @override
+  Future<Rental> updateRental(
+    String id,
+    Map<String, dynamic> rental,
+    List<File?>? imageFiles,
+  ) async {
+    if (!await _connectionChecker.hasConnection) {
+      throw Exception('No internet connection');
+    }
+
+    // final imageUrls = rental['images'] as List<String>;
+    final imageUrls = <String>[];
+
+    if (imageFiles != null) {
+      for (var f in imageFiles) {
+        if (f != null) {
+          final url = await (await _storage
+                  .ref('${rental['id']}/${f.hashCode}.png')
+                  .putFile(f))
+              .ref
+              .getDownloadURL();
+          imageUrls.add(url);
+        }
+      }
+    }
+
+    final doc = _firestore.collection('rentals').doc(id);
+    await doc.update({
+      'images': [
+        ...(await doc.get()).get('images'),
+        ...imageUrls,
+      ],
+      ...rental,
+    });
+
+    return Rental.fromSnapshot((await doc.get()).data());
+
+    // return (await _firestore.collection('rentals').doc(rental.id).get()).data();
+  }
+
+  @override
+  Future<void> deleteRental(String id) async {
+    if (!await _connectionChecker.hasConnection) {
+      throw Exception('No internet connection');
+    }
+    await _firestore.collection('rentals').doc(id).delete();
+    await _storage.ref('$id/').listAll().then(
+          (value) => value.items.forEach((element) async {
+            await _storage.ref(element.fullPath).delete();
+          }),
+        );
   }
 }
