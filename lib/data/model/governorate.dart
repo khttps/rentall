@@ -30,5 +30,5 @@ enum Governorate {
 }
 
 extension GovernorateX on Governorate {
-  int? get value => (index != 0) ? index : null;
+  String? get value => (index != 0) ? name : null;
 }

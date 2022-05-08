@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:rentall/data/model/property_type.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,13 +44,13 @@ class RentalRepositoryImpl implements RentalRepository {
     }
     return (await _firestore
             .collection('rentals')
-            .where('publishStatus', isEqualTo: PublishStatus.approved.index)
+            .where('publishStatus', isEqualTo: PublishStatus.approved.name)
             .where(
               'propertyType',
               isEqualTo: (filters['propertyType'] as PropertyType?)?.value,
             )
             .where(
-              'governorateId',
+              'governorate',
               isEqualTo: (filters['governorate'] as Governorate?)?.value,
             )
             // .where(
@@ -65,7 +66,7 @@ class RentalRepositoryImpl implements RentalRepository {
             // .orderBy('createdAt', descending: true)
             .get())
         .docs
-        .map((doc) => Rental.fromSnapshot(doc.data()))
+        .map((doc) => Rental.fromJson(doc.data()))
         .toList();
   }
 
@@ -91,7 +92,10 @@ class RentalRepositoryImpl implements RentalRepository {
     }
 
     await ref.update({'id': ref.id, 'images': imageUrls});
-    return Rental.fromSnapshot((await ref.get()).data());
+
+    final map = (await ref.get()).data();
+    throwIf(map == null, Exception('Failed to retrieve rental.'));
+    return Rental.fromJson(map!);
 
     // return (await _firestore.collection('rentals').doc(rental['id']).get())
     //     .data();
@@ -132,7 +136,9 @@ class RentalRepositoryImpl implements RentalRepository {
       ...rental,
     });
 
-    return Rental.fromSnapshot((await doc.get()).data());
+    final map = (await doc.get()).data();
+    throwIf(map == null, Exception('Failed to update rental.'));
+    return Rental.fromJson(map!);
 
     // return (await _firestore.collection('rentals').doc(rental.id).get()).data();
   }

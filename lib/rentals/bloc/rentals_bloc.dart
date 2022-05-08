@@ -58,7 +58,7 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
     ));
 
     if (governorate.value != null) {
-      _preferences.setInt('governorate', governorate.value!);
+      _preferences.setInt('governorate', governorate.index);
     } else {
       _preferences.remove('governorate');
     }

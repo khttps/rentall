@@ -52,7 +52,7 @@ class RentalsScreen extends StatelessWidget {
                               Navigator.pop(context);
                             },
                             title: Text(
-                              'governorates.${Governorate.values[index].value}',
+                              'governorates.$index',
                             ).tr(),
                             contentPadding: const EdgeInsetsDirectional.only(
                               start: 8.0,
@@ -71,7 +71,7 @@ class RentalsScreen extends StatelessWidget {
                         size: 20.0,
                       ),
                       label: Text(
-                        'propertyType.${state.type.value}',
+                        'propertyType.${state.type.index}',
                       ).tr(),
                       labelPadding: const EdgeInsetsDirectional.only(end: 8.0),
                       onPressed: () async => await _showFiltersBottomSheet(
@@ -88,7 +88,7 @@ class RentalsScreen extends StatelessWidget {
                               Navigator.pop(context);
                             },
                             title: Text(
-                              'propertyType.${PropertyType.values[index].index}',
+                              'propertyType.$index',
                             ).tr(),
                             contentPadding: const EdgeInsetsDirectional.only(
                               start: 8.0,

@@ -8,5 +8,5 @@ enum PropertyType {
 }
 
 extension PropertyTypeX on PropertyType {
-  int? get value => (index != 0) ? index : null;
+  String? get value => (index != 0) ? name : null;
 }

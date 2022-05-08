@@ -25,7 +25,7 @@ void main() {
         'propertyType': 1
       };
 
-      final Rental? rental = Rental.fromSnapshot(map);
+      final Rental? rental = Rental.fromJson(map);
       expect(rental, isNotNull);
     });
 
@@ -48,7 +48,7 @@ void main() {
         'createdAt': Timestamp(0, 0),
       };
 
-      final Rental? rental = Rental.fromSnapshot(map);
+      final Rental? rental = Rental.fromJson(map);
       expect(rental, isNotNull);
     });
 
@@ -64,7 +64,7 @@ void main() {
         'hostPhoneNumber': 'dadasdad'
       };
 
-      final Rental? rental = Rental.fromSnapshot(map);
+      final Rental? rental = Rental.fromJson(map);
       expect(rental, isNotNull);
     });
   });

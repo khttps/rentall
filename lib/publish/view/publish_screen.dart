@@ -7,6 +7,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:phone_number/phone_number.dart';
+import 'package:rentall/data/model/governorate.dart';
 import 'package:rentall/widgets/widgets.dart';
 
 import '../../data/model/property_type.dart';
@@ -68,12 +69,17 @@ class _PublishScreenState extends State<PublishScreen> {
                 );
               } else if (state.status == PublishLoadStatus.published) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Rental was successfully published.'),
-                    backgroundColor: Color.fromARGB(255, 47, 169, 110),
+                  SnackBar(
+                    content: Text(
+                        'Rental was successfully ${updating ? 'updated' : 'published'}.'),
+                    backgroundColor: const Color.fromARGB(255, 47, 169, 110),
                   ),
                 );
-                Navigator.popAndPushNamed(
+                Navigator.popUntil(
+                  context,
+                  (route) => route.settings.name == HomeScreen.routeName,
+                );
+                Navigator.pushNamed(
                   context,
                   DetailsScreen.routeName,
                   arguments: state.rental!,
@@ -85,7 +91,8 @@ class _PublishScreenState extends State<PublishScreen> {
                     backgroundColor: Color.fromARGB(255, 47, 169, 110),
                   ),
                 );
-                Navigator.popAndPushNamed(context, HomeScreen.routeName);
+                Navigator.popUntil(context, (route) => false);
+                Navigator.pushNamed(context, HomeScreen.routeName);
               }
             },
             builder: (context, state) {
@@ -183,8 +190,12 @@ class _PublishScreenState extends State<PublishScreen> {
                       ),
                       FormBuilder(
                         key: _formKey,
-                        initialValue:
-                            updating ? Rental.toFormMap(widget.rental!) : {},
+                        initialValue: updating
+                            ? widget.rental!.toJson().map((key, value) =>
+                                (value is int?)
+                                    ? MapEntry(key, '$value')
+                                    : MapEntry(key, value))
+                            : {},
                         child: ListView(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -241,11 +252,19 @@ class _PublishScreenState extends State<PublishScreen> {
                             ),
                             FormBuilderDropdown(
                               name: 'propertyType',
-                              initialValue: updating ? null : 1,
+                              initialValue: updating
+                                  ? widget.rental!.propertyType ??
+                                      PropertyType.apartment
+                                  : PropertyType.apartment,
+                              valueTransformer: (PropertyType? value) {
+                                if (value != null) {
+                                  return value.name;
+                                }
+                              },
                               items: List.generate(
                                 PropertyType.values.length - 1,
                                 (index) => DropdownMenuItem(
-                                  value: index + 1,
+                                  value: PropertyType.values[index + 1],
                                   child: Text(
                                     'propertyType.${index + 1}',
                                   ).tr(),
@@ -291,11 +310,18 @@ class _PublishScreenState extends State<PublishScreen> {
                                 Flexible(
                                   child: FormBuilderDropdown(
                                     name: 'governorateId',
-                                    initialValue: updating ? null : 1,
+                                    initialValue: updating
+                                        ? widget.rental!.governorate
+                                        : Governorate.cairo,
+                                    valueTransformer: (Governorate? value) {
+                                      if (value != null) {
+                                        return value.name;
+                                      }
+                                    },
                                     items: List.generate(
                                       27,
                                       (index) => DropdownMenuItem(
-                                        value: index + 1,
+                                        value: Governorate.values[index + 1],
                                         child: Text(
                                           'governorates.${index + 1}',
                                           overflow: TextOverflow.ellipsis,
@@ -321,11 +347,19 @@ class _PublishScreenState extends State<PublishScreen> {
                                 Flexible(
                                   child: FormBuilderDropdown(
                                     name: 'rentType',
-                                    initialValue: updating ? null : 0,
+                                    initialValue: updating
+                                        ? widget.rental!.rentType ??
+                                            RentType.daily
+                                        : RentType.daily,
+                                    valueTransformer: (RentType? value) {
+                                      if (value != null) {
+                                        return value.name;
+                                      }
+                                    },
                                     items: List.generate(
                                       RentType.values.length,
                                       (index) => DropdownMenuItem(
-                                        value: index,
+                                        value: RentType.values[index],
                                         child: Text(
                                           'rentPeriod.$index',
                                           overflow: TextOverflow.ellipsis,
