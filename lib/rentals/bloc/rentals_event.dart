@@ -38,7 +38,7 @@ class SetPriceFilter extends RentalsEvent {
   List<Object?> get props => [priceFrom, priceTo];
 }
 
-class SetSortFilter extends RentalsEvent {
-  final bool descending;
-  const SetSortFilter({required this.descending});
+class SetPeriodFilter extends RentalsEvent {
+  final RentPeriod period;
+  const SetPeriodFilter({required this.period});
 }

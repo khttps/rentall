@@ -7,6 +7,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:rentall/data/model/property_type.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/governorate.dart';
+import '../model/rent_period.dart';
 import '../model/rental.dart';
 
 abstract class RentalRepository {
@@ -56,7 +57,7 @@ class RentalRepositoryImpl implements RentalRepository {
         )
         .where(
           'rentPeriod',
-          isEqualTo: (filters['rentPeriod'] as RentPeriod?)?.name,
+          isEqualTo: (filters['rentPeriod'] as RentPeriod?)?.value,
         )
         .where('region', isEqualTo: filters['region'])
         .where(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:rentall/data/model/rent_period.dart';
 import 'package:rentall/rentals/view/widgets/price_form.dart';
 
 import '../../blocs.dart';
@@ -74,12 +75,12 @@ class RentalsScreen extends StatelessWidget {
                         size: 20.0,
                       ),
                       label: Text(
-                        'propertyType.${state.type.index}',
+                        'propertyType.${state.type?.value == null ? null : state.type?.index}',
                       ).tr(),
                       labelPadding: const EdgeInsetsDirectional.only(end: 8.0),
                       onPressed: () async => await _showFiltersBottomSheet(
                         context,
-                        itemCount: 5,
+                        itemCount: PropertyType.values.length - 1,
                         itemBuilder: (context, index) {
                           return ListTile(
                             onTap: () {
@@ -109,20 +110,25 @@ class RentalsScreen extends StatelessWidget {
                         color: Colors.black,
                         size: 20.0,
                       ),
-                      label: const Text(
-                        'Price',
-                      ),
+                      label: Text(state.priceText),
                       labelPadding: const EdgeInsetsDirectional.only(end: 8.0),
                       onPressed: () async => await showModalBottomSheet(
-                          context: context,
-                          builder: (context) {
-                            return PriceForm(onApply: (from, to) {
-                              context.read<RentalsBloc>().add(SetPriceFilter(
-                                    priceFrom: from,
-                                    priceTo: to,
-                                  ));
-                            });
-                          }),
+                        context: context,
+                        builder: (context) {
+                          return PriceForm(
+                            from: state.priceFrom,
+                            to: state.priceTo,
+                            onApply: (from, to) {
+                              context.read<RentalsBloc>().add(
+                                    SetPriceFilter(
+                                      priceFrom: from,
+                                      priceTo: to,
+                                    ),
+                                  );
+                            },
+                          );
+                        },
+                      ),
                     ),
                     const SizedBox(width: 4.0),
                     ActionChip(
@@ -131,22 +137,26 @@ class RentalsScreen extends StatelessWidget {
                         color: Colors.black,
                         size: 20.0,
                       ),
-                      label: const Text('Period'),
+                      label: Text(
+                        'rentPeriod.${state.period?.value == null ? null : state.period?.index}',
+                      ).tr(),
                       labelPadding: const EdgeInsetsDirectional.only(end: 8.0),
                       onPressed: () async => await _showFiltersBottomSheet(
                         context,
-                        itemCount: 2,
+                        itemCount: RentPeriod.values.length - 1,
                         itemBuilder: (context, index) {
                           return ListTile(
                             onTap: () {
                               context.read<RentalsBloc>().add(
-                                    SetSortFilter(
-                                      descending: index == 0 ? true : false,
+                                    SetPeriodFilter(
+                                      period: RentPeriod.values[index],
                                     ),
                                   );
                               Navigator.pop(context);
                             },
-                            title: Text('order.$index').tr(),
+                            title: Text(
+                              'rentPeriod.$index',
+                            ).tr(),
                             contentPadding: const EdgeInsetsDirectional.only(
                               start: 8.0,
                             ),

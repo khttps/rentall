@@ -7,7 +7,8 @@ class RentalsState extends Equatable {
   final List<Rental>? rentals;
   final String? error;
   final Governorate governorate;
-  final PropertyType type;
+  final PropertyType? type;
+  final RentPeriod? period;
   final int? priceFrom;
   final int? priceTo;
 
@@ -16,7 +17,8 @@ class RentalsState extends Equatable {
     this.rentals,
     this.error,
     this.governorate = Governorate.all,
-    this.type = PropertyType.all,
+    this.type,
+    this.period,
     this.priceFrom,
     this.priceTo,
   });
@@ -27,6 +29,7 @@ class RentalsState extends Equatable {
     String? error,
     Governorate? governorate,
     PropertyType? type,
+    RentPeriod? period,
     int? priceFrom,
     int? priceTo,
   }) =>
@@ -36,13 +39,27 @@ class RentalsState extends Equatable {
         error: error,
         governorate: governorate ?? this.governorate,
         type: type ?? this.type,
-        priceFrom: priceFrom ?? this.priceFrom,
-        priceTo: priceTo ?? this.priceTo,
+        period: period ?? this.period,
+        priceFrom: priceFrom == 0 ? null : priceFrom ?? this.priceFrom,
+        priceTo: priceTo == 0 ? null : priceTo ?? this.priceTo,
       );
+
+  String get priceText {
+    if (priceFrom != null && priceTo != null) {
+      return 'Price: LE$priceFrom - $priceTo';
+    } else if (priceFrom != null && priceTo == null) {
+      return 'Price: From LE$priceFrom';
+    }
+    if (priceFrom == null && priceTo != null) {
+      return 'Price: To LE$priceTo';
+    }
+    return 'Price';
+  }
 
   Map<String, dynamic> get filters => {
         'governorate': governorate,
         'propertyType': type,
+        'rentPeriod': period,
         'priceFrom': priceFrom,
         'priceTo': priceTo,
       };
@@ -54,6 +71,7 @@ class RentalsState extends Equatable {
         error,
         governorate,
         type,
+        period,
         priceFrom,
         priceTo,
       ];

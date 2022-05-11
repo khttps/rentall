@@ -32,6 +32,7 @@
 },
 "propertyType" : {
     "null" : "Type",
+    "all" : "Type",
     "0" : "All",
     "1": "Apartment",
     "2": "Vacation Home",
@@ -40,10 +41,13 @@
     "5" : "Other"
 },
 "rentPeriod" : {
-    "0" : "Daily",
-    "1" : "Monthly",
-    "2" : "Weekly",
-    "3" : "Custom"
+    "null" : "Period",
+    "all" : "Period",
+    "0" : "All",
+    "1" : "Daily",
+    "2" : "Monthly",
+    "3" : "Weekly",
+    "4" : "Custom"
 },
 "order" : {
     "0" : "By Date Descending",

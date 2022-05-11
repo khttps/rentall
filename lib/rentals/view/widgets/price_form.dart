@@ -3,8 +3,15 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
 class PriceForm extends StatefulWidget {
+  final int? from;
+  final int? to;
   final Function(int? from, int? to) onApply;
-  const PriceForm({required this.onApply, Key? key}) : super(key: key);
+  const PriceForm({
+    this.from,
+    this.to,
+    required this.onApply,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<PriceForm> createState() => _PriceFormState();
@@ -12,8 +19,9 @@ class PriceForm extends StatefulWidget {
 
 class _PriceFormState extends State<PriceForm> {
   final _formKey = GlobalKey<FormBuilderState>();
-  final _fromController = TextEditingController();
-  final _toController = TextEditingController();
+  late final _fromController =
+      TextEditingController(text: widget.from?.toString());
+  late final _toController = TextEditingController(text: widget.to?.toString());
 
   @override
   void dispose() {
@@ -82,18 +90,44 @@ class _PriceFormState extends State<PriceForm> {
               },
             ),
             const SizedBox(height: 4.0),
-            ElevatedButton(
-              child: const Text('Apply'),
-              onPressed: () {
-                if (_formKey.currentState!.saveAndValidate()) {
-                  final values = _formKey.currentState!.value;
-                  widget.onApply(
-                    int.tryParse(values['from']),
-                    int.tryParse(values['to']),
-                  );
-                  Navigator.pop(context);
-                }
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (widget.from != null || widget.to != null)
+                  Flexible(
+                    flex: 1,
+                    child: TextButton.icon(
+                      icon: const Icon(
+                        Icons.clear,
+                        color: Colors.red,
+                      ),
+                      label: const Text(
+                        'Clear',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      onPressed: () {
+                        widget.onApply(0, 0);
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                const SizedBox(width: 8.0),
+                Flexible(
+                  child: ElevatedButton(
+                    child: const Text('Apply'),
+                    onPressed: () {
+                      if (_formKey.currentState!.saveAndValidate()) {
+                        final values = _formKey.currentState!.value;
+                        widget.onApply(
+                          int.tryParse(values['from']),
+                          int.tryParse(values['to']),
+                        );
+                        Navigator.pop(context);
+                      }
+                    },
+                  ),
+                ),
+              ],
             )
           ],
         ),

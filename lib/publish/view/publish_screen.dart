@@ -11,6 +11,7 @@ import 'package:rentall/data/model/governorate.dart';
 import 'package:rentall/widgets/widgets.dart';
 
 import '../../data/model/property_type.dart';
+import '../../data/model/rent_period.dart';
 import '../../data/model/rental.dart';
 import '../../screens.dart';
 import '../bloc/publish_bloc.dart';
@@ -357,11 +358,11 @@ class _PublishScreenState extends State<PublishScreen> {
                                       }
                                     },
                                     items: List.generate(
-                                      RentPeriod.values.length,
+                                      RentPeriod.values.length - 1,
                                       (index) => DropdownMenuItem(
-                                        value: RentPeriod.values[index],
+                                        value: RentPeriod.values[index + 1],
                                         child: Text(
-                                          'rentPeriod.$index',
+                                          'rentPeriod.${index + 1}',
                                           overflow: TextOverflow.ellipsis,
                                         ).tr(),
                                       ),

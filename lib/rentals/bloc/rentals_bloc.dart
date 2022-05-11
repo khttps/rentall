@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../data/model/rent_period.dart';
 import '../../data/repository/rental_repository.dart';
 import '../../data/model/governorate.dart';
 import '../../data/model/property_type.dart';
@@ -24,6 +25,7 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
     on<SetRegionFilter>(_onSetRegionFilter);
     on<SetPropertyTypeFilter>(_onSetPropertyTypeFilter);
     on<SetPriceFilter>(_onSetPriceFilter);
+    on<SetPeriodFilter>(_onSetPeriodFilter);
   }
 
   FutureOr<void> _onGetRentals(GetRentals event, emit) async {
@@ -105,6 +107,26 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
       status: RentalsLoadStatus.reloading,
       priceFrom: event.priceFrom,
       priceTo: event.priceTo,
+    ));
+    try {
+      final rentals = await _repository.getRentals(state.filters);
+      emit(state.copyWith(
+        status: RentalsLoadStatus.success,
+        rentals: rentals,
+      ));
+    } on Exception catch (err) {
+      rethrow;
+      emit(state.copyWith(
+        status: RentalsLoadStatus.failed,
+        error: (err as dynamic).message,
+      ));
+    }
+  }
+
+  FutureOr<void> _onSetPeriodFilter(SetPeriodFilter event, emit) async {
+    emit(state.copyWith(
+      status: RentalsLoadStatus.reloading,
+      period: event.period,
     ));
     try {
       final rentals = await _repository.getRentals(state.filters);

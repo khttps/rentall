@@ -2,12 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:rentall/data/model/converters.dart';
+import 'package:rentall/data/model/rent_period.dart';
 import 'governorate.dart';
 import 'property_type.dart';
 
 part 'rental.g.dart';
-
-enum RentPeriod { day, month, week, custom }
 
 enum PublishStatus { pending, approved, rejected, booked }
 
