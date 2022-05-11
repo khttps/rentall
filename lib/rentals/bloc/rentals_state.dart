@@ -8,6 +8,8 @@ class RentalsState extends Equatable {
   final String? error;
   final Governorate governorate;
   final PropertyType type;
+  final int? priceFrom;
+  final int? priceTo;
 
   const RentalsState({
     this.status = RentalsLoadStatus.loading,
@@ -15,6 +17,8 @@ class RentalsState extends Equatable {
     this.error,
     this.governorate = Governorate.all,
     this.type = PropertyType.all,
+    this.priceFrom,
+    this.priceTo,
   });
 
   RentalsState copyWith({
@@ -23,6 +27,8 @@ class RentalsState extends Equatable {
     String? error,
     Governorate? governorate,
     PropertyType? type,
+    int? priceFrom,
+    int? priceTo,
   }) =>
       RentalsState(
         status: status ?? this.status,
@@ -30,11 +36,15 @@ class RentalsState extends Equatable {
         error: error,
         governorate: governorate ?? this.governorate,
         type: type ?? this.type,
+        priceFrom: priceFrom ?? this.priceFrom,
+        priceTo: priceTo ?? this.priceTo,
       );
 
   Map<String, dynamic> get filters => {
         'governorate': governorate,
         'propertyType': type,
+        'priceFrom': priceFrom,
+        'priceTo': priceTo,
       };
 
   @override
@@ -44,5 +54,7 @@ class RentalsState extends Equatable {
         error,
         governorate,
         type,
+        priceFrom,
+        priceTo,
       ];
 }

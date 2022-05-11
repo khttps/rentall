@@ -18,18 +18,22 @@ Rental _$RentalFromJson(Map<String, dynamic> json) => Rental(
       location:
           const GeoPointConverter().fromJson(json['location'] as GeoPoint?),
       floorNumber: json['floorNumber'] as int?,
-      numberOfRooms: json['numberOfRooms'] as int?,
-      numberOfBathrooms: json['numberOfBathrooms'] as int?,
+      rooms: json['rooms'] as int?,
+      bathrooms: json['bathrooms'] as int?,
       furnished: json['furnished'] as bool?,
       area: json['area'] as int,
       governorate: $enumDecode(_$GovernorateEnumMap, json['governorate']),
-      regionId: json['regionId'] as int?,
-      rentPrice: json['rentPrice'] as int,
-      hostPhoneNumber: json['hostPhoneNumber'] as String,
+      region: json['region'] as int?,
+      price: json['price'] as int,
+      hostPhone: json['hostPhone'] as String,
       createdAt:
           const TimestampConverter().fromJson(json['createdAt'] as Timestamp?),
-      rentType: $enumDecodeNullable(_$RentTypeEnumMap, json['rentType']) ??
-          RentType.monthly,
+      rentPeriod:
+          $enumDecodeNullable(_$RentPeriodEnumMap, json['rentPeriod']) ??
+              RentPeriod.month,
+      availableAt: const TimestampConverter()
+          .fromJson(json['availableAt'] as Timestamp?),
+      verified: json['verified'] as bool? ?? false,
       propertyType:
           $enumDecodeNullable(_$PropertyTypeEnumMap, json['propertyType']),
       publishStatus:
@@ -52,17 +56,20 @@ Map<String, dynamic> _$RentalToJson(Rental instance) {
   val['address'] = instance.address;
   writeNotNull('location', const GeoPointConverter().toJson(instance.location));
   writeNotNull('floorNumber', instance.floorNumber);
-  writeNotNull('numberOfRooms', instance.numberOfRooms);
-  writeNotNull('numberOfBathrooms', instance.numberOfBathrooms);
+  writeNotNull('rooms', instance.rooms);
+  writeNotNull('bathrooms', instance.bathrooms);
   writeNotNull('furnished', instance.furnished);
   val['area'] = instance.area;
   val['governorate'] = _$GovernorateEnumMap[instance.governorate];
-  writeNotNull('regionId', instance.regionId);
-  val['rentPrice'] = instance.rentPrice;
-  val['hostPhoneNumber'] = instance.hostPhoneNumber;
+  writeNotNull('region', instance.region);
+  val['price'] = instance.price;
+  val['hostPhone'] = instance.hostPhone;
   val['createdAt'] = const TimestampConverter().toJson(instance.createdAt);
-  writeNotNull('rentType', _$RentTypeEnumMap[instance.rentType]);
+  writeNotNull('rentPeriod', _$RentPeriodEnumMap[instance.rentPeriod]);
   writeNotNull('propertyType', _$PropertyTypeEnumMap[instance.propertyType]);
+  writeNotNull(
+      'availableAt', const TimestampConverter().toJson(instance.availableAt));
+  val['verified'] = instance.verified;
   writeNotNull('publishStatus', _$PublishStatusEnumMap[instance.publishStatus]);
   return val;
 }
@@ -98,11 +105,11 @@ const _$GovernorateEnumMap = {
   Governorate.sohag: 'sohag',
 };
 
-const _$RentTypeEnumMap = {
-  RentType.daily: 'daily',
-  RentType.monthly: 'monthly',
-  RentType.weekly: 'weekly',
-  RentType.custom: 'custom',
+const _$RentPeriodEnumMap = {
+  RentPeriod.day: 'day',
+  RentPeriod.month: 'month',
+  RentPeriod.week: 'week',
+  RentPeriod.custom: 'custom',
 };
 
 const _$PropertyTypeEnumMap = {
@@ -116,7 +123,7 @@ const _$PropertyTypeEnumMap = {
 
 const _$PublishStatusEnumMap = {
   PublishStatus.pending: 'pending',
-  PublishStatus.reviewing: 'reviewing',
   PublishStatus.approved: 'approved',
   PublishStatus.rejected: 'rejected',
+  PublishStatus.booked: 'booked',
 };

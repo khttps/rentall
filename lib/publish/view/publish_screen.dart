@@ -35,7 +35,7 @@ class _PublishScreenState extends State<PublishScreen> {
   late final updating = widget.rental != null;
   late final _images = <dynamic>[...?widget.rental?.images];
   late final _phoneController = TextEditingController(
-    text: widget.rental?.hostPhoneNumber,
+    text: widget.rental?.hostPhone,
   );
 
   var _currentPage = 0;
@@ -309,7 +309,7 @@ class _PublishScreenState extends State<PublishScreen> {
                               children: [
                                 Flexible(
                                   child: FormBuilderDropdown(
-                                    name: 'governorateId',
+                                    name: 'governorate',
                                     initialValue: updating
                                         ? widget.rental!.governorate
                                         : Governorate.cairo,
@@ -338,7 +338,7 @@ class _PublishScreenState extends State<PublishScreen> {
                                 Flexible(
                                   child: FormBuilderTextField(
                                     readOnly: true,
-                                    name: 'regionId',
+                                    name: 'region',
                                     enabled: false,
                                     textInputAction: TextInputAction.next,
                                   ),
@@ -346,20 +346,20 @@ class _PublishScreenState extends State<PublishScreen> {
                                 const SizedBox(width: 8.0),
                                 Flexible(
                                   child: FormBuilderDropdown(
-                                    name: 'rentType',
+                                    name: 'rentPeriod',
                                     initialValue: updating
-                                        ? widget.rental!.rentType ??
-                                            RentType.daily
-                                        : RentType.daily,
-                                    valueTransformer: (RentType? value) {
+                                        ? widget.rental!.rentPeriod ??
+                                            RentPeriod.day
+                                        : RentPeriod.day,
+                                    valueTransformer: (RentPeriod? value) {
                                       if (value != null) {
                                         return value.name;
                                       }
                                     },
                                     items: List.generate(
-                                      RentType.values.length,
+                                      RentPeriod.values.length,
                                       (index) => DropdownMenuItem(
-                                        value: RentType.values[index],
+                                        value: RentPeriod.values[index],
                                         child: Text(
                                           'rentPeriod.$index',
                                           overflow: TextOverflow.ellipsis,
@@ -390,7 +390,7 @@ class _PublishScreenState extends State<PublishScreen> {
                               children: [
                                 Expanded(
                                   child: FormBuilderTextField(
-                                    name: 'rentPrice',
+                                    name: 'price',
                                     valueTransformer: (String? value) {
                                       if (value != null) {
                                         return int.tryParse(value);
@@ -475,7 +475,7 @@ class _PublishScreenState extends State<PublishScreen> {
                                 const SizedBox(width: 8.0),
                                 Flexible(
                                   child: FormBuilderTextField(
-                                    name: 'numberOfRooms',
+                                    name: 'rooms',
                                     valueTransformer: (String? value) {
                                       if (value != null) {
                                         return int.tryParse(value);
@@ -488,7 +488,7 @@ class _PublishScreenState extends State<PublishScreen> {
                                 const SizedBox(width: 8.0),
                                 Flexible(
                                   child: FormBuilderTextField(
-                                    name: 'numberOfBathrooms',
+                                    name: 'bathrooms',
                                     valueTransformer: (String? value) {
                                       if (value != null) {
                                         return int.tryParse(value);
@@ -505,7 +505,7 @@ class _PublishScreenState extends State<PublishScreen> {
                               child: Text('Phone'),
                             ),
                             FormBuilderTextField(
-                              name: 'hostPhoneNumber',
+                              name: 'hostPhone',
                               controller: _phoneController,
                               decoration:
                                   const InputDecoration(prefix: Text('+20  ')),

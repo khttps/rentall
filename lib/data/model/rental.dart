@@ -7,9 +7,9 @@ import 'property_type.dart';
 
 part 'rental.g.dart';
 
-enum RentType { daily, monthly, weekly, custom }
+enum RentPeriod { day, month, week, custom }
 
-enum PublishStatus { pending, reviewing, approved, rejected }
+enum PublishStatus { pending, approved, rejected, booked }
 
 @JsonSerializable()
 class Rental extends Equatable {
@@ -26,23 +26,27 @@ class Rental extends Equatable {
   @JsonKey(includeIfNull: false)
   final int? floorNumber;
   @JsonKey(includeIfNull: false)
-  final int? numberOfRooms;
+  final int? rooms;
   @JsonKey(includeIfNull: false)
-  final int? numberOfBathrooms;
+  final int? bathrooms;
   @JsonKey(includeIfNull: false)
   final bool? furnished;
   final int area;
   final Governorate governorate;
   @JsonKey(includeIfNull: false)
-  final int? regionId;
-  final int rentPrice;
-  final String hostPhoneNumber;
+  final int? region;
+  final int price;
+  final String hostPhone;
   @TimestampConverter()
   final Timestamp? createdAt;
   @JsonKey(includeIfNull: false)
-  final RentType? rentType;
+  final RentPeriod? rentPeriod;
   @JsonKey(includeIfNull: false)
   final PropertyType? propertyType;
+  @JsonKey(includeIfNull: false)
+  @TimestampConverter()
+  final Timestamp? availableAt;
+  final bool verified;
   @JsonKey(includeIfNull: false)
   final PublishStatus? publishStatus;
 
@@ -54,16 +58,18 @@ class Rental extends Equatable {
     required this.address,
     this.location,
     this.floorNumber,
-    this.numberOfRooms,
-    this.numberOfBathrooms,
+    this.rooms,
+    this.bathrooms,
     this.furnished,
     required this.area,
     required this.governorate,
-    this.regionId,
-    required this.rentPrice,
-    required this.hostPhoneNumber,
+    this.region,
+    required this.price,
+    required this.hostPhone,
     this.createdAt,
-    this.rentType = RentType.monthly,
+    this.rentPeriod = RentPeriod.month,
+    this.availableAt,
+    this.verified = false,
     required this.propertyType,
     this.publishStatus,
   });
@@ -79,7 +85,7 @@ class Rental extends Equatable {
   //       address: map['address'] as String,
   //       location: map['location'] as GeoPoint?,
   //       floorNumber: map['floorNumber'] as int?,
-  //       numberOfRooms: map['numberOfRooms'] as int?,
+  //       rooms: map['rooms'] as int?,
   //       numberOfBathrooms: map['numberOfBathrooms'] as int?,
   //       furnished: map['furnished'] as bool?,
   //       area: map['area'] as int,
@@ -121,7 +127,7 @@ class Rental extends Equatable {
   //   map['address'] = r.address;
   //   writeNotNull('location', r.location);
   //   writeNotNullToString('floorNumber', r.floorNumber);
-  //   writeNotNullToString('numberOfRooms', r.numberOfRooms);
+  //   writeNotNullToString('rooms', r.rooms);
   //   writeNotNullToString('numberOfBathrooms', r.numberOfBathrooms);
   //   writeNotNull('furnished', r.furnished);
   //   writeNotNullToString('area', r.area);
@@ -142,7 +148,7 @@ class Rental extends Equatable {
   //   // 'address': r.address,
   //   // 'location': r.location,
   //   // 'floorNumber': r.floorNumber,
-  //   // 'numberOfRooms': r.numberOfRooms,
+  //   // 'rooms': r.rooms,
   //   // 'numberOfBathrooms': r.numberOfBathrooms,
   //   // 'area': r.area,
   //   // 'furnished': r.furnished,
@@ -163,16 +169,18 @@ class Rental extends Equatable {
         description,
         address,
         floorNumber,
-        numberOfRooms,
-        numberOfBathrooms,
+        rooms,
+        bathrooms,
         governorate,
         furnished,
         area,
-        regionId,
-        rentPrice,
-        hostPhoneNumber,
+        region,
+        price,
+        hostPhone,
         createdAt,
-        rentType,
+        availableAt,
+        verified,
+        rentPeriod,
         propertyType,
       ];
 }

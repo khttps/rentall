@@ -42,29 +42,32 @@ class RentalRepositoryImpl implements RentalRepository {
     if (!await _connectionChecker.hasConnection) {
       throw Exception('No internet connection');
     }
-    return (await _firestore
-            .collection('rentals')
-            .where('publishStatus', isEqualTo: PublishStatus.approved.name)
-            .where(
-              'propertyType',
-              isEqualTo: (filters['propertyType'] as PropertyType?)?.value,
-            )
-            .where(
-              'governorate',
-              isEqualTo: (filters['governorate'] as Governorate?)?.value,
-            )
-            // .where(
-            //   'rentType',
-            //   isEqualTo: (filters['rentType'] as RentType?)?.value,
-            // )
-            // .where('regionId', isEqualTo: filters['regionId'])
-            // .where(
-            //   'rentPrice',
-            //   isGreaterThanOrEqualTo: filters['priceFrom'],
-            //   isLessThanOrEqualTo: filters['priceTo'],
-            // )
-            // .orderBy('createdAt', descending: true)
-            .get())
+
+    final query = _firestore
+        .collection('rentals')
+        .where('publishStatus', isEqualTo: PublishStatus.approved.name)
+        .where(
+          'propertyType',
+          isEqualTo: (filters['propertyType'] as PropertyType?)?.value,
+        )
+        .where(
+          'governorate',
+          isEqualTo: (filters['governorate'] as Governorate?)?.value,
+        )
+        .where(
+          'rentPeriod',
+          isEqualTo: (filters['rentPeriod'] as RentPeriod?)?.name,
+        )
+        .where('region', isEqualTo: filters['region'])
+        .where(
+          'price',
+          isGreaterThanOrEqualTo: filters['priceFrom'],
+          isLessThanOrEqualTo: filters['priceTo'],
+        )
+        .orderBy('price', descending: true)
+        .orderBy('createdAt', descending: true);
+
+    return (await query.get())
         .docs
         .map((doc) => Rental.fromJson(doc.data()))
         .toList();
@@ -96,9 +99,6 @@ class RentalRepositoryImpl implements RentalRepository {
     final map = (await ref.get()).data();
     throwIf(map == null, Exception('Failed to retrieve rental.'));
     return Rental.fromJson(map!);
-
-    // return (await _firestore.collection('rentals').doc(rental['id']).get())
-    //     .data();
   }
 
   @override
@@ -111,7 +111,6 @@ class RentalRepositoryImpl implements RentalRepository {
       throw Exception('No internet connection');
     }
 
-    // final imageUrls = rental['images'] as List<String>;
     final imageUrls = <String>[];
 
     if (imageFiles != null) {
@@ -139,8 +138,6 @@ class RentalRepositoryImpl implements RentalRepository {
     final map = (await doc.get()).data();
     throwIf(map == null, Exception('Failed to update rental.'));
     return Rental.fromJson(map!);
-
-    // return (await _firestore.collection('rentals').doc(rental.id).get()).data();
   }
 
   @override

@@ -29,10 +29,16 @@ class SetPropertyTypeFilter extends RentalsEvent {
   List<Object?> get props => [type];
 }
 
-// class ClearRegionFilter extends RentalsEvent {
-//   const ClearRegionFilter();
-// }
+class SetPriceFilter extends RentalsEvent {
+  final int? priceFrom;
+  final int? priceTo;
+  const SetPriceFilter({this.priceFrom, this.priceTo});
 
-// class ClearPropertyTypeFilter extends RentalsEvent {
-//   const ClearPropertyTypeFilter();
-// }
+  @override
+  List<Object?> get props => [priceFrom, priceTo];
+}
+
+class SetSortFilter extends RentalsEvent {
+  final bool descending;
+  const SetSortFilter({required this.descending});
+}

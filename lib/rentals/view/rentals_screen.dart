@@ -1,6 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:rentall/rentals/view/widgets/price_form.dart';
 
 import '../../blocs.dart';
 import '../../data/model/governorate.dart';
@@ -101,30 +104,58 @@ class RentalsScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 4.0),
                     ActionChip(
-                        avatar: const Icon(
-                          Icons.expand_more,
-                          color: Colors.black,
-                          size: 20.0,
-                        ),
-                        label: const Text(
-                          'Price',
-                        ),
-                        labelPadding:
-                            const EdgeInsetsDirectional.only(end: 8.0),
-                        onPressed: () {}),
+                      avatar: const Icon(
+                        Icons.expand_more,
+                        color: Colors.black,
+                        size: 20.0,
+                      ),
+                      label: const Text(
+                        'Price',
+                      ),
+                      labelPadding: const EdgeInsetsDirectional.only(end: 8.0),
+                      onPressed: () async => await showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return PriceForm(onApply: (from, to) {
+                              context.read<RentalsBloc>().add(SetPriceFilter(
+                                    priceFrom: from,
+                                    priceTo: to,
+                                  ));
+                            });
+                          }),
+                    ),
                     const SizedBox(width: 4.0),
                     ActionChip(
-                        avatar: const Icon(
-                          Icons.expand_more,
-                          color: Colors.black,
-                          size: 20.0,
-                        ),
-                        label: const Text(
-                          'Sort',
-                        ),
-                        labelPadding:
-                            const EdgeInsetsDirectional.only(end: 8.0),
-                        onPressed: () {}),
+                      avatar: const Icon(
+                        Icons.expand_more,
+                        color: Colors.black,
+                        size: 20.0,
+                      ),
+                      label: const Text('Period'),
+                      labelPadding: const EdgeInsetsDirectional.only(end: 8.0),
+                      onPressed: () async => await _showFiltersBottomSheet(
+                        context,
+                        itemCount: 2,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            onTap: () {
+                              context.read<RentalsBloc>().add(
+                                    SetSortFilter(
+                                      descending: index == 0 ? true : false,
+                                    ),
+                                  );
+                              Navigator.pop(context);
+                            },
+                            title: Text('order.$index').tr(),
+                            contentPadding: const EdgeInsetsDirectional.only(
+                              start: 8.0,
+                            ),
+                            dense: true,
+                            visualDensity: VisualDensity.compact,
+                          );
+                        },
+                      ),
+                    ),
                     const SizedBox(width: 8.0),
                     TextButton(
                       onPressed: () {},
@@ -190,7 +221,7 @@ class RentalsScreen extends StatelessWidget {
       showModalBottomSheet(
         context: context,
         builder: (c) => Container(
-          constraints: const BoxConstraints(maxHeight: 350.0, minHeight: 180.0),
+          constraints: const BoxConstraints(maxHeight: 350.0),
           child: ListView.separated(
             shrinkWrap: true,
             itemCount: itemCount,

@@ -91,14 +91,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${rental.rentPrice} EGP / ${rental.rentType?.name}',
+                    '${rental.price} EGP / ${rental.rentPeriod?.name}',
                     style: const TextStyle(
                       fontSize: 22.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    '${rental.regionId}, ${tr('governorates.${rental.governorate.index}')}',
+                    '${rental.region}, ${tr('governorates.${rental.governorate.index}')}',
                     style: TextStyle(
                       color: Colors.blueGrey.shade400,
                       fontSize: 18.0,
@@ -120,10 +120,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 'Posted ${DateFormat('MMM d, h:mma').format(rental.createdAt!.toDate())}',
               ),
               const Divider(height: 16.0, thickness: 1.5),
-              if (rental.numberOfRooms != null)
-                Text('Rooms: ${rental.numberOfRooms}'),
-              if (rental.numberOfBathrooms != null)
-                Text('Bathrooms: ${rental.numberOfBathrooms}'),
+              if (rental.rooms != null) Text('Rooms: ${rental.rooms}'),
+              if (rental.bathrooms != null)
+                Text('Bathrooms: ${rental.bathrooms}'),
               if (rental.furnished != null)
                 Text(
                   'Furnished: ${rental.furnished == true ? 'Yes' : 'No'}',
@@ -171,7 +170,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
   }
 
   void _launchDialer() async {
-    final url = Uri.parse('tel:${widget.rental.hostPhoneNumber}');
+    final url = Uri.parse('tel:${widget.rental.hostPhone}');
     bool canLaunch = await canLaunchUrl(url);
     if (canLaunch) {
       await launchUrl(url);

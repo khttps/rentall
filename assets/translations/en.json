@@ -45,5 +45,9 @@
     "2" : "Weekly",
     "3" : "Custom"
 },
+"order" : {
+    "0" : "By Date Descending",
+    "1" : "By Date Ascending"
+},
 "required" : "Required field."
 }

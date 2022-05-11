@@ -1,19 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'data/model/governorate.dart';
-import 'data/model/property_type.dart';
-import 'data/model/rental.dart';
 import 'firebase_options.dart';
 import 'blocs.dart';
 import 'injector.dart' as di;
 import 'router.dart' as router;
 import 'theme.dart' as theme;
 import 'screens.dart';
+
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:rentall/data/model/governorate.dart';
+// import 'package:rentall/data/model/property_type.dart';
+// import 'package:rentall/data/model/rental.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,12 +39,6 @@ class RentallApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Provider<PublishBloc>(
-    //   create: (context) => di.sl(),
-    //   dispose: (context, bloc) {
-    //     bloc.dispose();
-    //   },
-    // ),
     return MultiBlocProvider(
       providers: [
         BlocProvider<RentalsBloc>(
