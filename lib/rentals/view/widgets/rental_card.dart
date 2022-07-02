@@ -18,6 +18,7 @@ class RentalCard extends StatelessWidget {
         arguments: rental,
       ),
       child: Container(
+        height: 120,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(4.0),
@@ -83,6 +84,13 @@ class RentalCard extends StatelessWidget {
                       style: const TextStyle(
                         fontWeight: FontWeight.w400,
                       ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      '${rental.price} EGP / ${rental.rentPeriod?.name}',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 16.0),
                     ),
                   ],
                 ),

@@ -63,8 +63,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       fit: BoxFit.cover,
                       width: double.infinity,
                       imageUrl: rental.images[index],
-                      placeholder: (c, _) =>
-                          const CircularProgressIndicator.adaptive(),
+                      placeholder: (c, _) => const Center(
+                          child: CircularProgressIndicator.adaptive()),
                     ),
                     options: CarouselOptions(
                       enableInfiniteScroll: false,

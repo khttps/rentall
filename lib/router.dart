@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rentall/screens.dart';
 import 'details/details.dart';
 import 'home/home.dart';
 import 'publish/publish.dart';
@@ -14,6 +15,8 @@ MaterialPageRoute<dynamic> onGenerateRoute(RouteSettings settings) {
           return PublishScreen(
             rental: settings.arguments as Rental?,
           );
+        case SearchScreen.routeName:
+          return const SearchScreen();
         case DetailsScreen.routeName:
           return DetailsScreen(
             rental: settings.arguments as Rental,

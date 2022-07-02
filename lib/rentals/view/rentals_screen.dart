@@ -46,7 +46,7 @@ class RentalsScreen extends StatelessWidget {
                       labelPadding: const EdgeInsetsDirectional.only(end: 8.0),
                       onPressed: () async => await _showFiltersBottomSheet(
                         context,
-                        itemCount: 28,
+                        itemCount: Governorate.values.length - 1,
                         itemBuilder: (context, index) {
                           return ListTile(
                             onTap: () {

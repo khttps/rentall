@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../screens.dart';
+import '../../widgets/widgets.dart';
 import 'widgets/widgets.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var _currentIndex = 0;
   final _screens = [
     RentalsScreen(),
-    Center(child: Text('Notifications')),
+    NotificationsScreen(),
     Center(child: Text('Menu')),
   ];
 
@@ -25,7 +26,24 @@ class _HomeScreenState extends State<HomeScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: const SearchBar(),
+          title: InkWell(
+            child: const SearchBar(enabled: false),
+            onTap: () {
+              Navigator.pushNamed(context, SearchScreen.routeName);
+            },
+          ),
+          actions: [
+            InkWell(
+              onTap: () {},
+              child: Column(
+                children: const [
+                  Expanded(child: Icon(Icons.notification_add)),
+                  Expanded(child: Text('Create Alert'))
+                ],
+              ),
+            ),
+            const SizedBox(width: 10.0)
+          ],
           elevation: 2.0,
         ),
         body: _screens[_currentIndex],

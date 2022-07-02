@@ -11,11 +11,6 @@ import 'router.dart' as router;
 import 'theme.dart' as theme;
 import 'screens.dart';
 
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:rentall/data/model/governorate.dart';
-// import 'package:rentall/data/model/property_type.dart';
-// import 'package:rentall/data/model/rental.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
