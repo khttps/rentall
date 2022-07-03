@@ -199,10 +199,11 @@ class RentalsScreen extends StatelessWidget {
                 state.status == RentalsLoadStatus.reloading) {
               return ListView.separated(
                 physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 shrinkWrap: true,
                 itemCount: state.rentals!.length,
-                separatorBuilder: (c, i) => const SizedBox(height: 8.0),
+                separatorBuilder: (c, i) =>
+                    const Divider(thickness: 1.0, height: 0.0),
                 itemBuilder: (context, index) {
                   return RentalCard(rental: state.rentals![index]);
                 },

@@ -5,4 +5,4 @@ export 'details/details.dart';
 export 'notifications/notifications.dart';
 export 'menu/menu.dart';
 export 'search/search.dart';
-export 'sign_in/sign_in.dart';
+export 'auth/auth.dart';

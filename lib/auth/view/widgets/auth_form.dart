@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-
 import '../../../menu/view/widgets/widgets.dart';
 
-class SignInForm extends StatefulWidget {
+class AuthForm extends StatefulWidget {
   final String label;
   final List<Widget> actions;
-  const SignInForm({
+  const AuthForm({
     required this.label,
     required this.actions,
     Key? key,
   }) : super(key: key);
 
   @override
-  State<SignInForm> createState() => _SignInFormState();
+  State<AuthForm> createState() => _AuthFormState();
 }
 
-class _SignInFormState extends State<SignInForm> {
+class _AuthFormState extends State<AuthForm> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 

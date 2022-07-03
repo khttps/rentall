@@ -17,7 +17,7 @@ class LoggedOutProfile extends StatelessWidget {
             Icon(Icons.account_circle),
             SizedBox(width: 8.0),
             Text(
-              'Sign In',
+              'Guest',
               style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
             ),
           ],
@@ -31,7 +31,7 @@ class LoggedOutProfile extends StatelessWidget {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              Navigator.pushNamed(context, SignInScreen.routeName);
+              Navigator.pushNamed(context, AuthScreen.routeName);
             },
             child: const Text('Sign In / Sign Up'),
           ),

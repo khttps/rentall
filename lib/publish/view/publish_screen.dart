@@ -54,12 +54,39 @@ class _PublishScreenState extends State<PublishScreen> {
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: NestedScrollView(
-          headerSliverBuilder: (c, i) => const [
+          headerSliverBuilder: (c, i) => [
             SliverAppBar(
               snap: true,
               floating: true,
+              leading: IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.close)),
               forceElevated: true,
-              title: Text('New Rental'),
+              title: Text(!updating ? 'New Rental' : 'Update Rental'),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.check),
+                  onPressed: () async {
+                    _validPhone = await PhoneNumberUtil()
+                        .validate(_phoneController.text, 'EG');
+
+                    if (_formKey.currentState!.saveAndValidate()) {
+                      context.read<PublishBloc>().add(
+                            !updating
+                                ? PublishRental(
+                                    rentalMap: _formKey.currentState!.value,
+                                    images: _images.whereType<XFile>().toList(),
+                                  )
+                                : UpdateRental(
+                                    id: widget.rental!.id!,
+                                    rental: _formKey.currentState!.value,
+                                    images: _images.whereType<XFile>().toList(),
+                                  ),
+                          );
+                    }
+                  },
+                ),
+              ],
             ),
           ],
           body: BlocConsumer<PublishBloc, PublishState>(
@@ -538,67 +565,31 @@ class _PublishScreenState extends State<PublishScreen> {
                               textInputAction: TextInputAction.done,
                             ),
                             const SizedBox(height: 8.0),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                if (updating)
-                                  TextButton.icon(
-                                    icon: const Icon(
-                                      Icons.delete,
-                                      color: Colors.red,
-                                    ),
-                                    label: const Text(
-                                      'Delete',
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                    onPressed: () async =>
-                                        await _showAlertDialog(
-                                      context,
-                                      title: const Text('Delete Rental'),
-                                      content: const Text(
-                                        'Are you sure you want to delete this rental?',
-                                      ),
-                                      onPositive: () {
-                                        context.read<PublishBloc>().add(
-                                              DeleteRental(
-                                                id: widget.rental!.id!,
-                                              ),
-                                            );
-                                      },
-                                    ),
+                            if (updating)
+                              TextButton.icon(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                                label: const Text(
+                                  'Delete',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                                onPressed: () async => await _showAlertDialog(
+                                  context,
+                                  title: const Text('Delete Rental'),
+                                  content: const Text(
+                                    'Are you sure you want to delete this rental?',
                                   ),
-                                const SizedBox(width: 8.0),
-                                ElevatedButton(
-                                  child: Text(updating ? 'Update' : 'Publish'),
-                                  onPressed: () async {
-                                    _validPhone = await PhoneNumberUtil()
-                                        .validate(_phoneController.text, 'EG');
-
-                                    if (_formKey.currentState!
-                                        .saveAndValidate()) {
-                                      context.read<PublishBloc>().add(
-                                            widget.rental == null
-                                                ? PublishRental(
-                                                    rentalMap: _formKey
-                                                        .currentState!.value,
-                                                    images: _images
-                                                        .whereType<XFile>()
-                                                        .toList(),
-                                                  )
-                                                : UpdateRental(
-                                                    id: widget.rental!.id!,
-                                                    rental: _formKey
-                                                        .currentState!.value,
-                                                    images: _images
-                                                        .whereType<XFile>()
-                                                        .toList(),
-                                                  ),
-                                          );
-                                    }
+                                  onPositive: () {
+                                    context.read<PublishBloc>().add(
+                                          DeleteRental(
+                                            id: widget.rental!.id!,
+                                          ),
+                                        );
                                   },
                                 ),
-                              ],
-                            )
+                              ),
                           ],
                         ),
                       ),

@@ -20,44 +20,38 @@ class RentalCard extends StatelessWidget {
         arguments: rental,
       ),
       child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8.0),
         height: height,
-        clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(4.0),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black38,
-              offset: Offset(0.0, 2.0),
-              blurRadius: 3,
-            )
-          ],
-        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            rental.images.isNotEmpty
-                ? CachedNetworkImage(
-                    imageUrl: rental.images[0],
-                    height: height,
-                    width: height,
-                    placeholder: (c, u) => const Center(
-                      child: CircularProgressIndicator(),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4.0),
+              child: rental.images.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: rental.images[0],
+                      height: height,
+                      width: height,
+                      placeholder: (c, u) => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      fit: BoxFit.cover,
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Icon(
+                        Icons.image_not_supported,
+                        size: height - 20.0,
+                        color: Colors.grey,
+                      ),
                     ),
-                    fit: BoxFit.cover,
-                  )
-                : Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Icon(
-                      Icons.image_not_supported,
-                      size: height - 20.0,
-                      color: Colors.grey,
-                    ),
-                  ),
+            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: 12.0),
+                  vertical: 10.0,
+                  horizontal: 12.0,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

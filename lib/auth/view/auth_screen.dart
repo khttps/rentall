@@ -1,18 +1,16 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:rentall/sign_in/view/widgets/widgets.dart';
 
-import '../../menu/view/widgets/widgets.dart';
+import 'widgets/widgets.dart';
 
-class SignInScreen extends StatefulWidget {
+class AuthScreen extends StatefulWidget {
   static const routeName = '/sign_in';
-  const SignInScreen({Key? key}) : super(key: key);
+  const AuthScreen({Key? key}) : super(key: key);
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  State<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _AuthScreenState extends State<AuthScreen> {
   final _controller = PageController();
 
   @override
@@ -48,9 +46,9 @@ class _SignInScreenState extends State<SignInScreen> {
           Expanded(
             child: PageView(
               controller: _controller,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               children: [
-                SignInForm(
+                AuthForm(
                   label: 'Sign In',
                   actions: [
                     TextButton(
@@ -75,7 +73,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     )
                   ],
                 ),
-                SignInForm(
+                AuthForm(
                   label: 'Sign Up',
                   actions: [
                     TextButton(

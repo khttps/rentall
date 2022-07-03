@@ -13,19 +13,43 @@ class MenuScreen extends StatelessWidget {
         const LoggedOutProfile(),
         const Divider(thickness: 1.0),
         ListTile(
+          leading: const Icon(Icons.person),
+          title: const Text('Profile'),
+          dense: true,
+          onTap: () {},
+        ),
+        ListTile(
+          leading: const Icon(Icons.favorite),
+          title: const Text('Favorites'),
+          dense: true,
+          onTap: () {},
+        ),
+        const Divider(thickness: 1.0),
+        ListTile(
+          leading: const Icon(Icons.hotel),
+          title: const Text('Host'),
+          dense: true,
+          onTap: () {},
+        ),
+        ListTile(
+          leading: const Icon(Icons.house),
+          title: const Text('My Rentals'),
+          dense: true,
+          onTap: () {},
+        ),
+        const Divider(thickness: 1.0),
+        ListTile(
           leading: const Icon(Icons.settings),
           title: const Text('Settings'),
           dense: true,
           onTap: () {},
         ),
-        const Divider(thickness: 1.0),
         ListTile(
           leading: const Icon(Icons.info),
           title: const Text('About'),
           dense: true,
           onTap: () {},
         ),
-        const Divider(thickness: 1.0),
       ],
     );
   }
