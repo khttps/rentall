@@ -12,18 +12,19 @@ class NotificationsScreen extends StatelessWidget {
       separatorBuilder: (c, i) => const Divider(thickness: 1),
       itemBuilder: (BuildContext context, int index) {
         return ListTile(
-          contentPadding: EdgeInsets.all(8.0),
-          title: Padding(
-            padding: const EdgeInsetsDirectional.only(start: 8.0),
+          contentPadding: const EdgeInsets.all(8.0),
+          dense: true,
+          title: const Padding(
+            padding: EdgeInsetsDirectional.only(start: 8.0),
             child: Text('Notification', maxLines: 3),
           ),
           onTap: () {},
           trailing: Column(
             children: [
-              Expanded(child: Text('5h')),
+              const Expanded(child: Text('5h')),
               Expanded(
                 child: IconButton(
-                  icon: Icon(Icons.more_vert),
+                  icon: const Icon(Icons.more_vert),
                   onPressed: () {},
                 ),
               )
