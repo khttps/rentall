@@ -11,6 +11,8 @@ class RentalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height / 7;
+
     return InkWell(
       onTap: () => Navigator.pushNamed(
         context,
@@ -18,7 +20,8 @@ class RentalCard extends StatelessWidget {
         arguments: rental,
       ),
       child: Container(
-        height: 120,
+        height: height,
+        clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(4.0),
@@ -33,31 +36,28 @@ class RentalCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius:
-                  const BorderRadius.horizontal(left: Radius.circular(3.0)),
-              child: rental.images.isNotEmpty
-                  ? CachedNetworkImage(
-                      imageUrl: rental.images[0],
-                      placeholder: (c, u) => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      height: 120,
-                      width: 120,
-                      fit: BoxFit.cover,
-                    )
-                  : const Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Icon(
-                        Icons.image_not_supported,
-                        size: 100,
-                        color: Colors.grey,
-                      ),
+            rental.images.isNotEmpty
+                ? CachedNetworkImage(
+                    imageUrl: rental.images[0],
+                    height: height,
+                    width: height,
+                    placeholder: (c, u) => const Center(
+                      child: CircularProgressIndicator(),
                     ),
-            ),
+                    fit: BoxFit.cover,
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Icon(
+                      Icons.image_not_supported,
+                      size: height - 20.0,
+                      color: Colors.grey,
+                    ),
+                  ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: 12.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -88,7 +88,7 @@ class RentalCard extends StatelessWidget {
                     const Spacer(),
                     Text(
                       '${rental.price} EGP / ${rental.rentPeriod?.name}',
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(fontSize: 16.0),
                     ),

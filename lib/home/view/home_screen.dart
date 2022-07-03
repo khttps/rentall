@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../screens.dart';
 import '../../widgets/widgets.dart';
-import 'widgets/widgets.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = 'home';

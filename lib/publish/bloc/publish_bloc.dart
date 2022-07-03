@@ -59,7 +59,6 @@ class PublishBloc extends Bloc<PublishEvent, PublishState> {
         rental: rental,
       ));
     } on Exception catch (err) {
-      rethrow;
       emit(PublishState(
         status: PublishLoadStatus.failed,
         error: (err as dynamic).message,

@@ -1,7 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
-import '../../home/view/widgets/widgets.dart';
 import '../../widgets/widgets.dart';
 
 class SearchScreen extends StatefulWidget {

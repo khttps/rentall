@@ -43,7 +43,6 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
         rentals: rentals,
       ));
     } on Exception catch (err) {
-      rethrow;
       emit(state.copyWith(
         status: RentalsLoadStatus.failed,
         error: (err as dynamic).message,
@@ -71,7 +70,6 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
         rentals: rentals,
       ));
     } on Exception catch (err) {
-      rethrow;
       emit(state.copyWith(
         status: RentalsLoadStatus.failed,
         error: (err as dynamic).message,
@@ -94,7 +92,6 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
         rentals: rentals,
       ));
     } on Exception catch (err) {
-      rethrow;
       emit(state.copyWith(
         status: RentalsLoadStatus.failed,
         error: (err as dynamic).message,
@@ -115,7 +112,6 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
         rentals: rentals,
       ));
     } on Exception catch (err) {
-      rethrow;
       emit(state.copyWith(
         status: RentalsLoadStatus.failed,
         error: (err as dynamic).message,
@@ -135,7 +131,6 @@ class RentalsBloc extends Bloc<RentalsEvent, RentalsState> {
         rentals: rentals,
       ));
     } on Exception catch (err) {
-      rethrow;
       emit(state.copyWith(
         status: RentalsLoadStatus.failed,
         error: (err as dynamic).message,

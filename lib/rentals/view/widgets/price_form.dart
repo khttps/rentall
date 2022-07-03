@@ -87,6 +87,7 @@ class _PriceFormState extends State<PriceForm> {
                 if (to != null && from != null && to < from) {
                   return 'Start value can\'t be larger than end value.';
                 }
+                return null;
               },
             ),
             const SizedBox(height: 4.0),

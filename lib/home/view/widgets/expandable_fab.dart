@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class ExpandableFab extends StatefulWidget {
   final List<Widget> children;
-  ExpandableFab({
+  const ExpandableFab({
     required this.children,
     Key? key,
   }) : super(key: key);

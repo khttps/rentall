@@ -1,14 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:rentall/data/model/rent_period.dart';
-import 'package:rentall/rentals/view/widgets/price_form.dart';
 
 import '../../blocs.dart';
 import '../../data/model/governorate.dart';
 import '../../data/model/property_type.dart';
+import '../../data/model/rent_period.dart';
 import '../../widgets/widgets.dart';
 import 'widgets/widgets.dart';
 
@@ -203,6 +200,7 @@ class RentalsScreen extends StatelessWidget {
               return ListView.separated(
                 physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.all(8.0),
+                shrinkWrap: true,
                 itemCount: state.rentals!.length,
                 separatorBuilder: (c, i) => const SizedBox(height: 8.0),
                 itemBuilder: (context, index) {
@@ -210,12 +208,7 @@ class RentalsScreen extends StatelessWidget {
                 },
               );
             } else {
-              return Stack(
-                children: [
-                  ListView(),
-                  const Center(child: Text('Nothing to see here.')),
-                ],
-              );
+              return const EmptyList();
             }
           },
         ),
