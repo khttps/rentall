@@ -46,7 +46,7 @@ class _PriceFormState extends State<PriceForm> {
                     name: 'from',
                     controller: _fromController,
                     validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.numeric(context),
+                      FormBuilderValidators.numeric(),
                     ]),
                     decoration: const InputDecoration(
                       hintText: 'From',
@@ -62,7 +62,7 @@ class _PriceFormState extends State<PriceForm> {
                       hintText: 'To',
                     ),
                     validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.numeric(context),
+                      FormBuilderValidators.numeric(),
                     ]),
                   ),
                 ),

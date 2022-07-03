@@ -243,7 +243,7 @@ class _PublishScreenState extends State<PublishScreen> {
                               name: 'title',
                               textInputAction: TextInputAction.next,
                               validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context,
+                                FormBuilderValidators.required(
                                     errorText: tr('required')),
                               ]),
                             ),
@@ -272,7 +272,7 @@ class _PublishScreenState extends State<PublishScreen> {
                                 ),
                               ),
                               validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context,
+                                FormBuilderValidators.required(
                                     errorText: tr('required')),
                               ]),
                             ),
@@ -286,7 +286,7 @@ class _PublishScreenState extends State<PublishScreen> {
                               maxLines: 3,
                               textInputAction: TextInputAction.next,
                               validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context,
+                                FormBuilderValidators.required(
                                     errorText: tr('required')),
                               ]),
                             ),
@@ -330,7 +330,7 @@ class _PublishScreenState extends State<PublishScreen> {
                                       ),
                                     ),
                                     validator: FormBuilderValidators.compose([
-                                      FormBuilderValidators.required(context,
+                                      FormBuilderValidators.required(
                                           errorText: tr('required')),
                                     ]),
                                   ),
@@ -368,7 +368,7 @@ class _PublishScreenState extends State<PublishScreen> {
                                       ),
                                     ),
                                     validator: FormBuilderValidators.compose([
-                                      FormBuilderValidators.required(context,
+                                      FormBuilderValidators.required(
                                           errorText: tr('required')),
                                     ]),
                                   ),
@@ -411,10 +411,9 @@ class _PublishScreenState extends State<PublishScreen> {
                                     textInputAction: TextInputAction.next,
                                     validator: FormBuilderValidators.compose([
                                       FormBuilderValidators.required(
-                                        context,
                                         errorText: tr('required'),
                                       ),
-                                      FormBuilderValidators.numeric(context),
+                                      FormBuilderValidators.numeric(),
                                     ]),
                                   ),
                                 ),
@@ -434,10 +433,9 @@ class _PublishScreenState extends State<PublishScreen> {
                                     textInputAction: TextInputAction.next,
                                     validator: FormBuilderValidators.compose([
                                       FormBuilderValidators.required(
-                                        context,
                                         errorText: tr('required'),
                                       ),
-                                      FormBuilderValidators.numeric(context),
+                                      FormBuilderValidators.numeric(),
                                     ]),
                                   ),
                                 )
@@ -514,10 +512,9 @@ class _PublishScreenState extends State<PublishScreen> {
                               textInputAction: TextInputAction.next,
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(
-                                  context,
                                   errorText: tr('required'),
                                 ),
-                                FormBuilderValidators.numeric(context),
+                                FormBuilderValidators.numeric(),
                                 (_) {
                                   if (!_validPhone) {
                                     return 'Invalid phone number.';
