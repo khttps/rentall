@@ -13,7 +13,7 @@ class MenuScreen extends StatelessWidget {
       children: [
         const ProfileCard(),
         const Divider(thickness: 1.0),
-        Text(
+        const Text(
           'Account',
           style: TextStyle(
             fontSize: 16.0,
@@ -26,22 +26,27 @@ class MenuScreen extends StatelessWidget {
           title: const Text('Email'),
           subtitle: Text('example@example.com'),
           dense: true,
-          onTap: () => Navigator.pushNamed(context, ProfileScreen.routeName),
+          onTap: () =>
+              Navigator.pushNamed(context, UpdateEmailScreen.routeName),
         ),
         ListTile(
           leading: const Icon(Icons.lock),
-          title: const Text('Change Password'),
+          title: const Text('Update Password'),
           dense: true,
-          onTap: () => Navigator.pushNamed(context, ProfileScreen.routeName),
+          onTap: () =>
+              Navigator.pushNamed(context, UpdatePasswordScreen.routeName),
         ),
         ListTile(
           leading: const Icon(Icons.favorite),
           title: const Text('Favorites'),
           dense: true,
-          onTap: () => Navigator.pushNamed(context, FavoritesScreen.routeName),
+          onTap: () => Navigator.pushNamed(
+            context,
+            FavoritesScreen.routeName,
+          ),
         ),
         const Divider(thickness: 1.0),
-        Text(
+        const Text(
           'Host Settings',
           style: TextStyle(
             fontSize: 16.0,
@@ -53,13 +58,19 @@ class MenuScreen extends StatelessWidget {
           leading: const Icon(Icons.corporate_fare),
           title: const Text('Organization'),
           dense: true,
-          onTap: () {},
+          onTap: () => Navigator.pushNamed(
+            context,
+            OrganizationScreen.routeName,
+          ),
         ),
         ListTile(
           leading: const Icon(Icons.house),
           title: const Text('My Rentals'),
           dense: true,
-          onTap: () => Navigator.pushNamed(context, MyRentalsScreen.routeName),
+          onTap: () => Navigator.pushNamed(
+            context,
+            MyRentalsScreen.routeName,
+          ),
         ),
         const Divider(thickness: 1.0),
         ListTile(

@@ -640,52 +640,9 @@ class _PublishScreenState extends State<PublishScreen> {
   Future<void> _showBottomSheet(BuildContext context) {
     return showModalBottomSheet(
       context: context,
-      builder: (context) => Container(
-        height: 180.0,
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            RawMaterialButton(
-              padding: const EdgeInsets.all(20.0),
-              onPressed: () async {
-                Navigator.pop(context);
-                final image = await _picker.pickImage(
-                    source: ImageSource.camera, imageQuality: 50);
-                if (image != null) setState(() => _images.add(image));
-              },
-              elevation: 0.0,
-              shape: const CircleBorder(),
-              fillColor: Colors.blueGrey,
-              child: const Icon(
-                Icons.camera_alt,
-                color: Colors.white,
-                size: 50,
-              ),
-            ),
-            RawMaterialButton(
-              padding: const EdgeInsets.all(20.0),
-              onPressed: () async {
-                Navigator.pop(context);
-                final images = await _picker.pickMultiImage(imageQuality: 50);
-                if (images != null) {
-                  setState(() => _images.addAll(images));
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    ErrorSnackbar(message: 'Failed to retrieve images.'),
-                  );
-                }
-              },
-              elevation: 0.0,
-              shape: const CircleBorder(),
-              fillColor: Colors.blueGrey,
-              child: const Icon(
-                Icons.photo,
-                color: Colors.white,
-                size: 50,
-              ),
-            ),
-          ],
+      builder: (context) => ImagePickerBottomSheet(
+        onImagesPicked: (images) => setState(
+          () => _images.addAll(images),
         ),
       ),
     );

@@ -1,1 +1,1 @@
-export 'carousel_indicator.dart';
+export 'page_indicator.dart';

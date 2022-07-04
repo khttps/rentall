@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../widgets/widgets.dart';
 import '../../../screens.dart';
 
 class ProfileCard extends StatelessWidget {
@@ -12,25 +13,31 @@ class ProfileCard extends StatelessWidget {
       children: [
         Row(
           children: const [
-            Icon(
-              Icons.account_circle,
-              size: 100.0,
+            ImageCircleAvatar(
+              radius: 32.0,
+              icon: Icons.person,
             ),
-            SizedBox(width: 8.0),
+            SizedBox(width: 16.0),
             Text(
               'Guest',
-              style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 26.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
-        const SizedBox(height: 8.0),
+        const SizedBox(height: 16.0),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, AuthScreen.routeName);
-            },
             child: const Text('Sign In / Sign Up'),
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                AuthScreen.routeName,
+              );
+            },
           ),
         ),
       ],

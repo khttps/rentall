@@ -21,7 +21,7 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
-  final _carouselController = CarouselController();
+  final _controller = PageController();
   int _current = 0;
 
   @override
@@ -56,44 +56,34 @@ class _DetailsScreenState extends State<DetailsScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            (rental.images.isNotEmpty)
-                ? CarouselSlider.builder(
-                    carouselController: _carouselController,
-                    itemCount: rental.images.length,
-                    itemBuilder: (context, index, realIndex) => Container(
-                      decoration: const BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black54,
-                            offset: Offset(0.0, 1.0),
-                            blurRadius: 4,
-                          )
-                        ],
-                      ),
-                      child: CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        imageUrl: rental.images[index],
-                        placeholder: (c, _) => Container(
-                          color: Colors.white,
-                          child: const Center(
-                            child: CircularProgressIndicator.adaptive(),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return (rental.images.isNotEmpty)
+                    ? SizedBox(
+                        height: constraints.maxWidth,
+                        child: PageView.builder(
+                          controller: _controller,
+                          itemCount: rental.images.length,
+                          onPageChanged: (index) {
+                            setState(() => _current = index);
+                          },
+                          itemBuilder: (context, index) => CachedNetworkImage(
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: constraints.maxWidth,
+                            imageUrl: rental.images[index],
+                            placeholder: (c, _) => Container(
+                              color: Colors.white,
+                              child: const Center(
+                                child: CircularProgressIndicator.adaptive(),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    options: CarouselOptions(
-                      enableInfiniteScroll: false,
-                      viewportFraction: 1.0,
-                      aspectRatio: 1.0,
-                      onPageChanged: (index, reason) {
-                        setState(() => _current = index);
-                      },
-                    ),
-                  )
-                : NoImage(
-                    dimension: MediaQuery.of(context).size.width,
-                  ),
+                      )
+                    : NoImage(dimension: constraints.maxWidth);
+              },
+            ),
             Stack(
               children: [
                 const TopShadow(),
@@ -104,9 +94,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     physics: const NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.all(8.0),
                     children: [
-                      CarouselIndicator(
+                      PageIndicator(
                         items: widget.rental.images,
-                        carouselController: _carouselController,
+                        controller: _controller,
                         current: _current,
                       ),
                       Text(
