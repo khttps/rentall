@@ -6,3 +6,4 @@ export 'notifications/notifications.dart';
 export 'menu/menu.dart';
 export 'search/search.dart';
 export 'auth/auth.dart';
+export 'profile/profile.dart';

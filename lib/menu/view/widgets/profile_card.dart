@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../screens.dart';
 
-class LoggedOutProfile extends StatelessWidget {
-  const LoggedOutProfile({
-    Key? key,
-  }) : super(key: key);
+class ProfileCard extends StatelessWidget {
+  const ProfileCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -12,6 +12,8 @@ MaterialPageRoute<dynamic> onGenerateRoute(RouteSettings settings) {
           return PublishScreen(
             rental: settings.arguments as Rental?,
           );
+        case ProfileScreen.routeName:
+          return const ProfileScreen();
         case SearchScreen.routeName:
           return const SearchScreen();
         case AuthScreen.routeName:

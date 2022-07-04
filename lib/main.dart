@@ -49,7 +49,7 @@ class RentallApp extends StatelessWidget {
         localizationsDelegates: context.localizationDelegates
           ..add(FormBuilderLocalizations.delegate),
         theme: theme.themeData,
-        initialRoute: HomeScreen.routeName,
+        home: const HomeScreen(),
         onGenerateRoute: router.onGenerateRoute,
       ),
     );

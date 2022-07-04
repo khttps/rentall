@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../screens.dart';
 import 'widgets/widgets.dart';
 
 class MenuScreen extends StatelessWidget {
@@ -10,13 +11,13 @@ class MenuScreen extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(12.0),
       children: [
-        const LoggedOutProfile(),
+        const ProfileCard(),
         const Divider(thickness: 1.0),
         ListTile(
           leading: const Icon(Icons.person),
           title: const Text('Profile'),
           dense: true,
-          onTap: () {},
+          onTap: () => Navigator.pushNamed(context, ProfileScreen.routeName),
         ),
         ListTile(
           leading: const Icon(Icons.favorite),

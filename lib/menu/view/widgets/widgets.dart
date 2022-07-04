@@ -1,2 +1,2 @@
-export 'logged_out_profile.dart';
+export 'profile_card.dart';
 export '../../../auth/view/widgets/social_button.dart';

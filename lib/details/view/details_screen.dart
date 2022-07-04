@@ -9,13 +9,10 @@ import '../../screens.dart';
 import 'widgets/widgets.dart';
 
 class DetailsScreen extends StatefulWidget {
-  static const routeName = '/rental_details';
+  static const routeName = '/details';
 
   final Rental rental;
-  const DetailsScreen({
-    required this.rental,
-    Key? key,
-  }) : super(key: key);
+  const DetailsScreen({required this.rental, Key? key}) : super(key: key);
 
   @override
   State<DetailsScreen> createState() => _DetailsScreenState();

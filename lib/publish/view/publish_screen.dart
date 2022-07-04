@@ -55,39 +55,28 @@ class _PublishScreenState extends State<PublishScreen> {
         onTap: () => FocusScope.of(context).unfocus(),
         child: NestedScrollView(
           headerSliverBuilder: (c, i) => [
-            SliverAppBar(
-              snap: true,
-              floating: true,
-              leading: IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close)),
-              forceElevated: true,
-              title: Text(!updating ? 'New Rental' : 'Update Rental'),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.check),
-                  onPressed: () async {
-                    _validPhone = await PhoneNumberUtil()
-                        .validate(_phoneController.text, 'EG');
+            PostAppBar(
+              title: !updating ? 'New Rental' : 'Update Rental',
+              onSave: () async {
+                _validPhone = await PhoneNumberUtil()
+                    .validate(_phoneController.text, 'EG');
 
-                    if (_formKey.currentState!.saveAndValidate()) {
-                      context.read<PublishBloc>().add(
-                            !updating
-                                ? PublishRental(
-                                    rentalMap: _formKey.currentState!.value,
-                                    images: _images.whereType<XFile>().toList(),
-                                  )
-                                : UpdateRental(
-                                    id: widget.rental!.id!,
-                                    rental: _formKey.currentState!.value,
-                                    images: _images.whereType<XFile>().toList(),
-                                  ),
-                          );
-                    }
-                  },
-                ),
-              ],
-            ),
+                if (_formKey.currentState!.saveAndValidate()) {
+                  context.read<PublishBloc>().add(
+                        !updating
+                            ? PublishRental(
+                                rentalMap: _formKey.currentState!.value,
+                                images: _images.whereType<XFile>().toList(),
+                              )
+                            : UpdateRental(
+                                id: widget.rental!.id!,
+                                rental: _formKey.currentState!.value,
+                                images: _images.whereType<XFile>().toList(),
+                              ),
+                      );
+                }
+              },
+            )
           ],
           body: BlocConsumer<PublishBloc, PublishState>(
             listener: (context, state) {
@@ -103,15 +92,22 @@ class _PublishScreenState extends State<PublishScreen> {
                     backgroundColor: const Color.fromARGB(255, 47, 169, 110),
                   ),
                 );
-                Navigator.popUntil(
-                  context,
-                  (route) => route.settings.name == HomeScreen.routeName,
-                );
-                Navigator.pushNamed(
+
+                Navigator.pushNamedAndRemoveUntil(
                   context,
                   DetailsScreen.routeName,
+                  ModalRoute.withName(DetailsScreen.routeName),
                   arguments: state.rental!,
                 );
+                // Navigator.popUntil(
+                //   context,
+                //   ModalRoute.withName(DetailsScreen.routeName),
+                // );
+                // Navigator.pushNamed(
+                //   context,
+                //   DetailsScreen.routeName,
+                //   arguments: state.rental!,
+                // );
               } else if (state.status == PublishLoadStatus.deleted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -119,8 +115,16 @@ class _PublishScreenState extends State<PublishScreen> {
                     backgroundColor: Color.fromARGB(255, 47, 169, 110),
                   ),
                 );
-                Navigator.popUntil(context, (route) => false);
-                Navigator.pushNamed(context, HomeScreen.routeName);
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  HomeScreen.routeName,
+                  (route) => false,
+                );
+                // Navigator.popUntil(
+                //   context,
+                //   ModalRoute.withName(DetailsScreen.routeName),
+                // );
+                // Navigator.pushNamed(context, HomeScreen.routeName);
               }
             },
             builder: (context, state) {
