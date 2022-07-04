@@ -45,6 +45,15 @@ class MenuScreen extends StatelessWidget {
             FavoritesScreen.routeName,
           ),
         ),
+        ListTile(
+          leading: const Icon(Icons.circle_notifications),
+          title: const Text('My Alerts'),
+          dense: true,
+          onTap: () => Navigator.pushNamed(
+            context,
+            FavoritesScreen.routeName,
+          ),
+        ),
         const Divider(thickness: 1.0),
         const Text(
           'Host Settings',

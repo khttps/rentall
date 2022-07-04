@@ -26,6 +26,10 @@ MaterialPageRoute<dynamic> onGenerateRoute(RouteSettings settings) {
           return const OrganizationScreen();
         case MyRentalsScreen.routeName:
           return const MyRentalsScreen();
+        case PasswordSentScreen.routeName:
+          return PasswordSentScreen(email: settings.arguments as String);
+        case AlertScreen.routeName:
+          return const AlertScreen();
         case DetailsScreen.routeName:
           return DetailsScreen(
             rental: settings.arguments as Rental,

@@ -22,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -34,7 +35,9 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           actions: [
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, AlertScreen.routeName);
+              },
               child: Column(
                 children: const [
                   Expanded(child: Icon(Icons.notification_add)),

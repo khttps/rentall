@@ -46,6 +46,11 @@ class _AuthFormState extends State<AuthForm> {
               ),
             ),
             const SizedBox(height: 8.0),
+            const Text(
+              'Join our community, post your rentals, setup alerts for new rentals, save your favorite rentals',
+              style: TextStyle(fontSize: 16.0),
+            ),
+            const SizedBox(height: 16.0),
             TextFormField(
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,

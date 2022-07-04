@@ -27,7 +27,6 @@ class PublishScreen extends StatefulWidget {
 }
 
 class _PublishScreenState extends State<PublishScreen> {
-  final _picker = ImagePicker();
   final _formKey = GlobalKey<FormBuilderState>();
 
   late final updating = widget.rental != null;

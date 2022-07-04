@@ -48,6 +48,16 @@ class _DetailsScreenState extends State<DetailsScreen> {
         backgroundColor: Colors.transparent,
         actions: [
           IconButton(
+            icon: const Icon(Icons.drive_file_rename_outline_sharp),
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                PublishScreen.routeName,
+                arguments: rental,
+              );
+            },
+          ),
+          IconButton(
             onPressed: () {},
             icon: const Icon(Icons.favorite_border),
           )
@@ -88,7 +98,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               children: [
                 const TopShadow(),
                 Container(
-                  color: Colors.white,
+                  color: Theme.of(context).canvasColor,
                   child: ListView(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -173,16 +183,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           ),
                         ),
                       Text(rental.description ?? ''),
-                      TextButton(
-                        child: const Text('Update'),
-                        onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            PublishScreen.routeName,
-                            arguments: rental,
-                          );
-                        },
-                      )
                     ],
                   ),
                 ),

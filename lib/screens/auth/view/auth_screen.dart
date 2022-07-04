@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
+import '../../screens.dart';
 import 'widgets/widgets.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -54,7 +56,13 @@ class _AuthScreenState extends State<AuthScreen> {
                   label: 'Sign In',
                   actions: [
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _controller.animateToPage(
+                          3,
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeIn,
+                        );
+                      },
                       child: const Text(
                         'Forgot Pasword',
                         style: TextStyle(decoration: TextDecoration.underline),
@@ -92,7 +100,14 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ),
                   ],
-                )
+                ),
+                ForgotPasswordForm(onSubmit: () {
+                  _controller.animateToPage(
+                    0,
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeIn,
+                  );
+                })
               ],
             ),
           ),
