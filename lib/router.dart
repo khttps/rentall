@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rentall/screens.dart';
-import 'data/model/rental.dart';
+import 'package:rentall/screens/screens.dart';
+
+import 'data/models/models.dart';
 
 MaterialPageRoute<dynamic> onGenerateRoute(RouteSettings settings) {
   return MaterialPageRoute(
@@ -18,6 +19,10 @@ MaterialPageRoute<dynamic> onGenerateRoute(RouteSettings settings) {
           return const SearchScreen();
         case AuthScreen.routeName:
           return const AuthScreen();
+        case FavoritesScreen.routeName:
+          return const FavoritesScreen();
+        case MyRentalsScreen.routeName:
+          return const MyRentalsScreen();
         case DetailsScreen.routeName:
           return DetailsScreen(
             rental: settings.arguments as Rental,

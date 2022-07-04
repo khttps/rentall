@@ -2,7 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'blocs.dart';
+import 'screens/blocs.dart';
 import 'data/repository/rental_repository.dart';
 
 final sl = GetIt.instance;

@@ -4,11 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:rentall/data/model/property_type.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../model/governorate.dart';
-import '../model/rent_period.dart';
-import '../model/rental.dart';
+
+import '../models/models.dart';
 
 abstract class RentalRepository {
   Future<List<Rental>> getRentals(Map<String, dynamic> filters);
