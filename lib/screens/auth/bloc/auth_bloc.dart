@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/repository/user_repository.dart';
@@ -16,6 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignUpPressed>(_onSignUpPressed);
     on<ForgotPassword>(_onForgotPassword);
     on<SignInByGoogle>(_onSignInByGoogle);
+    on<SignInByFacebook>(_onSignInByFacebook);
   }
 
   FutureOr<void> _onSignInPressed(SignInPressed event, emit) async {
@@ -27,7 +29,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (user != null) {
         emit(SignInSuccess(user: user));
       } else {
-        emit(const AuthFailed(message: 'Invalid credentials'));
+        throw Exception('Sign in failed.');
       }
     } on Exception catch (err) {
       emit(AuthFailed(message: (err as dynamic).message));
@@ -37,10 +39,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> _onSignInByGoogle(SignInByGoogle event, emit) async {
     emit(AuthLoading());
     try {
-      // User? theUser = (await userrepo.signInWithGoogle()) as User?;
-      // yield LoginSuccessState(user: theUser!);
-    } catch (e) {
-      emit(AuthFailed(message: e.toString()));
+      final user = await repository.signInWithGoogle();
+      if (user != null) {
+        emit(SignInSuccess(user: user));
+      } else {
+        throw Exception('Sign in failed.');
+      }
+    } on Exception catch (err) {
+      rethrow;
+      emit(AuthFailed(message: (err as dynamic).message ?? ''));
+    }
+  }
+
+  FutureOr<void> _onSignInByFacebook(SignInByFacebook event, emit) async {
+    emit(AuthLoading());
+    try {
+      final user = await repository.signInWithFacebook();
+      if (user != null) {
+        emit(SignInSuccess(user: user));
+      } else {
+        throw Exception('Sign in failed.');
+      }
+    } on Exception catch (err) {
+      rethrow;
+      emit(AuthFailed(message: (err as dynamic)).message);
     }
   }
 
@@ -55,7 +77,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (user != null) {
         emit(SignUpSuccess(user: user));
       } else {
-        emit(const AuthFailed(message: 'Sign up failed.'));
+        throw Exception('Sign up failed.');
       }
     } on Exception catch (err) {
       emit(AuthFailed(message: (err as dynamic).message));

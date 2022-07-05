@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class PostAppBar extends StatelessWidget {
   final String title;
-  final VoidCallback onSave;
+  final Function() onSave;
   const PostAppBar({
     required this.title,
     required this.onSave,
@@ -23,7 +23,7 @@ class PostAppBar extends StatelessWidget {
       actions: [
         IconButton(
           icon: const Icon(Icons.check),
-          onPressed: onSave,
+          onPressed: () => onSave(),
         ),
       ],
     );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:rentall/screens/auth/bloc/auth_bloc.dart';
 import 'widgets.dart';
 
 class AuthForm extends StatefulWidget {
@@ -104,7 +106,9 @@ class _AuthFormState extends State<AuthForm> {
               text: '${widget.label} with Google',
               color: Colors.red,
               asset: 'assets/images/google.png',
-              onPressed: () {},
+              onPressed: () {
+                BlocProvider.of<AuthBloc>(context).add(const SignInByGoogle());
+              },
             ),
             SocialButton(
               text: '${widget.label} with Facebook',

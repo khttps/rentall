@@ -26,8 +26,10 @@ class MenuScreen extends StatelessWidget {
           title: const Text('Email'),
           subtitle: Text('example@example.com'),
           dense: true,
-          onTap: () =>
-              Navigator.pushNamed(context, UpdateEmailScreen.routeName),
+          onTap: () => Navigator.pushNamed(
+            context,
+            UpdateEmailScreen.routeName,
+          ),
         ),
         ListTile(
           leading: const Icon(Icons.lock),

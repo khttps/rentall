@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rentall/screens/screens.dart';
 import 'data/models/models.dart';
@@ -13,7 +14,7 @@ MaterialPageRoute<dynamic> onGenerateRoute(RouteSettings settings) {
             rental: settings.arguments as Rental?,
           );
         case UpdateEmailScreen.routeName:
-          return const UpdateEmailScreen();
+          return UpdateEmailScreen(user: settings.arguments as User?);
         case UpdatePasswordScreen.routeName:
           return const UpdatePasswordScreen();
         case SearchScreen.routeName:

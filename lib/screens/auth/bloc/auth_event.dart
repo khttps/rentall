@@ -42,3 +42,10 @@ class SignInByGoogle extends AuthEvent {
   @override
   List<Object?> get props => [];
 }
+
+class SignInByFacebook extends AuthEvent {
+  const SignInByFacebook();
+
+  @override
+  List<Object?> get props => [];
+}
