@@ -1,7 +1,7 @@
 export 'home/home.dart'; // Done
-export 'rentals/rentals.dart'; // Done
-export 'publish/publish.dart'; // Done
-export 'details/details.dart'; // Done
+export 'rentals/rentals.dart'; // Done, Maps missing
+export 'publish/publish.dart'; // Done, Maps missing, multiple phone numbers
+export 'details/details.dart'; // Done, maps missing, host info
 export 'notifications/notifications.dart'; // UI Done
 export 'menu/menu.dart'; // UI Done
 export 'search/search.dart'; // UI Done

@@ -15,15 +15,15 @@ class PasswordSentScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: RichText(
-          text: const TextSpan(
+          text: TextSpan(
             text: 'An email has been sent to ',
-            style: TextStyle(fontSize: 18.0, color: Colors.black87),
+            style: const TextStyle(fontSize: 18.0, color: Colors.black87),
             children: [
               TextSpan(
-                text: 'example@example.com',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                text: email,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              TextSpan(
+              const TextSpan(
                 text: ' with your new password.',
               ),
             ],

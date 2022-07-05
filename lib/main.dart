@@ -40,6 +40,7 @@ class RentallApp extends StatelessWidget {
           create: (context) => di.sl()..add(const GetRentals()),
         ),
         BlocProvider<PublishBloc>(create: (context) => di.sl()),
+        BlocProvider<AuthBloc>(create: (context) => di.sl()),
       ],
       child: MaterialApp(
         title: 'Rentall',

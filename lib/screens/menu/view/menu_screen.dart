@@ -65,7 +65,7 @@ class MenuScreen extends StatelessWidget {
         ),
         ListTile(
           leading: const Icon(Icons.corporate_fare),
-          title: const Text('Organization'),
+          title: const Text('Host Profile'),
           dense: true,
           onTap: () => Navigator.pushNamed(
             context,

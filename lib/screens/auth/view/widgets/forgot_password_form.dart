@@ -4,7 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import '../../../screens.dart';
 
 class ForgotPasswordForm extends StatefulWidget {
-  final Function() onSubmit;
+  final Function(String?) onSubmit;
   const ForgotPasswordForm({
     required this.onSubmit,
     Key? key,
@@ -61,19 +61,16 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
                   color: Colors.white,
                 ),
               ),
-              onPressed: () async {
-                // TODO
+              onPressed: () {
+                widget.onSubmit(_controller.text);
                 _controller.clear();
-                widget.onSubmit();
-                Navigator.pushNamed(context, PasswordSentScreen.routeName,
-                    arguments: 'example@example.com');
               },
             ),
           ),
           TextButton(
             onPressed: () {
+              widget.onSubmit(null);
               _controller.clear();
-              widget.onSubmit();
             },
             child: const Text(
               'Sign In',

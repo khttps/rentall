@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'widgets.dart';
 
 class AuthForm extends StatefulWidget {
   final String label;
   final List<Widget> actions;
+  final Function(Map<String, dynamic>) onSubmit;
   const AuthForm({
     required this.label,
     required this.actions,
+    required this.onSubmit,
     Key? key,
   }) : super(key: key);
 
@@ -15,24 +18,13 @@ class AuthForm extends StatefulWidget {
 }
 
 class _AuthFormState extends State<AuthForm> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
   var _obscureText = true;
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  final formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormBuilderState>();
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: formKey,
+    return FormBuilder(
+      key: _formKey,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -51,12 +43,10 @@ class _AuthFormState extends State<AuthForm> {
               style: TextStyle(fontSize: 16.0),
             ),
             const SizedBox(height: 16.0),
-            TextFormField(
-              controller: _emailController,
+            FormBuilderTextField(
+              name: 'email',
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
-              onFieldSubmitted: (String value) {},
-              onChanged: (String value) {},
               decoration: const InputDecoration(
                 hintText: 'Email',
                 prefixIcon: Icon(Icons.email),
@@ -69,8 +59,8 @@ class _AuthFormState extends State<AuthForm> {
               },
             ),
             const SizedBox(height: 8.0),
-            TextFormField(
-              controller: _passwordController,
+            FormBuilderTextField(
+              name: 'password',
               keyboardType: TextInputType.visiblePassword,
               obscureText: _obscureText,
               validator: (value) {
@@ -102,8 +92,10 @@ class _AuthFormState extends State<AuthForm> {
                     color: Colors.white,
                   ),
                 ),
-                onPressed: () async {
-                  if (formKey.currentState!.validate()) {}
+                onPressed: () {
+                  if (_formKey.currentState!.saveAndValidate()) {
+                    widget.onSubmit(_formKey.currentState!.value);
+                  }
                 },
               ),
             ),
