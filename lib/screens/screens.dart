@@ -4,7 +4,7 @@ export 'publish/publish.dart'; // Maps missing, multiple phone numbers
 export 'details/details.dart'; // maps missing, avatar and name
 export 'notifications/notifications.dart'; // UI Done
 export 'menu/menu.dart'; // Done
-export 'search/search.dart'; // UI Done
+export 'search/search.dart'; // Done
 export 'auth/auth.dart'; // Facebook missing, confirmation email
 export 'update_email/update_email.dart'; // Done
 export 'update_password/update_password.dart'; // Done

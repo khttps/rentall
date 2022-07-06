@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class SearchBar extends StatefulWidget {
   final bool? enabled;
+  final Function(String)? onChanged;
   const SearchBar({
+    this.onChanged,
     this.enabled,
     Key? key,
   }) : super(key: key);
@@ -17,6 +19,11 @@ class _SearchBarState extends State<SearchBar> {
     return TextFormField(
       textInputAction: TextInputAction.search,
       autofocus: widget.enabled ?? true,
+      onChanged: (value) {
+        if (value.isNotEmpty) {
+          widget.onChanged!(value);
+        }
+      },
       decoration: InputDecoration(
         hintText: 'Search...',
         enabled: widget.enabled ?? true,

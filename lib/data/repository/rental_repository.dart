@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -21,6 +22,7 @@ abstract class RentalRepository {
     List<File?>? images,
   );
   Future<void> deleteRental(String id);
+  Future<List<Rental>> getSearchResults(String keyword);
 }
 
 class RentalRepositoryImpl implements RentalRepository {
@@ -28,17 +30,20 @@ class RentalRepositoryImpl implements RentalRepository {
   final FirebaseFirestore _firestore;
   final FirebaseAuth _firebaseAuth;
   final FirebaseStorage _storage;
+  final Algolia _aloglia;
 
-  RentalRepositoryImpl(
-      {FirebaseFirestore? firestore,
-      FirebaseAuth? firebaseAuth,
-      FirebaseStorage? storage,
-      required SharedPreferences prefs,
-      required InternetConnectionChecker connectionChecker})
-      : _firestore = firestore ?? FirebaseFirestore.instance,
+  RentalRepositoryImpl({
+    FirebaseFirestore? firestore,
+    FirebaseAuth? firebaseAuth,
+    FirebaseStorage? storage,
+    required SharedPreferences prefs,
+    required InternetConnectionChecker connectionChecker,
+    required Algolia algolia,
+  })  : _firestore = firestore ?? FirebaseFirestore.instance,
         _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _storage = storage ?? FirebaseStorage.instance,
-        _connectionChecker = connectionChecker;
+        _connectionChecker = connectionChecker,
+        _aloglia = algolia;
 
   @override
   Future<List<Rental>> getRentals(Map<String, dynamic> filters) async {
@@ -98,7 +103,6 @@ class RentalRepositoryImpl implements RentalRepository {
     }
 
     await ref.update({'id': ref.id, 'images': imageUrls});
-
     final map = (await ref.get()).data();
     throwIf(map == null, Exception('Failed to retrieve rental.'));
 
@@ -184,5 +188,17 @@ class RentalRepositoryImpl implements RentalRepository {
             },
           ),
         );
+  }
+
+  @override
+  Future<List<Rental>> getSearchResults(String keyword) async {
+    final snap =
+        await _aloglia.instance.index('rentals').query(keyword).getObjects();
+
+    return (snap.toMap()['hits'] as List)
+        .map(
+          (e) => Rental.fromJson(e),
+        )
+        .toList();
   }
 }

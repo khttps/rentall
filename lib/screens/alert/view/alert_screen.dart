@@ -38,7 +38,10 @@ class _AlertScreenState extends State<AlertScreen> {
                 const SizedBox(width: 16.0),
                 const Text('day'),
               ],
-            )
+            ),
+            Wrap(
+              children: [],
+            ),
           ],
         ),
       ),
