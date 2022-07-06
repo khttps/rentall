@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rentall/data/repository/user_repository.dart';
 import 'package:rentall/screens/update_email/bloc/update_email_bloc.dart';
+import 'package:rentall/screens/update_password/bloc/update_password_bloc.dart';
 import 'firebase_options.dart';
 import 'screens/blocs.dart';
 import 'injector.dart' as di;
@@ -43,7 +44,8 @@ class RentallApp extends StatelessWidget {
         ),
         BlocProvider<PublishBloc>(create: (context) => di.sl()),
         BlocProvider<AuthBloc>(create: (context) => di.sl()),
-        BlocProvider<UpdateEmailBloc>(create: (context) => di.sl())
+        BlocProvider<UpdateEmailBloc>(create: (context) => di.sl()),
+        BlocProvider<UpdatePasswordBloc>(create: (context) => di.sl()),
       ],
       child: MaterialApp(
         title: 'Rentall',

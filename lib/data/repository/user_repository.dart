@@ -17,6 +17,7 @@ abstract class UserRepository {
   Future<User?> signInWithGoogle();
   Future<User?> signInWithFacebook();
   Future<bool> changeEmailAddress(String newEmail, String currentPassword);
+  Future<bool> changePassword(String newPassword, String currentPassword);
   bool get isSignedIn;
   User? get currentUser;
 }
@@ -126,6 +127,31 @@ class UserRepositoryImpl implements UserRepository {
 
     if (newUser != null) {
       await newCredential.user!.updateEmail(newEmail);
+      success = true;
+    }
+    return success;
+  }
+
+  @override
+  Future<bool> changePassword(
+    String newPassword,
+    String currentPassword,
+  ) async {
+    bool success = false;
+
+    // final user = _firebaseAuth.currentUser;
+    final user = await signInEmailAndPassword('mohamed@gmail.com', '112233');
+
+    final credential = EmailAuthProvider.credential(
+      email: user!.email!,
+      password: currentPassword,
+    );
+
+    final newCredential = await user.reauthenticateWithCredential(credential);
+    final newUser = newCredential.user;
+
+    if (newUser != null) {
+      await newCredential.user!.updatePassword(newPassword);
       success = true;
     }
     return success;

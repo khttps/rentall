@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:rentall/data/repository/user_repository.dart';
 import 'package:rentall/screens/update_email/bloc/update_email_bloc.dart';
+import 'package:rentall/screens/update_password/bloc/update_password_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'screens/blocs.dart';
@@ -16,6 +17,8 @@ Future<void> init() async {
   sl.registerFactory<PublishBloc>(() => PublishBloc(repository: sl()));
   sl.registerFactory<AuthBloc>(() => AuthBloc(repository: sl()));
   sl.registerFactory<UpdateEmailBloc>(() => UpdateEmailBloc(repository: sl()));
+  sl.registerFactory<UpdatePasswordBloc>(
+      () => UpdatePasswordBloc(repository: sl()));
 
   //! Repositories
   sl.registerLazySingleton<RentalRepository>(
