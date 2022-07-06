@@ -24,6 +24,12 @@ class _AlertScreenState extends State<AlertScreen> {
         body: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
+            Text(''),
+            Wrap(
+              children: [],
+            ),
+            TextFormField(),
+            ElevatedButton(onPressed: () {}, child: Text('Add')),
             Row(
               children: [
                 const Text('Repeat every'),
@@ -38,7 +44,7 @@ class _AlertScreenState extends State<AlertScreen> {
                 const SizedBox(width: 16.0),
                 const Text('day'),
               ],
-            )
+            ),
           ],
         ),
       ),

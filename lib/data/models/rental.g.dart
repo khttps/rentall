@@ -106,6 +106,7 @@ const _$GovernorateEnumMap = {
 };
 
 const _$RentPeriodEnumMap = {
+  RentPeriod.all: 'all',
   RentPeriod.day: 'day',
   RentPeriod.month: 'month',
   RentPeriod.week: 'week',

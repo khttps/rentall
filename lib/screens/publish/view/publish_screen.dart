@@ -614,24 +614,10 @@ class _PublishScreenState extends State<PublishScreen> {
   }) {
     return showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (context) => ConfirmationDialog(
         title: title,
         content: content,
-        actions: [
-          TextButton(
-            onPressed: () {
-              onPositive();
-              Navigator.pop(context);
-            },
-            child: const Text('Yes'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('No'),
-          )
-        ],
+        onPositive: onPositive,
       ),
     );
   }

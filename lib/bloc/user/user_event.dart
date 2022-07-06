@@ -1,8 +1,23 @@
 part of 'user_bloc.dart';
 
-abstract class AuthEvent extends Equatable {}
+abstract class UserEvent extends Equatable {
+  const UserEvent();
 
-class Startup extends AuthEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+class UserChanged extends UserEvent {
+  final User? user;
+
+  const UserChanged({this.user});
+  @override
+  List<Object?> get props => [user];
+}
+
+class UserSignOut extends UserEvent {
+  const UserSignOut();
+
   @override
   List<Object?> get props => [];
 }

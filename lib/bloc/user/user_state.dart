@@ -22,9 +22,18 @@ class Authenticated extends UserState {
   List<Object?> get props => [user];
 }
 
+class UserLoading extends UserState {
+  const UserLoading();
+}
+
 class Unauthenticated extends UserState {
   const Unauthenticated();
+}
 
-  @override
-  List<Object?> get props => [];
+class UserError extends UserState {
+  const UserError();
+}
+
+class UserLoggedOut extends UserState {
+  const UserLoggedOut();
 }

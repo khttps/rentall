@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rentall/screens/home/bloc/home_bloc.dart';
 
 import '../../../widgets/widgets.dart';
+import '../../blocs.dart';
 import '../../screens.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -11,8 +14,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with AutomaticKeepAliveClientMixin {
+class _HomeScreenState extends State<HomeScreen> {
   var _currentIndex = 0;
   final _screens = const [
     RentalsScreen(),
@@ -21,8 +23,13 @@ class _HomeScreenState extends State<HomeScreen>
   ];
 
   @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<HomeBloc>(context).add(LoadUser());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    super.build(context);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -34,16 +41,24 @@ class _HomeScreenState extends State<HomeScreen>
             },
           ),
           actions: [
-            InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, AlertScreen.routeName);
+            BlocBuilder<UserBloc, UserState>(
+              builder: (context, state) {
+                return InkWell(
+                  onTap: () {
+                    if (state is Authenticated) {
+                      Navigator.pushNamed(context, AlertScreen.routeName);
+                    } else {
+                      Navigator.pushNamed(context, AuthScreen.routeName);
+                    }
+                  },
+                  child: Column(
+                    children: const [
+                      Expanded(child: Icon(Icons.notification_add)),
+                      Expanded(child: Text('Create Alert'))
+                    ],
+                  ),
+                );
               },
-              child: Column(
-                children: const [
-                  Expanded(child: Icon(Icons.notification_add)),
-                  Expanded(child: Text('Create Alert'))
-                ],
-              ),
             ),
             const SizedBox(width: 10.0)
           ],
@@ -91,15 +106,32 @@ class _HomeScreenState extends State<HomeScreen>
                   ],
                 ),
               ),
-              Expanded(
-                flex: 1,
-                child: FloatingActionButton(
-                  mini: true,
-                  elevation: 0,
-                  child: const Icon(Icons.add),
-                  onPressed: () =>
-                      Navigator.pushNamed(context, PublishScreen.routeName),
-                ),
+              BlocBuilder<HomeBloc, HomeState>(
+                builder: (context, state) {
+                  return Expanded(
+                    flex: 1,
+                    child: FloatingActionButton(
+                      mini: true,
+                      elevation: 0,
+                      child: const Icon(Icons.add),
+                      onPressed: () {
+                        if (state is UserWithHost) {
+                          Navigator.pushNamed(context, PublishScreen.routeName);
+                        } else if (state is UserOnly) {
+                          Navigator.pushNamed(
+                            context,
+                            OrganizationScreen.routeName,
+                          );
+                        } else if (state is NoUser) {
+                          Navigator.pushNamed(
+                            context,
+                            AuthScreen.routeName,
+                          );
+                        }
+                      },
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -107,7 +139,4 @@ class _HomeScreenState extends State<HomeScreen>
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
