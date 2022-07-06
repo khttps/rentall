@@ -58,18 +58,18 @@ class _PublishScreenState extends State<PublishScreen> {
                     .validate(_phoneController.text, 'EG');
 
                 if (_formKey.currentState!.saveAndValidate()) {
-                  context.read<PublishBloc>().add(
-                        !updating
-                            ? PublishRental(
-                                rentalMap: _formKey.currentState!.value,
-                                images: _images.whereType<XFile>().toList(),
-                              )
-                            : UpdateRental(
-                                id: widget.rental!.id!,
-                                rental: _formKey.currentState!.value,
-                                images: _images.whereType<XFile>().toList(),
-                              ),
-                      );
+                  BlocProvider.of<PublishBloc>(context).add(
+                    !updating
+                        ? PublishRental(
+                            rentalMap: _formKey.currentState!.value,
+                            images: _images.whereType<XFile>().toList(),
+                          )
+                        : UpdateRental(
+                            id: widget.rental!.id!,
+                            rental: _formKey.currentState!.value,
+                            images: _images.whereType<XFile>().toList(),
+                          ),
+                  );
                 }
               },
             )
@@ -95,15 +95,6 @@ class _PublishScreenState extends State<PublishScreen> {
                   ModalRoute.withName(DetailsScreen.routeName),
                   arguments: state.rental!,
                 );
-                // Navigator.popUntil(
-                //   context,
-                //   ModalRoute.withName(DetailsScreen.routeName),
-                // );
-                // Navigator.pushNamed(
-                //   context,
-                //   DetailsScreen.routeName,
-                //   arguments: state.rental!,
-                // );
               } else if (state.status == PublishLoadStatus.deleted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -116,11 +107,6 @@ class _PublishScreenState extends State<PublishScreen> {
                   HomeScreen.routeName,
                   (route) => false,
                 );
-                // Navigator.popUntil(
-                //   context,
-                //   ModalRoute.withName(DetailsScreen.routeName),
-                // );
-                // Navigator.pushNamed(context, HomeScreen.routeName);
               }
             },
             builder: (context, state) {
@@ -229,28 +215,7 @@ class _PublishScreenState extends State<PublishScreen> {
                           physics: const NeverScrollableScrollPhysics(),
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           children: [
-                            FormBuilderField(
-                              name: 'imgv',
-                              builder: (state) {
-                                if (state.errorText != null) {
-                                  return Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.error,
-                                        color: Colors.red,
-                                        size: 17.0,
-                                      ),
-                                      const SizedBox(width: 6.0),
-                                      Text(
-                                        state.errorText ?? '',
-                                        style: const TextStyle(
-                                            fontSize: 13.0, color: Colors.red),
-                                      )
-                                    ],
-                                  );
-                                }
-                                return const SizedBox.shrink();
-                              },
+                            CustomValidator(
                               validator: (_) {
                                 if (_images.length < 3) {
                                   return 'Please add at least 3 images of your rental.';

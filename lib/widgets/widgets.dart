@@ -10,3 +10,4 @@ export 'no_image.dart';
 export 'image_picker_bottom_sheet.dart';
 export 'image_circle_avatar.dart';
 export 'confirmation_dialog.dart';
+export 'custom_validator.dart';

@@ -17,7 +17,8 @@ class ProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool signedIn = user != null;
+    final signedIn = user != null;
+    final displayName = user?.displayName;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +41,9 @@ class ProfileCard extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: signedIn
-                          ? user!.displayName ?? user!.email!
+                          ? displayName?.isNotEmpty == true
+                              ? displayName
+                              : user!.email!
                           : 'Guest',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
