@@ -1,37 +1,41 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../models/models.dart';
+
 abstract class UserRepository {
-  Future<User?> signInEmailAndPassword(
+  Future<auth.User?> signInEmailAndPassword(
     String email,
     String password,
   );
-  Future<User?> signUpWithEmailAndPassword(
+  Future<auth.User?> signUpWithEmailAndPassword(
     String email,
     String password,
   );
   Future<void> sendForgotPasswordEmail(String email);
   Future<void> signOut();
-  Future<User?> signInWithGoogle();
-  Future<User?> signInWithFacebook();
+  Future<auth.User?> signInWithGoogle();
+  Future<auth.User?> signInWithFacebook();
   Future<bool> changeEmailAddress(String newEmail, String currentPassword);
   bool get isSignedIn;
-  User? get currentUser;
+  auth.User? get currentUser;
+  Stream<auth.User?> get userChanges;
+  Future<User> getUser({String? uid});
 }
 
 class UserRepositoryImpl implements UserRepository {
-  final FirebaseAuth _firebaseAuth;
+  final auth.FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firebaseFirestore;
   UserRepositoryImpl({
-    FirebaseAuth? firebaseAuth,
+    auth.FirebaseAuth? firebaseAuth,
     FirebaseFirestore? firebaseFirestore,
-  })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
+  })  : _firebaseAuth = firebaseAuth ?? auth.FirebaseAuth.instance,
         _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
 
   @override
-  Future<User?> signInEmailAndPassword(
+  Future<auth.User?> signInEmailAndPassword(
     String email,
     String password,
   ) async {
@@ -44,6 +48,8 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<void> signOut() async {
+    final googleSignedIn = await GoogleSignIn().isSignedIn();
+    if (googleSignedIn) await GoogleSignIn().signOut();
     await _firebaseAuth.signOut();
   }
 
@@ -51,10 +57,10 @@ class UserRepositoryImpl implements UserRepository {
   bool get isSignedIn => _firebaseAuth.currentUser != null;
 
   @override
-  User? get currentUser => _firebaseAuth.currentUser;
+  auth.User? get currentUser => _firebaseAuth.currentUser;
 
   @override
-  Future<User?> signUpWithEmailAndPassword(
+  Future<auth.User?> signUpWithEmailAndPassword(
     String email,
     String password,
   ) async {
@@ -63,9 +69,12 @@ class UserRepositoryImpl implements UserRepository {
       password: password,
     );
 
-    _firebaseFirestore.collection('users').doc(auth.user!.uid).set({
-      'email': auth.user!.email,
-    });
+    if (auth.user != null) {
+      _firebaseFirestore.collection('users').doc(auth.user!.uid).set({
+        'uid': auth.user!.uid,
+        'email': auth.user!.email,
+      });
+    }
 
     return auth.user;
   }
@@ -76,26 +85,47 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<User?> signInWithGoogle() async {
+  Future<auth.User?> signInWithGoogle() async {
     final googleUser = await GoogleSignIn().signIn();
     final googleAuth = await googleUser?.authentication;
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+    late final auth.OAuthCredential credential;
+    try {
+      credential = auth.GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+    } catch (err) {
+      return null;
+    }
 
     final userCredential = await _firebaseAuth.signInWithCredential(credential);
-    return userCredential.user;
+    final user = userCredential.user;
+
+    if (user != null) {
+      await _firebaseFirestore.collection('users').doc(user.uid).get().then(
+        (doc) {
+          if (doc.exists) {
+            doc.reference.set({
+              'uid': user.uid,
+              'displayName': user.displayName,
+              'email': user.email,
+            });
+          }
+        },
+      );
+    }
+
+    return user;
   }
 
   @override
-  Future<User?> signInWithFacebook() async {
+  Future<auth.User?> signInWithFacebook() async {
     final loginResult = await FacebookAuth.instance.login();
 
     if (loginResult.accessToken == null) return null;
 
-    final facebookAuthCredential = FacebookAuthProvider.credential(
+    final facebookAuthCredential = auth.FacebookAuthProvider.credential(
       loginResult.accessToken!.token,
     );
 
@@ -113,10 +143,9 @@ class UserRepositoryImpl implements UserRepository {
   ) async {
     bool success = false;
 
-    // final user = _firebaseAuth.currentUser;
-    final user = await signInEmailAndPassword('example@xx.xx', 'square');
+    final user = _firebaseAuth.currentUser;
 
-    final credential = EmailAuthProvider.credential(
+    final credential = auth.EmailAuthProvider.credential(
       email: user!.email!,
       password: currentPassword,
     );
@@ -129,5 +158,16 @@ class UserRepositoryImpl implements UserRepository {
       success = true;
     }
     return success;
+  }
+
+  @override
+  Stream<auth.User?> get userChanges => _firebaseAuth.userChanges();
+
+  @override
+  Future<User> getUser({String? uid}) async {
+    final userId = uid ?? _firebaseAuth.currentUser!.uid;
+    final doc = await _firebaseFirestore.collection('users').doc(userId).get();
+
+    return User.fromJson(doc.data()!);
   }
 }

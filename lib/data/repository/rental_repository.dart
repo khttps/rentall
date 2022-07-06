@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -25,14 +26,17 @@ abstract class RentalRepository {
 class RentalRepositoryImpl implements RentalRepository {
   final InternetConnectionChecker _connectionChecker;
   final FirebaseFirestore _firestore;
+  final FirebaseAuth _firebaseAuth;
   final FirebaseStorage _storage;
 
   RentalRepositoryImpl(
       {FirebaseFirestore? firestore,
+      FirebaseAuth? firebaseAuth,
       FirebaseStorage? storage,
       required SharedPreferences prefs,
       required InternetConnectionChecker connectionChecker})
       : _firestore = firestore ?? FirebaseFirestore.instance,
+        _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _storage = storage ?? FirebaseStorage.instance,
         _connectionChecker = connectionChecker;
 
@@ -97,7 +101,16 @@ class RentalRepositoryImpl implements RentalRepository {
 
     final map = (await ref.get()).data();
     throwIf(map == null, Exception('Failed to retrieve rental.'));
-    return Rental.fromJson(map!);
+
+    final uid = _firebaseAuth.currentUser!.uid;
+    await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('rentals')
+        .doc(ref.id)
+        .set(map!);
+
+    return Rental.fromJson(map);
   }
 
   @override
@@ -126,13 +139,23 @@ class RentalRepositoryImpl implements RentalRepository {
     }
 
     final doc = _firestore.collection('rentals').doc(id);
-    await doc.update({
+    final updates = {
       'images': [
         ...(await doc.get()).get('images'),
         ...imageUrls,
       ],
       ...rental,
-    });
+    };
+
+    await doc.update(updates);
+    final uid = _firebaseAuth.currentUser!.uid;
+
+    await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('rentals')
+        .doc(id)
+        .update(updates);
 
     final map = (await doc.get()).data();
     throwIf(map == null, Exception('Failed to update rental.'));
@@ -145,10 +168,21 @@ class RentalRepositoryImpl implements RentalRepository {
       throw Exception('No internet connection');
     }
     await _firestore.collection('rentals').doc(id).delete();
+
+    final uid = _firebaseAuth.currentUser!.uid;
+    await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('rentals')
+        .doc(id)
+        .delete();
+
     await _storage.ref('$id/').listAll().then(
-          (value) => value.items.forEach((element) async {
-            await _storage.ref(element.fullPath).delete();
-          }),
+          (value) => value.items.forEach(
+            (element) async {
+              await _storage.ref(element.fullPath).delete();
+            },
+          ),
         );
   }
 }

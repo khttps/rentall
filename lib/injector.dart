@@ -12,10 +12,16 @@ final sl = GetIt.instance;
 Future<void> init() async {
   //! Blocs
   sl.registerFactory<RentalsBloc>(
-      () => RentalsBloc(repository: sl(), preferences: sl()));
+    () => RentalsBloc(
+      repository: sl(),
+      preferences: sl(),
+    ),
+  );
   sl.registerFactory<PublishBloc>(() => PublishBloc(repository: sl()));
   sl.registerFactory<AuthBloc>(() => AuthBloc(repository: sl()));
+  sl.registerFactory<UserBloc>(() => UserBloc(repository: sl()));
   sl.registerFactory<UpdateEmailBloc>(() => UpdateEmailBloc(repository: sl()));
+  sl.registerFactory<HomeBloc>(() => HomeBloc(repository: sl()));
 
   //! Repositories
   sl.registerLazySingleton<RentalRepository>(

@@ -46,8 +46,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         throw Exception('Sign in failed.');
       }
     } on Exception catch (err) {
-      rethrow;
       emit(AuthFailed(message: (err as dynamic).message ?? ''));
+      emit(AuthInitital());
     }
   }
 
@@ -61,7 +61,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         throw Exception('Sign in failed.');
       }
     } on Exception catch (err) {
-      rethrow;
       emit(AuthFailed(message: (err as dynamic)).message);
     }
   }
