@@ -13,6 +13,8 @@ class UserWithHost extends HomeState {}
 
 class UserOnly extends HomeState {}
 
+class NoUser extends HomeState {}
+
 class Unknown extends HomeState {
   final String message;
   const Unknown({required this.message});

@@ -18,7 +18,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   FutureOr<void> _onLoadUser(event, emit) async {
     try {
       final user = await _repository.getUser();
-      if (user.hostName != null) {
+      if (user == null) {
+        emit(NoUser());
+      }
+      if (user!.hostName != null) {
         emit(UserWithHost());
       } else {
         emit(UserOnly());

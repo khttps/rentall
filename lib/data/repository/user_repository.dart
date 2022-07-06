@@ -22,7 +22,7 @@ abstract class UserRepository {
   bool get isSignedIn;
   auth.User? get currentUser;
   Stream<auth.User?> get userChanges;
-  Future<User> getUser({String? uid});
+  Future<User?> getUser({String? uid});
 }
 
 class UserRepositoryImpl implements UserRepository {
@@ -164,7 +164,13 @@ class UserRepositoryImpl implements UserRepository {
   Stream<auth.User?> get userChanges => _firebaseAuth.userChanges();
 
   @override
-  Future<User> getUser({String? uid}) async {
+  Future<User?> getUser({String? uid}) async {
+    final authUser = _firebaseAuth.currentUser;
+
+    if (authUser == null) {
+      return null;
+    }
+
     final userId = uid ?? _firebaseAuth.currentUser!.uid;
     final doc = await _firebaseFirestore.collection('users').doc(userId).get();
 

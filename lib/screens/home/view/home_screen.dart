@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rentall/screens/home/bloc/home_bloc.dart';
 
 import '../../../widgets/widgets.dart';
 import '../../blocs.dart';
@@ -118,7 +119,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.pushNamed(context, PublishScreen.routeName);
                         } else if (state is UserOnly) {
                           Navigator.pushNamed(
-                              context, OrganizationScreen.routeName);
+                            context,
+                            OrganizationScreen.routeName,
+                          );
+                        } else if (state is NoUser) {
+                          Navigator.pushNamed(
+                            context,
+                            AuthScreen.routeName,
+                          );
                         }
                       },
                     ),
