@@ -24,7 +24,10 @@ Future<void> init() async {
   sl.registerFactory<UserBloc>(() => UserBloc(repository: sl()));
   sl.registerFactory<UpdateEmailBloc>(() => UpdateEmailBloc(repository: sl()));
   sl.registerFactory<UpdatePasswordBloc>(
-      () => UpdatePasswordBloc(repository: sl()));
+    () => UpdatePasswordBloc(
+      repository: sl(),
+    ),
+  );
   sl.registerFactory<HomeBloc>(() => HomeBloc(repository: sl()));
   sl.registerFactory<SearchBloc>(() => SearchBloc(repository: sl()));
 

@@ -44,13 +44,10 @@ class RentallApp extends StatelessWidget {
         BlocProvider<PublishBloc>(create: (context) => di.sl()),
         BlocProvider<AuthBloc>(create: (context) => di.sl()),
         BlocProvider<UpdateEmailBloc>(create: (context) => di.sl()),
-<<<<<<< HEAD
         BlocProvider<UpdatePasswordBloc>(create: (context) => di.sl()),
-=======
         BlocProvider<UserBloc>(create: (context) => di.sl()),
         BlocProvider<HomeBloc>(create: (context) => di.sl()),
         BlocProvider<SearchBloc>(create: (context) => di.sl())
->>>>>>> 12-auth
       ],
       child: MaterialApp(
         title: 'Rentall',

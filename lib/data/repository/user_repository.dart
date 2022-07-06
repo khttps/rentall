@@ -19,7 +19,7 @@ abstract class UserRepository {
   Future<auth.User?> signInWithGoogle();
   Future<auth.User?> signInWithFacebook();
   Future<bool> changeEmailAddress(String newEmail, String currentPassword);
-  Future<bool> changePassword(String newPassword, String currentPassword);
+  Future<bool> changePassword(String currentPassword, String newPassword);
   bool get isSignedIn;
   auth.User? get currentUser;
   Stream<auth.User?> get userChanges;
@@ -145,7 +145,6 @@ class UserRepositoryImpl implements UserRepository {
     bool success = false;
 
     final user = _firebaseAuth.currentUser;
-
     final credential = auth.EmailAuthProvider.credential(
       email: user!.email!,
       password: currentPassword,
@@ -163,14 +162,12 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<bool> changePassword(
-    String newPassword,
     String currentPassword,
+    String newPassword,
   ) async {
     bool success = false;
 
-    // final user = _firebaseAuth.currentUser;
-    final user = await signInEmailAndPassword('mohamed@gmail.com', '112233');
-
+    final user = _firebaseAuth.currentUser;
     final credential = auth.EmailAuthProvider.credential(
       email: user!.email!,
       password: currentPassword,
@@ -186,6 +183,7 @@ class UserRepositoryImpl implements UserRepository {
     return success;
   }
 
+  @override
   Stream<auth.User?> get userChanges => _firebaseAuth.userChanges();
 
   @override
@@ -196,7 +194,7 @@ class UserRepositoryImpl implements UserRepository {
       return null;
     }
 
-    final userId = uid ?? _firebaseAuth.currentUser!.uid;
+    final userId = uid ?? authUser.uid;
     final doc = await _firebaseFirestore.collection('users').doc(userId).get();
 
     return User.fromJson(doc.data()!);

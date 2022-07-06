@@ -7,12 +7,15 @@ abstract class UpdatePasswordEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class SavePressed extends UpdatePasswordEvent {
-  final String newPassword;
+class SavePasswordPressed extends UpdatePasswordEvent {
   final String currentPassword;
+  final String newPassword;
 
-  const SavePressed({required this.newPassword, required this.currentPassword});
+  const SavePasswordPressed({
+    required this.currentPassword,
+    required this.newPassword,
+  });
 
   @override
-  List<Object> get props => [newPassword, currentPassword];
+  List<Object> get props => [currentPassword, newPassword];
 }

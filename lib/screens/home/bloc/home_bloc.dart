@@ -20,8 +20,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       final user = await _repository.getUser();
       if (user == null) {
         emit(NoUser());
-      }
-      if (user!.hostName != null) {
+      } else if (user.hostName != null) {
         emit(UserWithHost());
       } else {
         emit(UserOnly());

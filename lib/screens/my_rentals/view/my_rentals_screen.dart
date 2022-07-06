@@ -7,6 +7,7 @@ import '../../../data/models/models.dart';
 
 class MyRentalsScreen extends StatelessWidget {
   static const routeName = '/my_rentals';
+
   const MyRentalsScreen({Key? key}) : super(key: key);
 
   @override

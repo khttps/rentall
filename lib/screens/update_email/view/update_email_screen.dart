@@ -67,10 +67,10 @@ class _UpdateEmailScreenState extends State<UpdateEmailScreen> {
           builder: (context, state) {
             return Stack(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: FormBuilder(
-                    key: _formKey,
+                FormBuilder(
+                  key: _formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -91,7 +91,10 @@ class _UpdateEmailScreenState extends State<UpdateEmailScreen> {
                         FormBuilderTextField(
                           name: 'password',
                           obscureText: true,
-                          validator: FormBuilderValidators.required(),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(),
+                            FormBuilderValidators.min(8)
+                          ]),
                         ),
                       ],
                     ),

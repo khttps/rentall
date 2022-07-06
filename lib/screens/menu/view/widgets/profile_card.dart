@@ -40,9 +40,7 @@ class ProfileCard extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: signedIn
-                          ? user!.displayName!.isEmpty
-                              ? user!.email!
-                              : user!.displayName
+                          ? user!.displayName ?? user!.email!
                           : 'Guest',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,

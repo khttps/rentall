@@ -107,7 +107,7 @@ class RentalRepositoryImpl implements RentalRepository {
     throwIf(map == null, Exception('Failed to retrieve rental.'));
 
     final uid = _firebaseAuth.currentUser!.uid;
-    await _firestore
+    final snap = await _firestore
         .collection('users')
         .doc(uid)
         .collection('rentals')

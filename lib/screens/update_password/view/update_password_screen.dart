@@ -30,9 +30,9 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
               if (_formKey.currentState!.saveAndValidate()) {
                 final value = _formKey.currentState!.value;
                 BlocProvider.of<UpdatePasswordBloc>(context).add(
-                  SavePressed(
-                    newPassword: value['new'],
+                  SavePasswordPressed(
                     currentPassword: value['current'],
+                    newPassword: value['new'],
                   ),
                 );
               }
@@ -62,30 +62,35 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
           builder: (context, state) {
             return Stack(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: FormBuilder(
-                    key: _formKey,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Current Password'),
-                          const SizedBox(height: 6.0),
-                          FormBuilderTextField(
-                            name: 'current',
-                          ),
-                          const SizedBox(height: 16.0),
-                          const Text('New Password'),
-                          const SizedBox(height: 6.0),
-                          FormBuilderTextField(
-                            name: 'new',
-                            obscureText: true,
-                            validator: FormBuilderValidators.required(),
-                          ),
-                        ],
-                      ),
+                FormBuilder(
+                  key: _formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Current Password'),
+                        const SizedBox(height: 6.0),
+                        FormBuilderTextField(
+                          name: 'current',
+                          obscureText: true,
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(),
+                            FormBuilderValidators.min(8)
+                          ]),
+                        ),
+                        const SizedBox(height: 16.0),
+                        const Text('New Password'),
+                        const SizedBox(height: 6.0),
+                        FormBuilderTextField(
+                          name: 'new',
+                          obscureText: true,
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(),
+                            FormBuilderValidators.min(8)
+                          ]),
+                        ),
+                      ],
                     ),
                   ),
                 ),
