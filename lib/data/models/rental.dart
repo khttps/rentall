@@ -35,6 +35,7 @@ class Rental extends Equatable {
   final int price;
   final String hostPhone;
   @TimestampConverter()
+  @JsonKey()
   final Timestamp? createdAt;
   @JsonKey(includeIfNull: false)
   final RentPeriod? rentPeriod;

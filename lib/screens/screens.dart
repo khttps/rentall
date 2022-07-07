@@ -14,3 +14,4 @@ export 'organization/organization.dart'; // (Small) UI Done
 export 'password_sent/password_sent.dart'; // Done
 export 'alert/alert.dart'; // TODO
 export 'on_boarding/on_boarding.dart'; // TODO (Small)
+export 'alerts/alerts.dart';

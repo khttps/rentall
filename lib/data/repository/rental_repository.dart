@@ -90,7 +90,10 @@ class RentalRepositoryImpl implements RentalRepository {
       throw Exception('No internet connection');
     }
     final imageUrls = <String>[];
-    final ref = await _firestore.collection('rentals').add(rental);
+    final ref = await _firestore.collection('rentals').add({
+      ...rental,
+      'createdAt': Timestamp.now(),
+    });
 
     for (var f in imageFiles) {
       if (f != null) {
@@ -107,7 +110,7 @@ class RentalRepositoryImpl implements RentalRepository {
     throwIf(map == null, Exception('Failed to retrieve rental.'));
 
     final uid = _firebaseAuth.currentUser!.uid;
-    final snap = await _firestore
+    await _firestore
         .collection('users')
         .doc(uid)
         .collection('rentals')
@@ -192,6 +195,9 @@ class RentalRepositoryImpl implements RentalRepository {
 
   @override
   Future<List<Rental>> getSearchResults(String keyword) async {
+    if (!await _connectionChecker.hasConnection) {
+      throw Exception('No internet connection');
+    }
     final snap =
         await _aloglia.instance.index('rentals').query(keyword).getObjects();
 

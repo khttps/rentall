@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import '../models/models.dart';
 
@@ -29,11 +30,14 @@ abstract class UserRepository {
 class UserRepositoryImpl implements UserRepository {
   final auth.FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firebaseFirestore;
+  final InternetConnectionChecker _connectionChecker;
   UserRepositoryImpl({
     auth.FirebaseAuth? firebaseAuth,
     FirebaseFirestore? firebaseFirestore,
+    required InternetConnectionChecker connectionChecker,
   })  : _firebaseAuth = firebaseAuth ?? auth.FirebaseAuth.instance,
-        _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
+        _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance,
+        _connectionChecker = connectionChecker;
 
   @override
   Future<auth.User?> signInEmailAndPassword(
@@ -65,6 +69,9 @@ class UserRepositoryImpl implements UserRepository {
     String email,
     String password,
   ) async {
+    if (!await _connectionChecker.hasConnection) {
+      throw Exception('No internet connection');
+    }
     final auth = await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
@@ -82,11 +89,17 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<void> sendForgotPasswordEmail(String email) async {
+    if (!await _connectionChecker.hasConnection) {
+      throw Exception('No internet connection');
+    }
     await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
   @override
   Future<auth.User?> signInWithGoogle() async {
+    if (!await _connectionChecker.hasConnection) {
+      throw Exception('No internet connection');
+    }
     final googleUser = await GoogleSignIn().signIn();
     final googleAuth = await googleUser?.authentication;
 
@@ -122,6 +135,9 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<auth.User?> signInWithFacebook() async {
+    if (!await _connectionChecker.hasConnection) {
+      throw Exception('No internet connection');
+    }
     final loginResult = await FacebookAuth.instance.login();
 
     if (loginResult.accessToken == null) return null;
@@ -142,6 +158,9 @@ class UserRepositoryImpl implements UserRepository {
     String newEmail,
     String currentPassword,
   ) async {
+    if (!await _connectionChecker.hasConnection) {
+      throw Exception('No internet connection');
+    }
     bool success = false;
 
     final user = _firebaseAuth.currentUser;
@@ -165,6 +184,9 @@ class UserRepositoryImpl implements UserRepository {
     String currentPassword,
     String newPassword,
   ) async {
+    if (!await _connectionChecker.hasConnection) {
+      throw Exception('No internet connection');
+    }
     bool success = false;
 
     final user = _firebaseAuth.currentUser;
@@ -188,6 +210,9 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<User?> getUser({String? uid}) async {
+    if (!await _connectionChecker.hasConnection) {
+      throw Exception('No internet connection');
+    }
     final authUser = _firebaseAuth.currentUser;
 
     if (authUser == null) {

@@ -77,7 +77,7 @@ class MenuScreen extends StatelessWidget {
                     dense: true,
                     onTap: () => Navigator.pushNamed(
                       context,
-                      FavoritesScreen.routeName,
+                      AlertsScreen.routeName,
                     ),
                   ),
                   const Divider(thickness: 1.0),
