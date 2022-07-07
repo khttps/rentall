@@ -203,7 +203,10 @@ class RentalRepositoryImpl implements RentalRepository {
 
     return (snap.toMap()['hits'] as List)
         .map(
-          (e) => Rental.fromJson(e),
+          (e) => Rental.fromJson(e
+            ..['createdAt'] = Timestamp.fromMillisecondsSinceEpoch(
+              e['createdAt'],
+            )),
         )
         .toList();
   }

@@ -39,7 +39,12 @@ class SearchScreen extends StatelessWidget {
               final result = results[index];
               return ListTile(
                 leading: result.images.isNotEmpty
-                    ? CachedNetworkImage(imageUrl: result.images[0])
+                    ? CachedNetworkImage(
+                        imageUrl: result.images[0],
+                        fit: BoxFit.cover,
+                        width: 50.0,
+                        height: 50.0,
+                      )
                     : const NoImage(dimension: 20.0),
                 title: Text(result.title),
                 onTap: () {

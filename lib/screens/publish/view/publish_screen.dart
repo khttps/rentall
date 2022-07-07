@@ -383,7 +383,7 @@ class _PublishScreenState extends State<PublishScreen> {
                               children: [
                                 Expanded(
                                   child: FormBuilderTextField(
-                                    name: 'price',
+                                    name: 'area',
                                     valueTransformer: (String? value) {
                                       if (value != null) {
                                         return int.tryParse(value);
@@ -412,7 +412,7 @@ class _PublishScreenState extends State<PublishScreen> {
                                 const SizedBox(width: 8.0),
                                 Expanded(
                                   child: FormBuilderTextField(
-                                    name: 'area',
+                                    name: 'price',
                                     valueTransformer: (String? value) {
                                       if (value != null) {
                                         return int.tryParse(value);

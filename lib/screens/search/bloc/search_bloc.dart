@@ -19,11 +19,15 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   FutureOr<void> _onSearchStarted(SearchStarted event, emit) async {
     emit(const SearchState(status: SearchStatus.loading));
     try {
-      final results = await _repository.getSearchResults(event.keyword);
-      if (results.isEmpty) {
+      if (event.keyword.isEmpty) {
         emit(const SearchState());
       } else {
-        emit(SearchState(status: SearchStatus.loaded, results: results));
+        final results = await _repository.getSearchResults(event.keyword);
+        if (results.isEmpty) {
+          emit(const SearchState());
+        } else {
+          emit(SearchState(status: SearchStatus.loaded, results: results));
+        }
       }
     } on Exception catch (err) {
       emit(SearchState(

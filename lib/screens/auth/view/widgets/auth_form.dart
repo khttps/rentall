@@ -110,12 +110,12 @@ class _AuthFormState extends State<AuthForm> {
                 BlocProvider.of<AuthBloc>(context).add(const SignInByGoogle());
               },
             ),
-            SocialButton(
-              text: '${widget.label} with Facebook',
-              color: Colors.blue,
-              asset: 'assets/images/facebook.png',
-              onPressed: () {},
-            ),
+            // SocialButton(
+            //   text: '${widget.label} with Facebook',
+            //   color: Colors.blue,
+            //   asset: 'assets/images/facebook.png',
+            //   onPressed: () {},
+            // ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: widget.actions,

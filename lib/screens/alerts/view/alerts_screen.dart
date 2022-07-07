@@ -31,7 +31,9 @@ class AlertsScreen extends StatelessWidget {
           },
           builder: (context, state) {
             if (state.status == AlertsStatus.loading) {
-              return const LoadingWidget();
+              return const Center(
+                child: CircularProgressIndicator.adaptive(),
+              );
             } else if (state.status == AlertsStatus.loaded) {
               return ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),

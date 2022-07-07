@@ -115,19 +115,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       elevation: 0,
                       child: const Icon(Icons.add),
                       onPressed: () {
-                        if (state is UserWithHost) {
-                          Navigator.pushNamed(context, PublishScreen.routeName);
-                        } else if (state is UserOnly) {
-                          Navigator.pushNamed(
-                            context,
-                            OrganizationScreen.routeName,
-                          );
-                        } else if (state is NoUser) {
-                          Navigator.pushNamed(
-                            context,
-                            AuthScreen.routeName,
-                          );
-                        }
+                        Navigator.pushNamed(context, PublishScreen.routeName);
+                        //   if (state is UserWithHost) {
+                        //     Navigator.pushNamed(context, PublishScreen.routeName);
+                        //   } else if (state is UserOnly) {
+                        //     Navigator.pushNamed(
+                        //       context,
+                        //       OrganizationScreen.routeName,
+                        //     );
+                        //   } else if (state is NoUser) {
+                        //     Navigator.pushNamed(
+                        //       context,
+                        //       AuthScreen.routeName,
+                        //     );
+                        //   }
                       },
                     ),
                   );

@@ -19,11 +19,7 @@ class _SearchBarState extends State<SearchBar> {
     return TextFormField(
       textInputAction: TextInputAction.search,
       autofocus: widget.enabled ?? true,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          widget.onChanged!(value);
-        }
-      },
+      onChanged: widget.onChanged,
       decoration: InputDecoration(
         hintText: 'Search...',
         enabled: widget.enabled ?? true,
