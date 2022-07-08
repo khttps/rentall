@@ -14,8 +14,8 @@ class FloatingItem {
   final Widget title;
 }
 
-class FloatingMenu extends StatelessWidget {
-  const FloatingMenu(this.item, {Key? key}) : super(key: key);
+class _FloatingMenuItem extends StatelessWidget {
+  const _FloatingMenuItem(this.item, {Key? key}) : super(key: key);
 
   final FloatingItem item;
 
@@ -23,7 +23,7 @@ class FloatingMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
       shape: const StadiumBorder(),
-      padding: const EdgeInsets.fromLTRB(32.0, 10.0, 32.0, 12.0),
+      padding: const EdgeInsetsDirectional.fromSTEB(12.0, 10.0, 16.0, 10.0),
       color: item.color ?? Colors.blueGrey,
       splashColor: Colors.grey.withOpacity(0.1),
       highlightColor: Colors.grey.withOpacity(0.1),
@@ -43,12 +43,6 @@ class FloatingMenu extends StatelessWidget {
   }
 }
 
-class _DefaultHeroTag {
-  const _DefaultHeroTag();
-  @override
-  String toString() => '<default FloatingActionBubble tag>';
-}
-
 class FloatingActionMenu extends AnimatedWidget {
   const FloatingActionMenu({
     Key? key,
@@ -56,11 +50,10 @@ class FloatingActionMenu extends AnimatedWidget {
     this.backgroundColor,
     this.iconColor,
     required Animation animation,
-    this.heroTag,
   }) : super(listenable: animation, key: key);
 
   final List<FloatingItem> items;
-  final Object? heroTag;
+
   final Color? backgroundColor;
   final Color? iconColor;
 
@@ -87,7 +80,7 @@ class FloatingActionMenu extends AnimatedWidget {
         transform: transform,
         child: Opacity(
           opacity: _animation.value,
-          child: FloatingMenu(items[index]),
+          child: _FloatingMenuItem(items[index]),
         ),
       ),
     );
@@ -106,24 +99,12 @@ class FloatingActionMenu extends AnimatedWidget {
             child: ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              separatorBuilder: (_, __) => const SizedBox(height: 12.0),
+              separatorBuilder: (_, __) => const SizedBox(height: 8.0),
               padding: const EdgeInsets.symmetric(vertical: 12),
               itemCount: items.length,
               itemBuilder: buildItem,
             ),
           ),
-          // FloatingActionButton(
-          //   mini: true,
-          //   elevation: 0.0,
-          //   heroTag: heroTag ?? const _DefaultHeroTag(),
-          //   backgroundColor: backgroundColor,
-          //   onPressed: onPressed,
-          //   child: AnimatedIcon(
-          //     icon: animatedIconData,
-          //     progress: _animation,
-          //     color: iconColor,
-          //   ),
-          // ),
         ],
       ),
     );

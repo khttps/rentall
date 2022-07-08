@@ -23,14 +23,16 @@ class RentalCard extends StatelessWidget {
       child: Container(
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4.0),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                  offset: const Offset(0.0, 1.0),
-                  blurRadius: 1.0,
-                  color: Colors.grey.withOpacity(0.6))
-            ]),
+          borderRadius: BorderRadius.circular(4.0),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              offset: const Offset(0.0, 1.0),
+              blurRadius: 3.0,
+              color: Colors.grey.withOpacity(0.6),
+            )
+          ],
+        ),
         height: height,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -12,6 +12,7 @@ import 'package:rentall/widgets/widgets.dart';
 import '../../../data/models/models.dart';
 import '../../screens.dart';
 import '../bloc/publish_bloc.dart';
+import 'widgets/widgets.dart';
 
 class PublishScreen extends StatefulWidget {
   static const routeName = '/publish_screen';
@@ -528,17 +529,15 @@ class _PublishScreenState extends State<PublishScreen> {
                               ),
                               textInputAction: TextInputAction.done,
                             ),
-                            const SizedBox(height: 8.0),
+                            const SizedBox(height: 16.0),
+                            const AddMapButton(),
+                            const SizedBox(height: 20.0),
                             if (updating)
                               TextButton.icon(
-                                icon: const Icon(
-                                  Icons.archive,
-                                  color: Colors.red,
-                                ),
-                                label: const Text(
-                                  'Archive',
-                                  style: TextStyle(color: Colors.red),
-                                ),
+                                icon: const Icon(Icons.archive),
+                                label: const Text('Archive'),
+                                style:
+                                    TextButton.styleFrom(primary: Colors.red),
                                 onPressed: () async => await _showAlertDialog(
                                   context,
                                   title: const Text('Archive Rental'),

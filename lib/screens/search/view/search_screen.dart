@@ -14,7 +14,13 @@ class SearchScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: SearchBar(
+          prefix: InkWell(
+            child: const Icon(Icons.arrow_back),
+            onTap: () => Navigator.pop(context),
+          ),
+          enabled: true,
           onChanged: (value) => BlocProvider.of<SearchBloc>(context).add(
             SearchStarted(keyword: value),
           ),

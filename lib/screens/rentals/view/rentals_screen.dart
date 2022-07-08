@@ -162,13 +162,6 @@ class RentalsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8.0),
-                    // TextButton(
-                    //   onPressed: () {},
-                    //   child: const Text(
-                    //     'More Filters',
-                    //     style: TextStyle(color: Colors.white),
-                    //   ),
-                    // )
                   ],
                 );
               },

@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentall/screens/blocs.dart';
 import 'package:rentall/widgets/empty_list.dart';
 import 'package:rentall/widgets/error_snackbar.dart';
-import 'package:rentall/widgets/loading_widget.dart';
 
 import '../../screens.dart';
 

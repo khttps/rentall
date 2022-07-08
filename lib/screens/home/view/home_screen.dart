@@ -81,8 +81,8 @@ class _HomeScreenState extends State<HomeScreen>
                 flex: 4,
                 child: BottomNavigationBar(
                   elevation: 0.0,
-                  selectedFontSize: 8.0,
-                  unselectedFontSize: 8.0,
+                  selectedFontSize: 0.0,
+                  unselectedFontSize: 0.0,
                   iconSize: 30.0,
                   currentIndex: _currentIndex,
                   onTap: (index) {
@@ -93,16 +93,16 @@ class _HomeScreenState extends State<HomeScreen>
                   backgroundColor: Colors.transparent,
                   items: const [
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.business),
-                      label: 'Rentalls',
+                      icon: Icon(Icons.home),
+                      label: '',
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(Icons.notifications),
-                      label: 'Notifications',
+                      label: '',
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.menu),
-                      label: 'Menu',
+                      icon: Icon(Icons.person),
+                      label: '',
                     ),
                   ],
                 ),
@@ -113,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen>
                   mini: true,
                   elevation: 0,
                   child: AnimatedIcon(
-                    icon: AnimatedIcons.add_event,
+                    icon: AnimatedIcons.menu_close,
                     progress: _animation,
                   ),
                   onPressed: () {
@@ -166,14 +166,16 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                   icon: const Icon(Icons.add, color: Colors.white),
                   onPressed: () {
-                    if (state is UserWithHost) {
+                    if (state is UserWithHost || state is UserOnly) {
                       Navigator.pushNamed(context, PublishScreen.routeName);
-                    } else if (state is UserOnly) {
-                      Navigator.pushNamed(
-                        context,
-                        OrganizationScreen.routeName,
-                      );
-                    } else if (state is NoUser) {
+                    }
+                    // else if (state is UserOnly) {
+                    //   Navigator.pushNamed(
+                    //     context,
+                    //     OrganizationScreen.routeName,
+                    //   );
+                    // }
+                    else if (state is NoUser) {
                       Navigator.pushNamed(
                         context,
                         AuthScreen.routeName,

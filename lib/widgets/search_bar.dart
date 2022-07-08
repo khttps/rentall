@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class SearchBar extends StatefulWidget {
-  final bool? enabled;
+  final bool enabled;
   final Function(String)? onChanged;
+  final Widget? prefix;
   const SearchBar({
     this.onChanged,
-    this.enabled,
+    this.enabled = false,
+    this.prefix,
     Key? key,
   }) : super(key: key);
 
@@ -14,16 +16,33 @@ class SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<SearchBar> {
+  final _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: _controller,
       textInputAction: TextInputAction.search,
-      autofocus: widget.enabled ?? true,
+      autofocus: widget.enabled,
       onChanged: widget.onChanged,
       decoration: InputDecoration(
         hintText: 'Search...',
-        enabled: widget.enabled ?? true,
-        prefixIcon: const Icon(Icons.search),
+        enabled: widget.enabled,
+        prefixIcon: widget.prefix ?? const Icon(Icons.search),
+        suffixIcon: widget.enabled
+            ? IconButton(
+                onPressed: () {
+                  _controller.clear();
+                },
+                icon: const Icon(Icons.close),
+              )
+            : null,
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(3.0)),
         ),
