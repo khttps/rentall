@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:rentall/screens/favorites/bloc/favorites_bloc.dart';
 import 'package:rentall/screens/update_email/bloc/update_email_bloc.dart';
 import 'package:rentall/screens/update_password/bloc/update_password_bloc.dart';
 import 'firebase_options.dart';
@@ -47,7 +48,9 @@ class RentallApp extends StatelessWidget {
         BlocProvider<UpdatePasswordBloc>(create: (context) => di.sl()),
         BlocProvider<UserBloc>(create: (context) => di.sl()),
         BlocProvider<HomeBloc>(create: (context) => di.sl()),
-        BlocProvider<SearchBloc>(create: (context) => di.sl())
+        BlocProvider<SearchBloc>(create: (context) => di.sl()),
+        BlocProvider<FavouritesBloc>(
+            create: (context) => di.sl()..add(const LoadFavorites())),
       ],
       child: MaterialApp(
         title: 'Rentall',
