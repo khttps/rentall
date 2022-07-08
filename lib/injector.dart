@@ -33,6 +33,9 @@ Future<void> init() async {
   sl.registerFactory<SearchBloc>(() => SearchBloc(repository: sl()));
   sl.registerFactory<AlertBloc>(() => AlertBloc(repository: sl()));
   sl.registerFactory<AlertsBloc>(() => AlertsBloc(repository: sl()));
+  sl.registerFactory<DetailsBloc>(
+    () => DetailsBloc(userRepository: sl(), rentalRepository: sl()),
+  );
 
   //! Repositories
   sl.registerLazySingleton<RentalRepository>(

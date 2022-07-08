@@ -6,12 +6,11 @@ import 'models.dart';
 
 part 'rental.g.dart';
 
-enum PublishStatus { pending, approved, rejected, booked }
-
 @JsonSerializable()
 class Rental extends Equatable {
   @JsonKey(includeIfNull: false)
   final String? id;
+  final String userId;
   final String title;
   final List<String> images;
   @JsonKey(includeIfNull: false)
@@ -42,14 +41,11 @@ class Rental extends Equatable {
   @JsonKey(includeIfNull: false)
   final PropertyType? propertyType;
   @JsonKey(includeIfNull: false)
-  @TimestampConverter()
-  final Timestamp? availableAt;
-  final bool verified;
-  @JsonKey(includeIfNull: false)
   final PublishStatus? publishStatus;
 
   const Rental({
     this.id,
+    required this.userId,
     required this.title,
     this.images = const [],
     this.description,
@@ -66,102 +62,17 @@ class Rental extends Equatable {
     required this.hostPhone,
     this.createdAt,
     this.rentPeriod = RentPeriod.month,
-    this.availableAt,
-    this.verified = false,
     required this.propertyType,
-    this.publishStatus,
+    this.publishStatus = PublishStatus.pending,
   });
 
   factory Rental.fromJson(Map<String, dynamic> json) => _$RentalFromJson(json);
   Map<String, dynamic> toJson() => _$RentalToJson(this);
 
-  // factory Rental.fromMap(Map<String, dynamic> map) => Rental(
-  //       id: map['id'] as String?,
-  //       title: map['title'] as String,
-  //       images: List.from(map['images'] ?? []),
-  //       description: map['description'] as String?,
-  //       address: map['address'] as String,
-  //       location: map['location'] as GeoPoint?,
-  //       floorNumber: map['floorNumber'] as int?,
-  //       rooms: map['rooms'] as int?,
-  //       numberOfBathrooms: map['numberOfBathrooms'] as int?,
-  //       furnished: map['furnished'] as bool?,
-  //       area: map['area'] as int,
-  //       governorate: Governorate.values[map['governorateId'] as int],
-  //       regionId: map['regionId'] as int?,
-  //       rentPrice: map['rentPrice'] as int,
-  //       hostPhoneNumber: map['hostPhoneNumber'] as String,
-  //       createdAt: map['createdAt'] as Timestamp? ?? Timestamp.now(),
-  //       rentType: (map['rentType'] as int?) != null
-  //           ? RentType.values[map['rentType'] as int]
-  //           : RentType.monthly,
-  //       propertyType: (map['propertyType'] as int?) != null
-  //           ? PropertyType.values[map['rentType'] as int]
-  //           : PropertyType.apartment,
-  //       publishStatus: map['publishStatus'] != null
-  //           ? PublishStatus.values[map['publishStatus']]
-  //           : null,
-  //     );
-
-  // static Map<String, dynamic> toMap(Rental r) {
-  //   final map = <String, dynamic>{};
-
-  //   void writeNotNull(String key, dynamic value) {
-  //     if (value != null) {
-  //       map[key] = value;
-  //     }
-  //   }
-
-  //   void writeNotNullToString(String key, int? value) {
-  //     if (value != null) {
-  //       map[key] = '$value';
-  //     }
-  //   }
-
-  //   writeNotNull('id', r.id);
-  //   map['title'] = r.title;
-  //   map['images'] = r.images;
-  //   writeNotNull('description', r.description);
-  //   map['address'] = r.address;
-  //   writeNotNull('location', r.location);
-  //   writeNotNullToString('floorNumber', r.floorNumber);
-  //   writeNotNullToString('rooms', r.rooms);
-  //   writeNotNullToString('numberOfBathrooms', r.numberOfBathrooms);
-  //   writeNotNull('furnished', r.furnished);
-  //   writeNotNullToString('area', r.area);
-  //   map['governorateId'] = r.governorate.index;
-  //   writeNotNullToString('regionId', r.regionId);
-  //   writeNotNullToString('rentPrice', r.rentPrice);
-  //   map['hostPhoneNumber'] = r.hostPhoneNumber;
-  //   map['createdAt'] = r.createdAt;
-  //   writeNotNull('rentType', r.rentType?.index);
-  //   map['propertyType'] = r.propertyType?.index;
-  //   map['publishStatus'] = r.publishStatus?.index;
-  //   return map;
-
-  //   // map['id'] r.id,
-  //   // 'title': r.title,
-  //   // 'images': r.images,
-  //   // 'description': r.description,
-  //   // 'address': r.address,
-  //   // 'location': r.location,
-  //   // 'floorNumber': r.floorNumber,
-  //   // 'rooms': r.rooms,
-  //   // 'numberOfBathrooms': r.numberOfBathrooms,
-  //   // 'area': r.area,
-  //   // 'furnished': r.furnished,
-  //   // 'governorateId': r.governorate.index,
-  //   // 'regionId': r.regionId,
-  //   // 'rentPrice': r.rentPrice,
-  //   // 'hostPhoneNumber': r.hostPhoneNumber,
-  //   // 'createdAt': r.createdAt ?? Timestamp.now(),
-  //   // 'rentType': r.rentType?.index,
-  //   // 'propertyType': r.propertyType?.index,
-  // }
-
   @override
   List<Object?> get props => [
         id,
+        userId,
         title,
         images,
         description,
@@ -176,8 +87,6 @@ class Rental extends Equatable {
         price,
         hostPhone,
         createdAt,
-        availableAt,
-        verified,
         rentPeriod,
         propertyType,
       ];

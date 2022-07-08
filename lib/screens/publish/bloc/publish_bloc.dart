@@ -18,7 +18,7 @@ class PublishBloc extends Bloc<PublishEvent, PublishState> {
         super(const PublishState()) {
     on<PublishRental>(_onPublishRental);
     on<UpdateRental>(_onUpdateRental);
-    on<DeleteRental>(_onDeleteRental);
+    on<ArchiveRental>(_onArchiveRental);
   }
 
   FutureOr<void> _onPublishRental(PublishRental event, emit) async {
@@ -66,12 +66,12 @@ class PublishBloc extends Bloc<PublishEvent, PublishState> {
     }
   }
 
-  FutureOr<void> _onDeleteRental(DeleteRental event, emit) async {
+  FutureOr<void> _onArchiveRental(ArchiveRental event, emit) async {
     emit(const PublishState(
       status: PublishLoadStatus.loading,
     ));
     try {
-      await _repository.deleteRental(event.id);
+      await _repository.archiveRental(event.id);
       emit(const PublishState(status: PublishLoadStatus.deleted));
     } on Exception catch (err) {
       emit(PublishState(

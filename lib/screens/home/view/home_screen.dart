@@ -7,7 +7,7 @@ import '../../blocs.dart';
 import '../../screens.dart';
 
 class HomeScreen extends StatefulWidget {
-  static const routeName = 'home';
+  static const routeName = '/';
   const HomeScreen({Key? key}) : super(key: key);
 
   @override

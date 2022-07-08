@@ -25,6 +25,8 @@ abstract class UserRepository {
   auth.User? get currentUser;
   Stream<auth.User?> get userChanges;
   Future<User?> getUser({String? uid});
+  bool isOwned(String userId);
+  Future<bool> isFavorited(String id);
 }
 
 class UserRepositoryImpl implements UserRepository {
@@ -223,5 +225,27 @@ class UserRepositoryImpl implements UserRepository {
     final doc = await _firebaseFirestore.collection('users').doc(userId).get();
 
     return User.fromJson(doc.data()!);
+  }
+
+  @override
+  Future<bool> isFavorited(String id) async {
+    final user = _firebaseAuth.currentUser;
+
+    if (user == null) return false;
+
+    final doc = await _firebaseFirestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('favorites')
+        .doc(id)
+        .get();
+    return doc.exists;
+  }
+
+  @override
+  bool isOwned(String userId) {
+    final user = _firebaseAuth.currentUser;
+    if (user == null) return false;
+    return user.uid == userId;
   }
 }

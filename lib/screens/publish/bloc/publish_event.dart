@@ -32,9 +32,9 @@ class UpdateRental extends PublishEvent {
   List<Object?> get props => [id, rental, images];
 }
 
-class DeleteRental extends PublishEvent {
+class ArchiveRental extends PublishEvent {
   final String id;
-  const DeleteRental({required this.id});
+  const ArchiveRental({required this.id});
 
   @override
   List<Object?> get props => [id];

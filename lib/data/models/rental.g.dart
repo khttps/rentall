@@ -8,6 +8,7 @@ part of 'rental.dart';
 
 Rental _$RentalFromJson(Map<String, dynamic> json) => Rental(
       id: json['id'] as String?,
+      userId: json['userId'] as String,
       title: json['title'] as String,
       images: (json['images'] as List<dynamic>?)
               ?.map((e) => e as String)
@@ -31,13 +32,11 @@ Rental _$RentalFromJson(Map<String, dynamic> json) => Rental(
       rentPeriod:
           $enumDecodeNullable(_$RentPeriodEnumMap, json['rentPeriod']) ??
               RentPeriod.month,
-      availableAt: const TimestampConverter()
-          .fromJson(json['availableAt'] as Timestamp?),
-      verified: json['verified'] as bool? ?? false,
       propertyType:
           $enumDecodeNullable(_$PropertyTypeEnumMap, json['propertyType']),
       publishStatus:
-          $enumDecodeNullable(_$PublishStatusEnumMap, json['publishStatus']),
+          $enumDecodeNullable(_$PublishStatusEnumMap, json['publishStatus']) ??
+              PublishStatus.pending,
     );
 
 Map<String, dynamic> _$RentalToJson(Rental instance) {
@@ -50,6 +49,7 @@ Map<String, dynamic> _$RentalToJson(Rental instance) {
   }
 
   writeNotNull('id', instance.id);
+  val['userId'] = instance.userId;
   val['title'] = instance.title;
   val['images'] = instance.images;
   writeNotNull('description', instance.description);
@@ -67,9 +67,6 @@ Map<String, dynamic> _$RentalToJson(Rental instance) {
   val['createdAt'] = const TimestampConverter().toJson(instance.createdAt);
   writeNotNull('rentPeriod', _$RentPeriodEnumMap[instance.rentPeriod]);
   writeNotNull('propertyType', _$PropertyTypeEnumMap[instance.propertyType]);
-  writeNotNull(
-      'availableAt', const TimestampConverter().toJson(instance.availableAt));
-  val['verified'] = instance.verified;
   writeNotNull('publishStatus', _$PublishStatusEnumMap[instance.publishStatus]);
   return val;
 }
@@ -126,5 +123,5 @@ const _$PublishStatusEnumMap = {
   PublishStatus.pending: 'pending',
   PublishStatus.approved: 'approved',
   PublishStatus.rejected: 'rejected',
-  PublishStatus.booked: 'booked',
+  PublishStatus.archived: 'archived',
 };

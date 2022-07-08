@@ -5,6 +5,7 @@ import 'data/models/models.dart';
 
 MaterialPageRoute<dynamic> onGenerateRoute(RouteSettings settings) {
   return MaterialPageRoute(
+    settings: settings,
     builder: (context) {
       switch (settings.name) {
         case HomeScreen.routeName:

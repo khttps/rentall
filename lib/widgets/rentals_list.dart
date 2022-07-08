@@ -11,10 +11,10 @@ class RentalsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
       physics: NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.all(10.0),
       shrinkWrap: true,
       itemCount: rentals.length,
-      separatorBuilder: (c, i) => const Divider(thickness: 1.0, height: 0.0),
+      separatorBuilder: (c, i) => const SizedBox(height: 10.0),
       itemBuilder: (context, index) {
         return RentalCard(rental: rentals[index]);
       },

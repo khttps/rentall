@@ -50,7 +50,8 @@ class RentallApp extends StatelessWidget {
         BlocProvider<SearchBloc>(create: (context) => di.sl()),
         BlocProvider<AlertBloc>(create: (context) => di.sl()),
         BlocProvider<AlertsBloc>(
-            create: (context) => di.sl()..add(const LoadAlerts()))
+            create: (context) => di.sl()..add(const LoadAlerts())),
+        BlocProvider<DetailsBloc>(create: (context) => di.sl()),
       ],
       child: MaterialApp(
         title: 'Rentall',
@@ -60,7 +61,7 @@ class RentallApp extends StatelessWidget {
         localizationsDelegates: context.localizationDelegates
           ..add(FormBuilderLocalizations.delegate),
         theme: theme.themeData,
-        home: const HomeScreen(),
+        initialRoute: HomeScreen.routeName,
         onGenerateRoute: router.onGenerateRoute,
       ),
     );

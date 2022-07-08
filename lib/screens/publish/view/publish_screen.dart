@@ -88,17 +88,16 @@ class _PublishScreenState extends State<PublishScreen> {
                     backgroundColor: const Color.fromARGB(255, 47, 169, 110),
                   ),
                 );
-
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   DetailsScreen.routeName,
-                  ModalRoute.withName(DetailsScreen.routeName),
-                  arguments: state.rental!,
+                  ModalRoute.withName(HomeScreen.routeName),
+                  arguments: state.rental,
                 );
               } else if (state.status == PublishLoadStatus.deleted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Rental was successfully deleted.'),
+                    content: Text('Rental was successfully archived.'),
                     backgroundColor: Color.fromARGB(255, 47, 169, 110),
                   ),
                 );
@@ -533,22 +532,22 @@ class _PublishScreenState extends State<PublishScreen> {
                             if (updating)
                               TextButton.icon(
                                 icon: const Icon(
-                                  Icons.delete,
+                                  Icons.archive,
                                   color: Colors.red,
                                 ),
                                 label: const Text(
-                                  'Delete',
+                                  'Archive',
                                   style: TextStyle(color: Colors.red),
                                 ),
                                 onPressed: () async => await _showAlertDialog(
                                   context,
-                                  title: const Text('Delete Rental'),
+                                  title: const Text('Archive Rental'),
                                   content: const Text(
-                                    'Are you sure you want to delete this rental?',
+                                    'Are you sure you want to archive this rental?',
                                   ),
                                   onPositive: () {
                                     context.read<PublishBloc>().add(
-                                          DeleteRental(
+                                          ArchiveRental(
                                             id: widget.rental!.id!,
                                           ),
                                         );

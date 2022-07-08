@@ -17,6 +17,7 @@ class MyRentalsScreen extends StatelessWidget {
       body: RentalsList(
         rentals: [
           Rental(
+            userId: '',
             title: 'title',
             address: 'address',
             area: 100,

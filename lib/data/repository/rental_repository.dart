@@ -21,8 +21,10 @@ abstract class RentalRepository {
     Map<String, dynamic> rental,
     List<File?>? images,
   );
-  Future<void> deleteRental(String id);
+  Future<void> archiveRental(String id);
   Future<List<Rental>> getSearchResults(String keyword);
+  Future<void> setFavorited(Rental rental);
+  Future<void> removeFavorited(Rental rental);
 }
 
 class RentalRepositoryImpl implements RentalRepository {
@@ -89,10 +91,12 @@ class RentalRepositoryImpl implements RentalRepository {
     if (!await _connectionChecker.hasConnection) {
       throw Exception('No internet connection');
     }
+    final uid = _firebaseAuth.currentUser!.uid;
     final imageUrls = <String>[];
     final ref = await _firestore.collection('rentals').add({
       ...rental,
       'createdAt': Timestamp.now(),
+      'userId': uid,
     });
 
     for (var f in imageFiles) {
@@ -109,7 +113,6 @@ class RentalRepositoryImpl implements RentalRepository {
     final map = (await ref.get()).data();
     throwIf(map == null, Exception('Failed to retrieve rental.'));
 
-    final uid = _firebaseAuth.currentUser!.uid;
     await _firestore
         .collection('users')
         .doc(uid)
@@ -170,11 +173,14 @@ class RentalRepositoryImpl implements RentalRepository {
   }
 
   @override
-  Future<void> deleteRental(String id) async {
+  Future<void> archiveRental(String id) async {
     if (!await _connectionChecker.hasConnection) {
       throw Exception('No internet connection');
     }
-    await _firestore.collection('rentals').doc(id).delete();
+    await _firestore
+        .collection('rentals')
+        .doc(id)
+        .update({'publishStatus': PublishStatus.archived.name});
 
     final uid = _firebaseAuth.currentUser!.uid;
     await _firestore
@@ -182,15 +188,7 @@ class RentalRepositoryImpl implements RentalRepository {
         .doc(uid)
         .collection('rentals')
         .doc(id)
-        .delete();
-
-    await _storage.ref('$id/').listAll().then(
-          (value) => value.items.forEach(
-            (element) async {
-              await _storage.ref(element.fullPath).delete();
-            },
-          ),
-        );
+        .update({'publishStatus': PublishStatus.archived.name});
   }
 
   @override
@@ -209,5 +207,28 @@ class RentalRepositoryImpl implements RentalRepository {
             )),
         )
         .toList();
+  }
+
+  @override
+  Future<void> setFavorited(Rental rental) async {
+    final user = _firebaseAuth.currentUser;
+    await _firestore
+        .collection('users')
+        .doc(user!.uid)
+        .collection('favorites')
+        .doc(rental.id)
+        .set(rental.toJson());
+  }
+
+  @override
+  Future<void> removeFavorited(Rental rental) async {
+    final user = _firebaseAuth.currentUser;
+
+    await _firestore
+        .collection('users')
+        .doc(user!.uid)
+        .collection('favorites')
+        .doc(rental.id)
+        .delete();
   }
 }

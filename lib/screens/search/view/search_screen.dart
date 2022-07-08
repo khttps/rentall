@@ -33,11 +33,13 @@ class SearchScreen extends StatelessWidget {
         } else if (state.status == SearchStatus.loaded) {
           final results = state.results!;
           return ListView.separated(
+            padding: const EdgeInsets.all(4.0),
             itemCount: results.length,
             separatorBuilder: (c, i) => const Divider(thickness: 1.0),
             itemBuilder: (context, index) {
               final result = results[index];
               return ListTile(
+                contentPadding: EdgeInsets.zero,
                 leading: result.images.isNotEmpty
                     ? CachedNetworkImage(
                         imageUrl: result.images[0],
