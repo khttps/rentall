@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentall/screens/home/bloc/home_bloc.dart';
+import 'package:rentall/screens/home/view/widgets/floating_action_menu.dart';
 
 import '../../../widgets/widgets.dart';
 import '../../blocs.dart';
@@ -14,7 +15,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   var _currentIndex = 0;
   final _screens = const [
     RentalsScreen(),
@@ -22,10 +24,28 @@ class _HomeScreenState extends State<HomeScreen> {
     MenuScreen(),
   ];
 
+  late Animation<double> _animation;
+  late AnimationController _animationController;
+
   @override
   void initState() {
     super.initState();
     BlocProvider.of<HomeBloc>(context).add(LoadUser());
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 260),
+    );
+
+    final curvedAnimation =
+        CurvedAnimation(curve: Curves.easeInOut, parent: _animationController);
+    _animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -40,28 +60,6 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.pushNamed(context, SearchScreen.routeName);
             },
           ),
-          actions: [
-            BlocBuilder<UserBloc, UserState>(
-              builder: (context, state) {
-                return InkWell(
-                  onTap: () {
-                    if (state is Authenticated) {
-                      Navigator.pushNamed(context, AlertScreen.routeName);
-                    } else {
-                      Navigator.pushNamed(context, AuthScreen.routeName);
-                    }
-                  },
-                  child: Column(
-                    children: const [
-                      Expanded(child: Icon(Icons.notification_add)),
-                      Expanded(child: Text('Create Alert'))
-                    ],
-                  ),
-                );
-              },
-            ),
-            const SizedBox(width: 10.0)
-          ],
           elevation: 2.0,
         ),
         body: _screens[_currentIndex],
@@ -87,7 +85,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   unselectedFontSize: 8.0,
                   iconSize: 30.0,
                   currentIndex: _currentIndex,
-                  onTap: (index) => setState(() => _currentIndex = index),
+                  onTap: (index) {
+                    _animationController.reset();
+                    setState(() => _currentIndex = index);
+                  },
                   type: BottomNavigationBarType.fixed,
                   backgroundColor: Colors.transparent,
                   items: const [
@@ -106,36 +107,83 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              BlocBuilder<HomeBloc, HomeState>(
-                builder: (context, state) {
-                  return Expanded(
-                    flex: 1,
-                    child: FloatingActionButton(
-                      mini: true,
-                      elevation: 0,
-                      child: const Icon(Icons.add),
-                      onPressed: () {
-                        Navigator.pushNamed(context, PublishScreen.routeName);
-                        //   if (state is UserWithHost) {
-                        //     Navigator.pushNamed(context, PublishScreen.routeName);
-                        //   } else if (state is UserOnly) {
-                        //     Navigator.pushNamed(
-                        //       context,
-                        //       OrganizationScreen.routeName,
-                        //     );
-                        //   } else if (state is NoUser) {
-                        //     Navigator.pushNamed(
-                        //       context,
-                        //       AuthScreen.routeName,
-                        //     );
-                        //   }
-                      },
-                    ),
-                  );
-                },
-              ),
+              Expanded(
+                flex: 1,
+                child: FloatingActionButton(
+                  mini: true,
+                  elevation: 0,
+                  child: AnimatedIcon(
+                    icon: AnimatedIcons.add_event,
+                    progress: _animation,
+                  ),
+                  onPressed: () {
+                    _animationController.isCompleted
+                        ? _animationController.reverse()
+                        : _animationController.forward();
+                  },
+                ),
+              )
             ],
           ),
+        ),
+        floatingActionButton: BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) {
+            return FloatingActionMenu(
+              animation: _animation,
+              items: [
+                FloatingItem(
+                  title: const Text(
+                    'Create Alert',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  icon: const Icon(Icons.notification_add, color: Colors.white),
+                  onPressed: () {
+                    if (state is NoUser) {
+                      Navigator.pushNamed(context, AuthScreen.routeName);
+                    } else if (state is UserOnly || state is UserWithHost) {
+                      Navigator.pushNamed(context, AlertScreen.routeName);
+                    }
+                  },
+                ),
+                FloatingItem(
+                  title: const Text(
+                    'Lodge',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  icon: const Icon(Icons.hotel, color: Colors.white),
+                  onPressed: () {
+                    if (state is NoUser) {
+                      Navigator.pushNamed(context, AuthScreen.routeName);
+                    } else if (state is UserOnly || state is UserWithHost) {
+                      Navigator.pushNamed(context, AlertScreen.routeName);
+                    }
+                  },
+                ),
+                FloatingItem(
+                  title: const Text(
+                    'New Rental',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  icon: const Icon(Icons.add, color: Colors.white),
+                  onPressed: () {
+                    if (state is UserWithHost) {
+                      Navigator.pushNamed(context, PublishScreen.routeName);
+                    } else if (state is UserOnly) {
+                      Navigator.pushNamed(
+                        context,
+                        OrganizationScreen.routeName,
+                      );
+                    } else if (state is NoUser) {
+                      Navigator.pushNamed(
+                        context,
+                        AuthScreen.routeName,
+                      );
+                    }
+                  },
+                )
+              ],
+            );
+          },
         ),
       ),
     );
