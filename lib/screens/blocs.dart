@@ -7,3 +7,4 @@ export 'search/bloc/search_bloc.dart';
 export 'alert/bloc/alert_bloc.dart';
 export 'alerts/bloc/alerts_bloc.dart';
 export 'details/bloc/details_bloc.dart';
+export 'favorites/bloc/favorites_bloc.dart';

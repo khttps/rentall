@@ -25,6 +25,7 @@ abstract class RentalRepository {
   Future<List<Rental>> getSearchResults(String keyword);
   Future<void> setFavorited(Rental rental);
   Future<void> removeFavorited(Rental rental);
+  Future<List<Rental>> getFavourites();
 }
 
 class RentalRepositoryImpl implements RentalRepository {
@@ -230,5 +231,16 @@ class RentalRepositoryImpl implements RentalRepository {
         .collection('favorites')
         .doc(rental.id)
         .delete();
+  }
+
+  @override
+  Future<List<Rental>> getFavourites() async {
+    final uid = _firebaseAuth.currentUser!.uid;
+    final snap = await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('favorites')
+        .get();
+    return snap.docs.map((doc) => Rental.fromJson(doc.data())).toList();
   }
 }
