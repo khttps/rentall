@@ -15,3 +15,4 @@ export 'my_rentals/my_rentals.dart'; // (Small) UI Done
 export 'organization/organization.dart'; // (Small) UI Done
 export 'notifications/notifications.dart'; // UI Done
 export 'on_boarding/on_boarding.dart'; // TODO (Small)
+export 'map/map.dart';

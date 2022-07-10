@@ -35,14 +35,14 @@ class _AuthFormState extends State<AuthForm> {
             Text(
               '${widget.label} to Rentall',
               style: const TextStyle(
-                fontSize: 30.0,
+                fontSize: 28.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8.0),
             const Text(
               'Join our community, post your rentals, setup alerts for new rentals, save your favorite rentals',
-              style: TextStyle(fontSize: 16.0),
+              style: TextStyle(fontSize: 14.0),
             ),
             const SizedBox(height: 16.0),
             FormBuilderTextField(
@@ -51,7 +51,7 @@ class _AuthFormState extends State<AuthForm> {
               textInputAction: TextInputAction.next,
               decoration: const InputDecoration(
                 hintText: 'Email',
-                prefixIcon: Icon(Icons.email),
+                // prefixIcon: Icon(Icons.email),
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -73,15 +73,15 @@ class _AuthFormState extends State<AuthForm> {
               },
               decoration: InputDecoration(
                 hintText: 'Password',
-                prefixIcon: const Icon(Icons.lock),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.remove_red_eye),
-                  onPressed: () {
-                    setState(() {
-                      _obscureText = !_obscureText;
-                    });
-                  },
-                ),
+                // prefixIcon: const Icon(Icons.lock),
+                // suffixIcon: IconButton(
+                //   icon: const Icon(Icons.remove_red_eye),
+                //   onPressed: () {
+                //     setState(() {
+                //       _obscureText = !_obscureText;
+                //     });
+                //   },
+                // ),
               ),
             ),
             const SizedBox(height: 8.0),
@@ -103,9 +103,9 @@ class _AuthFormState extends State<AuthForm> {
             ),
             const Divider(thickness: 1.0),
             SocialButton(
-              text: '${widget.label} with Google',
+              text: 'Continue with Google',
               color: Colors.red,
-              asset: 'assets/images/google.png',
+              asset: 'assets/images/google.svg',
               onPressed: () {
                 BlocProvider.of<AuthBloc>(context).add(const SignInByGoogle());
               },

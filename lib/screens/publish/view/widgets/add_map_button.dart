@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../screens.dart';
+
 class AddMapButton extends StatelessWidget {
   const AddMapButton({Key? key}) : super(key: key);
 
@@ -10,7 +12,9 @@ class AddMapButton extends StatelessWidget {
       height: 150.0,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4.0), color: Colors.grey),
+        borderRadius: BorderRadius.circular(4.0),
+        color: Colors.grey,
+      ),
       child: Stack(children: [
         const GoogleMap(
           initialCameraPosition: CameraPosition(
@@ -24,13 +28,15 @@ class AddMapButton extends StatelessWidget {
         Align(
           alignment: Alignment.bottomCenter,
           child: OutlinedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, MapScreen.routeName);
+            },
             style: OutlinedButton.styleFrom(
-              side: BorderSide(width: 0.5, color: Colors.blueGrey),
+              side: const BorderSide(color: Colors.black54),
               onSurface: Colors.blueGrey,
               backgroundColor: Colors.white,
             ),
-            child: Text('Add Location'),
+            child: const Text('Add Location'),
           ),
         )
       ]),

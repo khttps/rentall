@@ -42,7 +42,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
             onChanged: (String value) {},
             decoration: const InputDecoration(
               hintText: 'Email',
-              prefixIcon: Icon(Icons.email),
+              // prefixIcon: Icon(Icons.email),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {

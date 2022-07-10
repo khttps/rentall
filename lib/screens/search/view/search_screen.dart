@@ -20,6 +20,7 @@ class SearchScreen extends StatelessWidget {
             child: const Icon(Icons.arrow_back),
             onTap: () => Navigator.pop(context),
           ),
+          autofocus: true,
           enabled: true,
           onChanged: (value) => BlocProvider.of<SearchBloc>(context).add(
             SearchStarted(keyword: value),

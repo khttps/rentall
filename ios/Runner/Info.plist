@@ -58,5 +58,11 @@
 		<array>
 			<string>tel</string>
 		</array>
+		<key>NSLocationUsageDescription</key>
+		<string>This app needs to access your location to be able to calculate distance</string>
+		<key>NSLocationAlwaysUsageDescription</key>
+		<string>This app needs to access your location to be able to calculate distance</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>This app needs to access your location to be able to calculate distance</string>
 	</dict>
 </plist>

@@ -147,10 +147,10 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
                 FloatingItem(
                   title: const Text(
-                    'Lodge',
+                    'Map',
                     style: TextStyle(color: Colors.white),
                   ),
-                  icon: const Icon(Icons.hotel, color: Colors.white),
+                  icon: const Icon(Icons.map, color: Colors.white),
                   onPressed: () {
                     if (state is NoUser) {
                       Navigator.pushNamed(context, AuthScreen.routeName);

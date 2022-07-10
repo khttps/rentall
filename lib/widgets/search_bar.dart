@@ -4,10 +4,12 @@ class SearchBar extends StatefulWidget {
   final bool enabled;
   final Function(String)? onChanged;
   final Widget? prefix;
+  final bool autofocus;
   const SearchBar({
     this.onChanged,
     this.enabled = false,
     this.prefix,
+    this.autofocus = false,
     Key? key,
   }) : super(key: key);
 
@@ -29,7 +31,7 @@ class _SearchBarState extends State<SearchBar> {
     return TextFormField(
       controller: _controller,
       textInputAction: TextInputAction.search,
-      autofocus: widget.enabled,
+      autofocus: widget.autofocus,
       onChanged: widget.onChanged,
       decoration: InputDecoration(
         hintText: 'Search...',
@@ -38,7 +40,11 @@ class _SearchBarState extends State<SearchBar> {
         suffixIcon: widget.enabled
             ? IconButton(
                 onPressed: () {
-                  _controller.clear();
+                  if (_controller.text.isNotEmpty) {
+                    _controller.clear();
+                  } else {
+                    FocusScope.of(context).unfocus();
+                  }
                 },
                 icon: const Icon(Icons.close),
               )

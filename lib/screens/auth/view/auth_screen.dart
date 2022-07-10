@@ -68,14 +68,14 @@ class _AuthScreenState extends State<AuthScreen> {
               Column(
                 children: [
                   Expanded(
-                    flex: 1,
+                    flex: 2,
                     child: Image.asset(
                       'assets/images/sign_in.png',
                       fit: BoxFit.cover,
                     ),
                   ),
                   Expanded(
-                    flex: 2,
+                    flex: 3,
                     child: PageView(
                       controller: _controller,
                       physics: const NeverScrollableScrollPhysics(),
