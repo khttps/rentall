@@ -17,11 +17,13 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final _controller = PageController();
+  final _pageController = PageController();
+  final _screenController = ScrollController();
 
   @override
   void dispose() {
-    _controller.dispose();
+    _pageController.dispose();
+    _screenController.dispose();
     super.dispose();
   }
 
@@ -29,7 +31,6 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
@@ -63,116 +64,138 @@ class _AuthScreenState extends State<AuthScreen> {
           }
         },
         builder: (context, state) {
-          return Stack(
-            children: [
-              Column(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Image.asset(
+          return LayoutBuilder(builder: (context, constraints) {
+            return Stack(
+              children: [
+                ListView(
+                  controller: _screenController,
+                  children: [
+                    Image.asset(
                       'assets/images/sign_in.png',
                       fit: BoxFit.cover,
+                      height: constraints.maxWidth / 2,
                     ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: PageView(
-                      controller: _controller,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: [
-                        AuthForm(
-                          label: 'Sign In',
-                          onSubmit: (value) {
-                            BlocProvider.of<AuthBloc>(context).add(
-                              SignInPressed(
-                                email: value['email'],
-                                password: value['password'],
-                              ),
-                            );
-                          },
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                _controller.animateToPage(
-                                  3,
-                                  duration: const Duration(milliseconds: 200),
-                                  curve: Curves.easeIn,
-                                );
-                              },
-                              child: const Text(
-                                'Forgot Pasword',
-                                style: TextStyle(
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                _controller.animateToPage(
-                                  1,
-                                  duration: const Duration(milliseconds: 200),
-                                  curve: Curves.easeIn,
-                                );
-                              },
-                              child: const Text(
-                                'Create Account',
-                                style: TextStyle(
-                                    decoration: TextDecoration.underline),
-                              ),
-                            )
-                          ],
-                        ),
-                        AuthForm(
-                          label: 'Sign Up',
-                          onSubmit: (value) {
-                            BlocProvider.of<AuthBloc>(context).add(
-                              SignUpPressed(
-                                email: value['email'],
-                                password: value['password'],
-                              ),
-                            );
-                          },
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                _controller.animateToPage(
-                                  0,
-                                  duration: const Duration(milliseconds: 200),
-                                  curve: Curves.easeIn,
-                                );
-                              },
-                              child: const Text(
-                                'Sign In',
-                                style: TextStyle(
-                                    decoration: TextDecoration.underline),
-                              ),
-                            ),
-                          ],
-                        ),
-                        ForgotPasswordForm(
-                          onSubmit: (email) {
-                            if (email != null) {
+                    SizedBox(
+                      width: constraints.maxWidth,
+                      height: constraints.maxWidth,
+                      child: PageView(
+                        controller: _pageController,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: [
+                          AuthForm(
+                            label: 'Sign In',
+                            onSubmit: (value) {
                               BlocProvider.of<AuthBloc>(context).add(
-                                ForgotPassword(
-                                  email: email,
+                                SignInPressed(
+                                  email: value['email'],
+                                  password: value['password'],
                                 ),
                               );
-                            }
-                            _controller.animateToPage(
-                              0,
-                              duration: const Duration(milliseconds: 200),
-                              curve: Curves.easeIn,
-                            );
-                          },
-                        )
-                      ],
+                            },
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  _pageController.animateToPage(
+                                    3,
+                                    duration: const Duration(milliseconds: 200),
+                                    curve: Curves.easeIn,
+                                  );
+                                  _screenController.animateTo(
+                                    0,
+                                    duration: const Duration(milliseconds: 200),
+                                    curve: Curves.easeIn,
+                                  );
+                                },
+                                child: const Text(
+                                  'Forgot Pasword',
+                                  style: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  _pageController.animateToPage(
+                                    1,
+                                    duration: const Duration(milliseconds: 200),
+                                    curve: Curves.easeIn,
+                                  );
+                                  _screenController.animateTo(
+                                    0,
+                                    duration: const Duration(milliseconds: 200),
+                                    curve: Curves.easeIn,
+                                  );
+                                },
+                                child: const Text(
+                                  'Create Account',
+                                  style: TextStyle(
+                                      decoration: TextDecoration.underline),
+                                ),
+                              )
+                            ],
+                          ),
+                          AuthForm(
+                            label: 'Sign Up',
+                            onSubmit: (value) {
+                              BlocProvider.of<AuthBloc>(context).add(
+                                SignUpPressed(
+                                  email: value['email'],
+                                  password: value['password'],
+                                ),
+                              );
+                            },
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  _pageController.animateToPage(
+                                    0,
+                                    duration: const Duration(milliseconds: 200),
+                                    curve: Curves.easeIn,
+                                  );
+                                  _screenController.animateTo(
+                                    0,
+                                    duration: const Duration(milliseconds: 200),
+                                    curve: Curves.easeIn,
+                                  );
+                                },
+                                child: const Text(
+                                  'Sign In',
+                                  style: TextStyle(
+                                      decoration: TextDecoration.underline),
+                                ),
+                              ),
+                            ],
+                          ),
+                          ForgotPasswordForm(
+                            onSubmit: (email) {
+                              if (email != null) {
+                                BlocProvider.of<AuthBloc>(context).add(
+                                  ForgotPassword(
+                                    email: email,
+                                  ),
+                                );
+                              }
+                              _pageController.animateToPage(
+                                0,
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.easeIn,
+                              );
+                              _screenController.animateTo(
+                                0,
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.easeIn,
+                              );
+                            },
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              if (state is AuthLoading) const LoadingWidget()
-            ],
-          );
+                  ],
+                ),
+                if (state is AuthLoading) const LoadingWidget()
+              ],
+            );
+          });
         },
       ),
     );

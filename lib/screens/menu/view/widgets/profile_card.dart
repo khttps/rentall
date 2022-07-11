@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,10 +23,10 @@ class ProfileCard extends StatelessWidget {
       children: [
         Row(
           children: [
-            const ImageCircleAvatar(
-              radius: 22.0,
-              icon: Icons.person,
-            ),
+            // const ImageCircleAvatar(
+            //   radius: 22.0,
+            //   icon: Icons.person,
+            // ),
             const SizedBox(width: 16.0),
             Expanded(
               child: RichText(

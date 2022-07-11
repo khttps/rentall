@@ -60,7 +60,7 @@ Map<String, dynamic> _$RentalToJson(Rental instance) {
   writeNotNull('bathrooms', instance.bathrooms);
   writeNotNull('furnished', instance.furnished);
   val['area'] = instance.area;
-  val['governorate'] = _$GovernorateEnumMap[instance.governorate];
+  val['governorate'] = _$GovernorateEnumMap[instance.governorate]!;
   writeNotNull('region', instance.region);
   val['price'] = instance.price;
   val['hostPhone'] = instance.hostPhone;

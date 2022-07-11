@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
@@ -27,18 +31,22 @@ abstract class UserRepository {
   Future<User?> getUser({String? uid});
   bool isOwned(String userId);
   Future<bool> isFavorited(String id);
+  Future<void> updateHost(Map<String, dynamic> host, File? image);
 }
 
 class UserRepositoryImpl implements UserRepository {
   final auth.FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firebaseFirestore;
   final InternetConnectionChecker _connectionChecker;
+  final FirebaseStorage _firebaseStorage;
   UserRepositoryImpl({
     auth.FirebaseAuth? firebaseAuth,
     FirebaseFirestore? firebaseFirestore,
+    FirebaseStorage? firebaseStorage,
     required InternetConnectionChecker connectionChecker,
   })  : _firebaseAuth = firebaseAuth ?? auth.FirebaseAuth.instance,
         _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance,
+        _firebaseStorage = firebaseStorage ?? FirebaseStorage.instance,
         _connectionChecker = connectionChecker;
 
   @override
@@ -229,6 +237,10 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<bool> isFavorited(String id) async {
+    if (!await _connectionChecker.hasConnection) {
+      throw Exception('No internet connection');
+    }
+
     final user = _firebaseAuth.currentUser;
 
     if (user == null) return false;
@@ -247,5 +259,31 @@ class UserRepositoryImpl implements UserRepository {
     final user = _firebaseAuth.currentUser;
     if (user == null) return false;
     return user.uid == userId;
+  }
+
+  @override
+  Future<void> updateHost(Map<String, dynamic> host, File? image) async {
+    if (!await _connectionChecker.hasConnection) {
+      throw Exception('No internet connection');
+    }
+
+    final userId = currentUser?.uid;
+
+    throwIf(userId == null, 'Couldn\'t retrieve user info.');
+
+    String? url;
+    if (image != null) {
+      url = await (await _firebaseStorage
+              .ref('$userId/${image.hashCode}.png')
+              .putFile(image))
+          .ref
+          .getDownloadURL();
+    }
+
+    await _firebaseFirestore.collection('users').doc(userId).update({
+      'hostName': host['hostName'],
+      'hostPhone': host['hostPhone'],
+      if (url != null) 'hostAvatar': url,
+    });
   }
 }

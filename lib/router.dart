@@ -22,12 +22,10 @@ MaterialPageRoute<dynamic> onGenerateRoute(RouteSettings settings) {
           return const SearchScreen();
         case AuthScreen.routeName:
           return const AuthScreen();
-        case FavoritesScreen.routeName:
-          return const FavoritesScreen();
-        case OrganizationScreen.routeName:
-          return const OrganizationScreen();
-        case MyRentalsScreen.routeName:
-          return const MyRentalsScreen();
+        case ListScreen.routeName:
+          return ListScreen(listName: settings.arguments as String);
+        case HostScreen.routeName:
+          return const HostScreen();
         case PasswordSentScreen.routeName:
           return PasswordSentScreen(email: settings.arguments as String);
         case AlertScreen.routeName:

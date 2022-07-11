@@ -17,7 +17,7 @@ class User extends Equatable {
   final List<Rental>? favorites;
   final String? hostName;
   @JsonKey(includeIfNull: false)
-  final String? avatarUrl;
+  final String? hostAvatar;
   final String? hostPhone;
   @JsonKey(includeIfNull: false)
   final List<Rental>? rentals;
@@ -27,7 +27,7 @@ class User extends Equatable {
     this.displayName,
     required this.email,
     this.hostName,
-    this.avatarUrl,
+    this.hostAvatar,
     this.hostPhone,
     this.rentals,
     this.favorites,
@@ -43,5 +43,14 @@ class User extends Equatable {
       );
 
   @override
-  List<Object?> get props => [uid, displayName, email, favorites];
+  List<Object?> get props => [
+        uid,
+        displayName,
+        email,
+        favorites,
+        rentals,
+        hostPhone,
+        hostName,
+        hostAvatar
+      ];
 }

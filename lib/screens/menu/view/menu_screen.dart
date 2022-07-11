@@ -68,7 +68,8 @@ class MenuScreen extends StatelessWidget {
                     dense: true,
                     onTap: () => Navigator.pushNamed(
                       context,
-                      FavoritesScreen.routeName,
+                      ListScreen.routeName,
+                      arguments: 'Favorites',
                     ),
                   ),
                   ListTile(
@@ -95,7 +96,7 @@ class MenuScreen extends StatelessWidget {
                     dense: true,
                     onTap: () => Navigator.pushNamed(
                       context,
-                      OrganizationScreen.routeName,
+                      HostScreen.routeName,
                     ),
                   ),
                   ListTile(
@@ -103,9 +104,8 @@ class MenuScreen extends StatelessWidget {
                     title: const Text('My Rentals'),
                     dense: true,
                     onTap: () => Navigator.pushNamed(
-                      context,
-                      MyRentalsScreen.routeName,
-                    ),
+                        context, ListScreen.routeName,
+                        arguments: 'Rentals'),
                   ),
                   const Divider(thickness: 1.0),
                 ],

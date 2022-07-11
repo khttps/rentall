@@ -1,13 +1,13 @@
-part of 'favorites_bloc.dart';
+part of 'list_bloc.dart';
 
 enum FavouritesStatus { initial, loading, success, failed }
 
-class FavouritesState extends Equatable {
+class ListState extends Equatable {
   final FavouritesStatus status;
   final List<Rental>? favourites;
   final String? message;
 
-  const FavouritesState(
+  const ListState(
       {this.status = FavouritesStatus.initial, this.favourites, this.message});
 
   @override

@@ -166,16 +166,14 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                   icon: const Icon(Icons.add, color: Colors.white),
                   onPressed: () {
-                    if (state is UserWithHost || state is UserOnly) {
+                    if (state is UserWithHost) {
                       Navigator.pushNamed(context, PublishScreen.routeName);
-                    }
-                    // else if (state is UserOnly) {
-                    //   Navigator.pushNamed(
-                    //     context,
-                    //     OrganizationScreen.routeName,
-                    //   );
-                    // }
-                    else if (state is NoUser) {
+                    } else if (state is UserOnly) {
+                      Navigator.pushNamed(
+                        context,
+                        HostScreen.routeName,
+                      );
+                    } else if (state is NoUser) {
                       Navigator.pushNamed(
                         context,
                         AuthScreen.routeName,

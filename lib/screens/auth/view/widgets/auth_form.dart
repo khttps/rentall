@@ -20,7 +20,6 @@ class AuthForm extends StatefulWidget {
 }
 
 class _AuthFormState extends State<AuthForm> {
-  var _obscureText = true;
   final _formKey = GlobalKey<FormBuilderState>();
 
   @override
@@ -64,7 +63,7 @@ class _AuthFormState extends State<AuthForm> {
             FormBuilderTextField(
               name: 'password',
               keyboardType: TextInputType.visiblePassword,
-              obscureText: _obscureText,
+              obscureText: true,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Required field.';

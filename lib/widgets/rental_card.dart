@@ -12,7 +12,7 @@ class RentalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height / 7;
+    final height = MediaQuery.of(context).size.height / 6;
 
     return InkWell(
       onTap: () => Navigator.pushNamed(
