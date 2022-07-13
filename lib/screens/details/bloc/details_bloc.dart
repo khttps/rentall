@@ -28,7 +28,7 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
       emit(state.copyWith(status: DetailsStatus.loggedOut));
     } else {
       try {
-        final isOwned = _userRepository.isOwned(event.rental.userId);
+        final isOwned = _userRepository.isOwned(event.rental.userId!);
         if (isOwned) {
           emit(state.copyWith(status: DetailsStatus.owned));
         } else {

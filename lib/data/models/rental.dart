@@ -10,7 +10,8 @@ part 'rental.g.dart';
 class Rental extends Equatable {
   @JsonKey(includeIfNull: false)
   final String? id;
-  final String userId;
+  @JsonKey(includeIfNull: false)
+  final String? userId;
   final String title;
   final List<String> images;
   @JsonKey(includeIfNull: false)
@@ -34,7 +35,7 @@ class Rental extends Equatable {
   final int price;
   final String hostPhone;
   @TimestampConverter()
-  @JsonKey()
+  @JsonKey(includeIfNull: false)
   final Timestamp? createdAt;
   @JsonKey(includeIfNull: false)
   final RentPeriod? rentPeriod;
@@ -45,7 +46,7 @@ class Rental extends Equatable {
 
   const Rental({
     this.id,
-    required this.userId,
+    this.userId,
     required this.title,
     this.images = const [],
     this.description,
@@ -63,7 +64,7 @@ class Rental extends Equatable {
     this.createdAt,
     this.rentPeriod = RentPeriod.month,
     required this.propertyType,
-    this.publishStatus = PublishStatus.pending,
+    this.publishStatus,
   });
 
   factory Rental.fromJson(Map<String, dynamic> json) => _$RentalFromJson(json);

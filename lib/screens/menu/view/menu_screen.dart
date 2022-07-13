@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentall/screens/blocs.dart';
@@ -112,9 +113,18 @@ class MenuScreen extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.language),
                   title: const Text('Language'),
-                  subtitle: Text('English'),
+                  subtitle: Text(
+                    context.locale.languageCode == 'en' ? 'English' : 'Arabic',
+                  ),
                   dense: true,
-                  onTap: () {},
+                  onTap: () async {
+                    await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const LanguageDialog();
+                      },
+                    );
+                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.light_mode),
@@ -122,7 +132,6 @@ class MenuScreen extends StatelessWidget {
                   subtitle: Text('Off'),
                   trailing: Switch(value: false, onChanged: (value) {}),
                   dense: true,
-                  onTap: () {},
                 ),
               ],
             ),

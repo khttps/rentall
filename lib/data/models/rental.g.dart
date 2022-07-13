@@ -8,7 +8,7 @@ part of 'rental.dart';
 
 Rental _$RentalFromJson(Map<String, dynamic> json) => Rental(
       id: json['id'] as String?,
-      userId: json['userId'] as String,
+      userId: json['userId'] as String?,
       title: json['title'] as String,
       images: (json['images'] as List<dynamic>?)
               ?.map((e) => e as String)
@@ -35,8 +35,7 @@ Rental _$RentalFromJson(Map<String, dynamic> json) => Rental(
       propertyType:
           $enumDecodeNullable(_$PropertyTypeEnumMap, json['propertyType']),
       publishStatus:
-          $enumDecodeNullable(_$PublishStatusEnumMap, json['publishStatus']) ??
-              PublishStatus.pending,
+          $enumDecodeNullable(_$PublishStatusEnumMap, json['publishStatus']),
     );
 
 Map<String, dynamic> _$RentalToJson(Rental instance) {
@@ -49,7 +48,7 @@ Map<String, dynamic> _$RentalToJson(Rental instance) {
   }
 
   writeNotNull('id', instance.id);
-  val['userId'] = instance.userId;
+  writeNotNull('userId', instance.userId);
   val['title'] = instance.title;
   val['images'] = instance.images;
   writeNotNull('description', instance.description);
@@ -64,7 +63,8 @@ Map<String, dynamic> _$RentalToJson(Rental instance) {
   writeNotNull('region', instance.region);
   val['price'] = instance.price;
   val['hostPhone'] = instance.hostPhone;
-  val['createdAt'] = const TimestampConverter().toJson(instance.createdAt);
+  writeNotNull(
+      'createdAt', const TimestampConverter().toJson(instance.createdAt));
   writeNotNull('rentPeriod', _$RentPeriodEnumMap[instance.rentPeriod]);
   writeNotNull('propertyType', _$PropertyTypeEnumMap[instance.propertyType]);
   writeNotNull('publishStatus', _$PublishStatusEnumMap[instance.publishStatus]);

@@ -44,7 +44,6 @@ Future<void> init() async {
   //! Repositories
   sl.registerLazySingleton<RentalRepository>(
     () => RentalRepositoryImpl(
-      prefs: sl(),
       connectionChecker: sl(),
       algolia: sl(),
     ),
@@ -56,14 +55,14 @@ Future<void> init() async {
     () => AlertRepositoryImpl(connectionChecker: sl()),
   );
 
-  //! Shared Preferences
-  final prefs = await SharedPreferences.getInstance();
-  sl.registerLazySingleton<SharedPreferences>(() => prefs);
-
   //! Internet
   sl.registerLazySingleton<InternetConnectionChecker>(
     () => InternetConnectionChecker(),
   );
+
+  //! Shared Preferences
+  final prefs = await SharedPreferences.getInstance();
+  sl.registerLazySingleton<SharedPreferences>(() => prefs);
 
   //! Algolia
   sl.registerLazySingleton<Algolia>(

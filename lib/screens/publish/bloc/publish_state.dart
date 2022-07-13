@@ -1,6 +1,13 @@
 part of 'publish_bloc.dart';
 
-enum PublishLoadStatus { initial, loading, deleted, published, failed }
+enum PublishLoadStatus {
+  initial,
+  loading,
+  archived,
+  published,
+  failed,
+  unachived
+}
 
 class PublishState extends Equatable {
   final PublishLoadStatus status;

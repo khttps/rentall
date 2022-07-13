@@ -59,6 +59,7 @@ class RentallApp extends StatelessWidget {
         BlocProvider<DetailsBloc>(create: (context) => di.sl()),
         BlocProvider<HostBloc>(
             create: (context) => di.sl()..add(const LoadHost())),
+        BlocProvider<ListBloc>(create: (context) => di.sl()),
       ],
       child: MaterialApp(
         title: 'Rentall',

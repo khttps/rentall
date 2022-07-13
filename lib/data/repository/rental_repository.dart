@@ -6,22 +6,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../models/models.dart';
 
 abstract class RentalRepository {
   Future<List<Rental>> getRentals(Map<String, dynamic> filters);
   Future<Rental> addRental(
-    Map<String, dynamic> rental,
+    Rental rental,
     List<File?> images,
   );
   Future<Rental> updateRental(
     String id,
-    Map<String, dynamic> rental,
+    Rental rental,
     List<File?>? images,
   );
   Future<void> archiveRental(String id);
+  Future<void> unarchiveRental(String id);
   Future<List<Rental>> getSearchResults(String keyword);
   Future<void> setFavorited(Rental rental);
   Future<void> removeFavorited(Rental rental);
@@ -39,7 +38,6 @@ class RentalRepositoryImpl implements RentalRepository {
     FirebaseFirestore? firestore,
     FirebaseAuth? firebaseAuth,
     FirebaseStorage? storage,
-    required SharedPreferences prefs,
     required InternetConnectionChecker connectionChecker,
     required Algolia algolia,
   })  : _firestore = firestore ?? FirebaseFirestore.instance,
@@ -86,7 +84,7 @@ class RentalRepositoryImpl implements RentalRepository {
 
   @override
   Future<Rental> addRental(
-    Map<String, dynamic> rental,
+    Rental rental,
     List<File?> imageFiles,
   ) async {
     if (!await _connectionChecker.hasConnection) {
@@ -95,9 +93,10 @@ class RentalRepositoryImpl implements RentalRepository {
     final uid = _firebaseAuth.currentUser!.uid;
     final imageUrls = <String>[];
     final ref = await _firestore.collection('rentals').add({
-      ...rental,
+      ...rental.toJson(),
       'createdAt': Timestamp.now(),
       'userId': uid,
+      'publishStatus': 'pending'
     });
 
     for (var f in imageFiles) {
@@ -127,7 +126,7 @@ class RentalRepositoryImpl implements RentalRepository {
   @override
   Future<Rental> updateRental(
     String id,
-    Map<String, dynamic> rental,
+    Rental rental,
     List<File?>? imageFiles,
   ) async {
     if (!await _connectionChecker.hasConnection) {
@@ -140,7 +139,7 @@ class RentalRepositoryImpl implements RentalRepository {
       for (var f in imageFiles) {
         if (f != null) {
           final url = await (await _storage
-                  .ref('${rental['id']}/${f.hashCode}.png')
+                  .ref('${rental.id}/${f.hashCode}.png')
                   .putFile(f))
               .ref
               .getDownloadURL();
@@ -155,7 +154,7 @@ class RentalRepositoryImpl implements RentalRepository {
         ...(await doc.get()).get('images'),
         ...imageUrls,
       ],
-      ...rental,
+      ...rental.toJson(),
     };
 
     await doc.update(updates);
@@ -190,6 +189,25 @@ class RentalRepositoryImpl implements RentalRepository {
         .collection('rentals')
         .doc(id)
         .update({'publishStatus': PublishStatus.archived.name});
+  }
+
+  @override
+  Future<void> unarchiveRental(String id) async {
+    if (!await _connectionChecker.hasConnection) {
+      throw Exception('No internet connection');
+    }
+    await _firestore
+        .collection('rentals')
+        .doc(id)
+        .update({'publishStatus': PublishStatus.approved.name});
+
+    final uid = _firebaseAuth.currentUser!.uid;
+    await _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('rentals')
+        .doc(id)
+        .update({'publishStatus': PublishStatus.approved.name});
   }
 
   @override

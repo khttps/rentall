@@ -84,134 +84,138 @@ class _AlertScreenState extends State<AlertScreen> {
                     },
                   )
                 ],
-                body: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: FormBuilder(
-                    key: _formKey,
-                    initialValue: isNew
-                        ? {}
-                        : widget.alert!.toJson().map(
-                              (key, value) => (value is int?)
-                                  ? MapEntry(key, '$value')
-                                  : MapEntry(key, value),
-                            ),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                body: FormBuilder(
+                  key: _formKey,
+                  initialValue: isNew
+                      ? {}
+                      : widget.alert!.toJson().map(
+                            (key, value) => (value is int?)
+                                ? MapEntry(key, '$value')
+                                : MapEntry(key, value),
+                          ),
+                  child: ListView(
+                    padding: const EdgeInsets.all(16.0),
+                    children: [
+                      const Text(
+                        'Setup alerts to stay up-to-date and discover rentals matching your preference',
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                      const SizedBox(height: 16.0),
+                      Row(
                         children: [
-                          const Text(
-                            'Setup alerts to stay up-to-date and discover rentals matching your preference',
-                            style: TextStyle(fontSize: 16.0),
-                          ),
-                          const SizedBox(height: 16.0),
-                          const Text('Keywords'),
-                          const SizedBox(height: 4.0),
-                          Wrap(
-                              spacing: 4.0,
-                              children: _keywords
-                                  .asMap()
-                                  .entries
-                                  .map(
-                                    (e) => Chip(
-                                      label: Text(e.value),
-                                      onDeleted: () {
-                                        setState(() {
-                                          _keywords.removeAt(e.key);
-                                        });
-                                      },
-                                    ),
-                                  )
-                                  .toList()),
-                          const SizedBox(height: 4.0),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  controller: _controller,
-                                  onChanged: (value) {
-                                    if (value.endsWith(' ') &&
-                                        value.trim().isNotEmpty) {
-                                      _addKeyword();
-                                    }
-                                  },
-                                  minLines: 3,
-                                  maxLines: 3,
-                                ),
+                          Expanded(
+                            child: TextFormField(
+                              controller: _controller,
+                              decoration: const InputDecoration(
+                                hintText: 'New Keyword',
                               ),
-                              const SizedBox(width: 10.0),
-                              ElevatedButton(
-                                onPressed: () {
-                                  _addKeyword();
-                                },
-                                child: const Text('Add'),
-                              ),
-                            ],
+                              onChanged: (_) {
+                                if (_controller.text.endsWith(' ') &&
+                                    _controller.text.trim().isNotEmpty) {
+                                  setState(() {
+                                    _keywords.add(_controller.text.trim());
+                                    _controller.clear();
+                                  });
+                                }
+                              },
+                            ),
                           ),
-                          const SizedBox(height: 6.0),
-                          CustomValidator(
-                            validator: (_) {
-                              if (_keywords.isEmpty) {
-                                return 'Keywords can\'t be empty';
+                          const SizedBox(width: 10.0),
+                          ElevatedButton(
+                            onPressed: () {
+                              if (_controller.text.trim().isNotEmpty) {
+                                setState(() {
+                                  _keywords.add(_controller.text.trim());
+                                  _controller.clear();
+                                });
                               }
-                              if (_keywords.length > 15) {
-                                return 'Maximum number of keywords is 15';
-                              }
-                              return null;
                             },
+                            child: const Text('Add'),
                           ),
-                          const SizedBox(height: 16.0),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Text('Repeat every'),
-                              const SizedBox(width: 10.0),
-                              SizedBox(
-                                width: 100.0,
-                                child: FormBuilderTextField(
-                                  name: 'repeat',
-                                  keyboardType: TextInputType.number,
-                                  valueTransformer: (String? value) {
-                                    if (value != null) {
-                                      return int.tryParse(value);
-                                    }
-                                  },
-                                  validator: FormBuilderValidators.compose([
-                                    FormBuilderValidators.required(
-                                      errorText: 'Required',
-                                    ),
-                                    FormBuilderValidators.notEqual(0),
-                                    FormBuilderValidators.max(14),
-                                  ]),
+                        ],
+                      ),
+                      const SizedBox(height: 16.0),
+                      const Text('Keywords'),
+                      const SizedBox(height: 4.0),
+                      Wrap(
+                        spacing: 4.0,
+                        children: _keywords.asMap().entries.map(
+                          (e) {
+                            return Chip(
+                              label: Text(e.value),
+                              onDeleted: () => setState(() {
+                                _keywords.removeAt(e.key);
+                              }),
+                            );
+                          },
+                        ).toList(),
+                      ),
+                      const SizedBox(height: 4.0),
+                      const SizedBox(height: 6.0),
+                      CustomValidator(
+                        validator: (_) {
+                          if (_keywords.isEmpty) {
+                            return 'Keywords can\'t be empty';
+                          }
+                          if (_keywords.length > 15) {
+                            return 'Maximum number of keywords is 15';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16.0),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text('Repeat every'),
+                          const SizedBox(width: 10.0),
+                          SizedBox(
+                            width: 100.0,
+                            child: FormBuilderTextField(
+                              name: 'repeat',
+                              keyboardType: TextInputType.number,
+                              valueTransformer: (String? value) {
+                                if (value != null) {
+                                  return int.tryParse(value);
+                                }
+                              },
+                              validator: FormBuilderValidators.compose([
+                                FormBuilderValidators.required(
+                                  errorText: 'Required',
                                 ),
-                              ),
-                              const SizedBox(width: 10.0),
-                              const Text('day'),
-                            ],
+                                FormBuilderValidators.notEqual(0),
+                                FormBuilderValidators.max(14),
+                              ]),
+                            ),
                           ),
-                          const SizedBox(height: 16.0),
-                          if (widget.alert != null) ...[
-                            const Spacer(),
-                            Center(
-                              child: TextButton.icon(
-                                label: const Text('Delete'),
-                                icon: const Icon(Icons.delete),
-                                style:
-                                    TextButton.styleFrom(primary: Colors.red),
-                                onPressed: () => _showAlertDialog(
-                                  context,
-                                  title: const Text('Delete Alert'),
-                                  content: const Text(
-                                    'Are you sure you want to delete this alert?',
-                                  ),
-                                  onPositive: () {
-                                    BlocProvider.of<AlertBloc>(context).add(
-                                      DeleteAlert(id: widget.alert!.id!),
-                                    );
-                                  },
-                                ),
+                          const SizedBox(width: 10.0),
+                          const Text('day'),
+                        ],
+                      ),
+                      const SizedBox(height: 16.0),
+                      if (widget.alert != null) ...[
+                        const Spacer(),
+                        Center(
+                          child: TextButton.icon(
+                            label: const Text('Delete'),
+                            icon: const Icon(Icons.delete),
+                            style: TextButton.styleFrom(primary: Colors.red),
+                            onPressed: () => _showAlertDialog(
+                              context,
+                              title: const Text('Delete Alert'),
+                              content: const Text(
+                                'Are you sure you want to delete this alert?',
                               ),
-                            )
-                          ],
-                        ]),
+                              onPositive: () {
+                                BlocProvider.of<AlertBloc>(context).add(
+                                  DeleteAlert(id: widget.alert!.id!),
+                                );
+                              },
+                            ),
+                          ),
+                        )
+                      ],
+                    ],
                   ),
                 ),
               ),
@@ -221,15 +225,6 @@ class _AlertScreenState extends State<AlertScreen> {
         },
       ),
     );
-  }
-
-  void _addKeyword() {
-    if (_controller.text.isNotEmpty) {
-      setState(() {
-        _keywords.add(_controller.text.trim());
-        _controller.clear();
-      });
-    }
   }
 
   Future _showAlertDialog(

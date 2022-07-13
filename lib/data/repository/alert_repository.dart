@@ -5,10 +5,10 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import '../models/alert.dart';
 
 abstract class AlertRepository {
-  Future<void> addAlert(Map<String, dynamic> alert);
+  Future<void> addAlert(Alert alert);
   Future<List<Alert>> getAlerts();
   Future<void> removeAlert(String id);
-  Future<void> updateAlert(String id, Map<String, dynamic> alert);
+  Future<void> updateAlert(String id, Alert alert);
 }
 
 class AlertRepositoryImpl implements AlertRepository {
@@ -25,7 +25,7 @@ class AlertRepositoryImpl implements AlertRepository {
         _connectionChecker = connectionChecker;
 
   @override
-  Future<void> addAlert(Map<String, dynamic> alert) async {
+  Future<void> addAlert(Alert alert) async {
     if (!await _connectionChecker.hasConnection) {
       throw Exception('No internet connection');
     }
@@ -35,7 +35,7 @@ class AlertRepositoryImpl implements AlertRepository {
         .doc(user!.uid)
         .collection('alerts')
         .add({
-      ...alert,
+      ...alert.toJson(),
       'createdAt': Timestamp.now(),
     });
 
@@ -45,7 +45,7 @@ class AlertRepositoryImpl implements AlertRepository {
   @override
   Future<void> updateAlert(
     String id,
-    Map<String, dynamic> alert,
+    Alert alert,
   ) async {
     if (!await _connectionChecker.hasConnection) {
       throw Exception('No internet connection');
@@ -57,7 +57,7 @@ class AlertRepositoryImpl implements AlertRepository {
         .doc(user!.uid)
         .collection('alerts')
         .doc(id)
-        .update(alert);
+        .update(alert.toJson());
   }
 
   @override

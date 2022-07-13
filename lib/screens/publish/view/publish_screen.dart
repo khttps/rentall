@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:phone_number/phone_number.dart';
 import 'package:rentall/widgets/widgets.dart';
@@ -38,6 +40,7 @@ class _PublishScreenState extends State<PublishScreen> {
 
   var _currentPage = 0;
   bool _validPhone = false;
+  GeoPoint? _location;
 
   @override
   void dispose() {
@@ -62,12 +65,18 @@ class _PublishScreenState extends State<PublishScreen> {
                   BlocProvider.of<PublishBloc>(context).add(
                     !updating
                         ? PublishRental(
-                            rentalMap: _formKey.currentState!.value,
+                            rentalMap: {
+                              ..._formKey.currentState!.value,
+                              'location': _location
+                            },
                             images: _images.whereType<XFile>().toList(),
                           )
                         : UpdateRental(
                             id: widget.rental!.id!,
-                            rental: _formKey.currentState!.value,
+                            rental: {
+                              ..._formKey.currentState!.value,
+                              'location': _location,
+                            },
                             images: _images.whereType<XFile>().toList(),
                           ),
                   );
@@ -86,7 +95,7 @@ class _PublishScreenState extends State<PublishScreen> {
                   SnackBar(
                     content: Text(
                         'Rental was successfully ${updating ? 'updated' : 'published'}.'),
-                    backgroundColor: const Color.fromARGB(255, 47, 169, 110),
+                    backgroundColor: Colors.green,
                   ),
                 );
                 Navigator.pushNamedAndRemoveUntil(
@@ -95,11 +104,14 @@ class _PublishScreenState extends State<PublishScreen> {
                   ModalRoute.withName(HomeScreen.routeName),
                   arguments: state.rental,
                 );
-              } else if (state.status == PublishLoadStatus.deleted) {
+              } else if (state.status == PublishLoadStatus.archived ||
+                  state.status == PublishLoadStatus.unachived) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Rental was successfully archived.'),
-                    backgroundColor: Color.fromARGB(255, 47, 169, 110),
+                  SnackBar(
+                    content: Text(
+                      'Rental was successfully ${state.status.name}.',
+                    ),
+                    backgroundColor: Colors.green,
                   ),
                 );
                 Navigator.pushNamedAndRemoveUntil(
@@ -159,28 +171,21 @@ class _PublishScreenState extends State<PublishScreen> {
                                       right: 0.0,
                                       child: InkWell(
                                         onTap: () async {
-                                          await _showAlertDialog(
-                                            context,
-                                            title: const Text(
-                                              'Remove this image?',
-                                            ),
-                                            onPositive: () {
-                                              setState(() {
-                                                _images.removeAt(index);
-                                              });
-                                            },
-                                          );
+                                          await _showRemoveImageDialog(
+                                              context, index);
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.all(2.0),
                                           decoration: const BoxDecoration(
-                                              color: Colors.white,
-                                              shape: BoxShape.circle,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    offset: Offset(0.0, 1.0),
-                                                    blurRadius: 1.0)
-                                              ]),
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                offset: Offset(0.0, 1.0),
+                                                blurRadius: 1.0,
+                                              )
+                                            ],
+                                          ),
                                           child: const Icon(
                                             Icons.delete,
                                             color: Colors.blueGrey,
@@ -530,29 +535,37 @@ class _PublishScreenState extends State<PublishScreen> {
                               textInputAction: TextInputAction.done,
                             ),
                             const SizedBox(height: 16.0),
-                            const AddMapButton(),
+                            AddMapButton(
+                              initialPosition: widget.rental?.location,
+                              onLocationChanged: (location) {
+                                if (location != null) {
+                                  setState(() {
+                                    _location = GeoPoint(
+                                      location.latitude,
+                                      location.longitude,
+                                    );
+                                  });
+                                }
+                              },
+                            ),
                             const SizedBox(height: 20.0),
                             if (updating)
-                              TextButton.icon(
-                                icon: const Icon(Icons.archive),
-                                label: const Text('Archive'),
-                                style:
-                                    TextButton.styleFrom(primary: Colors.red),
-                                onPressed: () async => await _showAlertDialog(
+                              ArchiveButton(
+                                isArchived: widget.rental!.publishStatus ==
+                                    PublishStatus.archived,
+                                onPressed: (isArchived) async =>
+                                    await _showAlertDialog(
                                   context,
-                                  title: const Text('Archive Rental'),
-                                  content: const Text(
-                                    'Are you sure you want to archive this rental?',
-                                  ),
+                                  title: isArchived ? 'Unarchive' : 'Archive',
                                   onPositive: () {
                                     context.read<PublishBloc>().add(
                                           ArchiveRental(
-                                            id: widget.rental!.id!,
+                                            rental: widget.rental!,
                                           ),
                                         );
                                   },
                                 ),
-                              ),
+                              )
                           ],
                         ),
                       ),
@@ -569,17 +582,35 @@ class _PublishScreenState extends State<PublishScreen> {
     );
   }
 
+  Future<dynamic> _showRemoveImageDialog(BuildContext context, int index) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return ConfirmationDialog(
+          title: const Text(
+            'Remove this image?',
+          ),
+          onPositive: () {
+            setState(() {
+              _images.removeAt(index);
+            });
+          },
+        );
+      },
+    );
+  }
+
   Future _showAlertDialog(
     BuildContext context, {
-    Widget? title,
-    Widget? content,
+    required String title,
     required Function() onPositive,
   }) {
     return showDialog(
       context: context,
       builder: (context) => ConfirmationDialog(
-        title: title,
-        content: content,
+        title: Text('$title Rental'),
+        content: Text(
+            'Are you sure you want to ${title.toLowerCase()} this rental?'),
         onPositive: onPositive,
       ),
     );

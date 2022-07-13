@@ -32,12 +32,14 @@ MaterialPageRoute<dynamic> onGenerateRoute(RouteSettings settings) {
           return AlertScreen(alert: settings.arguments as Alert?);
         case AlertsScreen.routeName:
           return const AlertsScreen();
-        case MapScreen.routeName:
-          return const MapScreen();
+        case AddLocationScreen.routeName:
+          return const AddLocationScreen();
         case DetailsScreen.routeName:
           return DetailsScreen(
             rental: settings.arguments as Rental,
           );
+        case AutofillScreen.routeName:
+          return const AutofillScreen();
         default:
           return const SizedBox.shrink();
       }

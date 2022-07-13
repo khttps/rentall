@@ -21,10 +21,12 @@ class AlertBloc extends Bloc<AlertEvent, AlertState> {
   FutureOr<void> _onAddAlert(AddAlert event, emit) async {
     emit(const AlertState(status: AlertStatus.loading));
     try {
-      await _repository.addAlert({
-        ...event.alertMap,
-        'keywords': event.keywords,
-      });
+      await _repository.addAlert(
+        Alert.fromJson({
+          ...event.alertMap,
+          'keywords': event.keywords,
+        }),
+      );
       emit(const AlertState(status: AlertStatus.success));
     } on Exception catch (err) {
       emit(
@@ -39,10 +41,13 @@ class AlertBloc extends Bloc<AlertEvent, AlertState> {
   FutureOr<void> _onUpdateAlert(UpdateAlert event, emit) async {
     emit(const AlertState(status: AlertStatus.loading));
     try {
-      await _repository.updateAlert(event.id, {
-        ...event.alert,
-        'keywords': event.keywords,
-      });
+      await _repository.updateAlert(
+        event.id,
+        Alert.fromJson({
+          ...event.alert,
+          'keywords': event.keywords,
+        }),
+      );
       emit(const AlertState(status: AlertStatus.success));
     } on Exception catch (err) {
       emit(

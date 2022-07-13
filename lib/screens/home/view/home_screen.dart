@@ -54,9 +54,11 @@ class _HomeScreenState extends State<HomeScreen>
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: InkWell(
             child: const SearchBar(enabled: false),
             onTap: () {
+              _animationController.reset();
               Navigator.pushNamed(context, SearchScreen.routeName);
             },
           ),
@@ -138,6 +140,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                   icon: const Icon(Icons.notification_add, color: Colors.white),
                   onPressed: () {
+                    _animationController.reset();
                     if (state is NoUser) {
                       Navigator.pushNamed(context, AuthScreen.routeName);
                     } else if (state is UserOnly || state is UserWithHost) {
@@ -152,6 +155,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                   icon: const Icon(Icons.map, color: Colors.white),
                   onPressed: () {
+                    _animationController.reset();
                     if (state is NoUser) {
                       Navigator.pushNamed(context, AuthScreen.routeName);
                     } else if (state is UserOnly || state is UserWithHost) {
@@ -166,6 +170,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                   icon: const Icon(Icons.add, color: Colors.white),
                   onPressed: () {
+                    _animationController.reset();
                     if (state is UserWithHost) {
                       Navigator.pushNamed(context, PublishScreen.routeName);
                     } else if (state is UserOnly) {

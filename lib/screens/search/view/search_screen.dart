@@ -15,13 +15,10 @@ class SearchScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        centerTitle: true,
         title: SearchBar(
-          prefix: InkWell(
-            child: const Icon(Icons.arrow_back),
-            onTap: () => Navigator.pop(context),
-          ),
-          autofocus: true,
           enabled: true,
+          autofocus: true,
           onChanged: (value) => BlocProvider.of<SearchBloc>(context).add(
             SearchStarted(keyword: value),
           ),

@@ -14,4 +14,5 @@ export 'list/list.dart'; // Done
 export 'host/host.dart'; // (Small) UI Done
 export 'notifications/notifications.dart'; // UI Done
 export 'on_boarding/on_boarding.dart'; // TODO (Small)
-export 'map/map.dart'; // TODO
+export 'add_location/add_location.dart'; // TODO
+export 'autofill/autofill.dart';

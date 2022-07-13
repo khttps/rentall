@@ -141,12 +141,29 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             controller: _controller,
                             current: _current,
                           ),
-                          Text(
-                            rental.title,
-                            style: const TextStyle(
-                              fontSize: 22.0,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  rental.title,
+                                  style: const TextStyle(
+                                    fontSize: 22.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              if (state.status == DetailsStatus.owned ||
+                                  (state.status == DetailsStatus.unowned &&
+                                      rental.publishStatus ==
+                                          PublishStatus.archived))
+                                Text(
+                                  rental.publishStatus!.name.toUpperCase(),
+                                  style: TextStyle(
+                                    color: rental.publishStatus!.color,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                            ],
                           ),
                           const SizedBox(height: 4.0),
                           Row(

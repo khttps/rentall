@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 class SearchBar extends StatefulWidget {
   final bool enabled;
   final Function(String)? onChanged;
-  final Widget? prefix;
   final bool autofocus;
   const SearchBar({
     this.onChanged,
     this.enabled = false,
-    this.prefix,
     this.autofocus = false,
     Key? key,
   }) : super(key: key);
@@ -36,7 +34,12 @@ class _SearchBarState extends State<SearchBar> {
       decoration: InputDecoration(
         hintText: 'Search...',
         enabled: widget.enabled,
-        prefixIcon: widget.prefix ?? const Icon(Icons.search),
+        prefixIcon: widget.enabled
+            ? InkWell(
+                child: const Icon(Icons.arrow_back),
+                onTap: () => Navigator.pop(context),
+              )
+            : const Icon(Icons.search),
         suffixIcon: widget.enabled
             ? IconButton(
                 onPressed: () {

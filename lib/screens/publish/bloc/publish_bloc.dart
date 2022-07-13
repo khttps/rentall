@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rentall/data/models/models.dart';
 
-import '../../../data/models/rental.dart';
 import '../../../data/repository/rental_repository.dart';
 
 part 'publish_state.dart';
@@ -27,7 +27,7 @@ class PublishBloc extends Bloc<PublishEvent, PublishState> {
     ));
     try {
       final rental = await _repository.addRental(
-        event.rentalMap,
+        Rental.fromJson(event.rentalMap),
         event.images.map((img) => File(img.path)).toList(),
       );
 
@@ -50,7 +50,7 @@ class PublishBloc extends Bloc<PublishEvent, PublishState> {
     try {
       final rental = await _repository.updateRental(
         event.id,
-        event.rental,
+        Rental.fromJson(event.rental),
         event.images?.map((img) => File(img.path)).toList(),
       );
 
@@ -70,9 +70,15 @@ class PublishBloc extends Bloc<PublishEvent, PublishState> {
     emit(const PublishState(
       status: PublishLoadStatus.loading,
     ));
+
     try {
-      await _repository.archiveRental(event.id);
-      emit(const PublishState(status: PublishLoadStatus.deleted));
+      if (event.rental.publishStatus == PublishStatus.archived) {
+        await _repository.unarchiveRental(event.rental.id!);
+        emit(const PublishState(status: PublishLoadStatus.unachived));
+      } else {
+        await _repository.archiveRental(event.rental.id!);
+        emit(const PublishState(status: PublishLoadStatus.archived));
+      }
     } on Exception catch (err) {
       emit(PublishState(
         status: PublishLoadStatus.failed,
