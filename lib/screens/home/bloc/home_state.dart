@@ -11,6 +11,10 @@ class HomeInitial extends HomeState {}
 
 class UserWithHost extends HomeState {}
 
+class UserWithHostPhoneUnverified extends HomeState {}
+
+class UserOnlyEmailUnverified extends HomeState {}
+
 class UserOnly extends HomeState {}
 
 class NoUser extends HomeState {}

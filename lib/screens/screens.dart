@@ -1,7 +1,7 @@
 export 'home/home.dart'; // Done
 export 'rentals/rentals.dart';
-export 'publish/publish.dart'; // Maps missing, multiple phone numbers
-export 'details/details.dart'; // maps missing, avatar and name
+export 'publish/publish.dart'; // multiple phone numbers
+export 'details/details.dart'; // avatar and name
 export 'menu/menu.dart'; // Done
 export 'search/search.dart'; // Done
 export 'auth/auth.dart'; // confirmation email
@@ -16,4 +16,5 @@ export 'notifications/notifications.dart'; // UI Done
 export 'on_boarding/on_boarding.dart'; // TODO (Small)
 export 'add_location/add_location.dart'; // DONE
 export 'autofill/autofill.dart'; // DONE
-export 'map/map.dart'; // TODO
+export 'map/map.dart'; // DONE
+export 'verify_email/verify_email.dart'; // DONE

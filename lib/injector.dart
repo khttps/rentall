@@ -37,8 +37,9 @@ Future<void> init() async {
   sl.registerFactory<DetailsBloc>(
     () => DetailsBloc(userRepository: sl(), rentalRepository: sl()),
   );
-  sl.registerFactory<HostBloc>(
-    () => HostBloc(repository: sl()),
+  sl.registerFactory<HostBloc>(() => HostBloc(repository: sl()));
+  sl.registerFactory<VerifyEmailCubit>(
+    () => VerifyEmailCubit(repository: sl()),
   );
 
   //! Repositories

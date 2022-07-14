@@ -21,6 +21,8 @@ class User extends Equatable {
   final String? hostPhone;
   @JsonKey(includeIfNull: false)
   final List<Rental>? rentals;
+  @JsonKey(defaultValue: false)
+  final bool verified;
 
   const User({
     required this.uid,
@@ -31,6 +33,7 @@ class User extends Equatable {
     this.hostPhone,
     this.rentals,
     this.favorites,
+    required this.verified,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -40,6 +43,7 @@ class User extends Equatable {
         uid: user.uid,
         displayName: user.displayName,
         email: user.email!,
+        verified: user.emailVerified,
       );
 
   @override
@@ -51,6 +55,7 @@ class User extends Equatable {
         rentals,
         hostPhone,
         hostName,
-        hostAvatar
+        hostAvatar,
+        verified
       ];
 }

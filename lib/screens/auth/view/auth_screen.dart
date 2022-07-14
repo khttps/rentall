@@ -49,7 +49,17 @@ class _AuthScreenState extends State<AuthScreen> {
             _showSuccessSnackbar(context, message: 'Signed in successfully!');
           }
           if (state is SignUpSuccess) {
-            _showSuccessSnackbar(context, message: 'Signed up successfully!');
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Sign up successful!'),
+                backgroundColor: Colors.green,
+              ),
+            );
+            Navigator.pushNamed(
+              context,
+              VerifyEmailScreen.routeName,
+              arguments: true,
+            );
           }
           if (state is EmailSent) {
             Navigator.pushNamed(

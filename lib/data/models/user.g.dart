@@ -19,6 +19,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       favorites: (json['favorites'] as List<dynamic>?)
           ?.map((e) => Rental.fromJson(e as Map<String, dynamic>))
           .toList(),
+      verified: json['verified'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) {
@@ -39,5 +40,6 @@ Map<String, dynamic> _$UserToJson(User instance) {
   writeNotNull('hostAvatar', instance.hostAvatar);
   val['hostPhone'] = instance.hostPhone;
   writeNotNull('rentals', instance.rentals);
+  val['verified'] = instance.verified;
   return val;
 }

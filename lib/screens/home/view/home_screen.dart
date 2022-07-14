@@ -30,8 +30,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<HomeBloc>(context).add(LoadUser());
-
+    BlocProvider.of<HomeBloc>(context).add(const ReloadUser());
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 260),
@@ -143,7 +142,9 @@ class _HomeScreenState extends State<HomeScreen>
                     _animationController.reset();
                     if (state is NoUser) {
                       Navigator.pushNamed(context, AuthScreen.routeName);
-                    } else if (state is UserOnly || state is UserWithHost) {
+                    } else if (state is UserOnly ||
+                        state is UserWithHost ||
+                        state is UserOnlyEmailUnverified) {
                       Navigator.pushNamed(context, AlertScreen.routeName);
                     }
                   },
@@ -178,6 +179,12 @@ class _HomeScreenState extends State<HomeScreen>
                       Navigator.pushNamed(
                         context,
                         AuthScreen.routeName,
+                      );
+                    } else if (state is UserOnlyEmailUnverified) {
+                      Navigator.pushNamed(
+                        context,
+                        VerifyEmailScreen.routeName,
+                        arguments: false,
                       );
                     }
                   },

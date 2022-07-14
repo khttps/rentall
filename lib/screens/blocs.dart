@@ -9,3 +9,4 @@ export 'alerts/bloc/alerts_bloc.dart';
 export 'details/bloc/details_bloc.dart';
 export 'list/bloc/list_bloc.dart';
 export 'host/bloc/host_bloc.dart';
+export 'verify_email/cubit/verify_email_cubit.dart';

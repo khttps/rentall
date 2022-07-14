@@ -116,6 +116,7 @@ const _$PropertyTypeEnumMap = {
   PropertyType.vacationHome: 'vacationHome',
   PropertyType.retailStore: 'retailStore',
   PropertyType.villa: 'villa',
+  PropertyType.hotel: 'hotel',
   PropertyType.other: 'other',
 };
 

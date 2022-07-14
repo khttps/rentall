@@ -28,10 +28,13 @@ abstract class UserRepository {
   bool get isSignedIn;
   auth.User? get currentUser;
   Stream<auth.User?> get userChanges;
-  Future<User?> getUser({String? uid});
+  Stream<User?> watchUserFromCollection();
+  Future<User?> getUserFromCollection({String? id});
+  Future<void> reloadUser();
   bool isOwned(String userId);
   Future<bool> isFavorited(String id);
   Future<void> updateHost(Map<String, dynamic> host, File? image);
+  Future<void> sendVerificationEmail();
 }
 
 class UserRepositoryImpl implements UserRepository {
@@ -65,6 +68,11 @@ class UserRepositoryImpl implements UserRepository {
   Future<void> signOut() async {
     final googleSignedIn = await GoogleSignIn().isSignedIn();
     if (googleSignedIn) await GoogleSignIn().signOut();
+
+    final facebookToken = await FacebookAuth.instance.accessToken;
+    if (facebookToken != null) {
+      await FacebookAuth.instance.logOut();
+    }
     await _firebaseAuth.signOut();
   }
 
@@ -91,7 +99,10 @@ class UserRepositoryImpl implements UserRepository {
       _firebaseFirestore.collection('users').doc(auth.user!.uid).set({
         'uid': auth.user!.uid,
         'email': auth.user!.email,
+        'verified': auth.user!.emailVerified,
       });
+
+      await _firebaseAuth.currentUser!.sendEmailVerification();
     }
 
     return auth.user;
@@ -160,7 +171,23 @@ class UserRepositoryImpl implements UserRepository {
       facebookAuthCredential,
     );
 
-    return credential.user;
+    final user = credential.user;
+
+    if (user != null) {
+      await _firebaseFirestore.collection('users').doc(user.uid).get().then(
+        (doc) {
+          if (doc.exists) {
+            doc.reference.set({
+              'uid': user.uid,
+              'displayName': user.displayName,
+              'email': user.email,
+            });
+          }
+        },
+      );
+    }
+
+    return user;
   }
 
   @override
@@ -219,20 +246,21 @@ class UserRepositoryImpl implements UserRepository {
   Stream<auth.User?> get userChanges => _firebaseAuth.userChanges();
 
   @override
-  Future<User?> getUser({String? uid}) async {
-    if (!await _connectionChecker.hasConnection) {
-      throw Exception('No internet connection');
-    }
-    final authUser = _firebaseAuth.currentUser;
+  Stream<User?> watchUserFromCollection() {
+    return _firebaseAuth.userChanges().asyncMap((user) async {
+      if (user != null) {
+        var doc =
+            await _firebaseFirestore.collection('users').doc(user.uid).get();
 
-    if (authUser == null) {
+        if (user.emailVerified && !doc.data()!['verified']) {
+          await doc.reference.update({'verified': true});
+          doc = await doc.reference.get();
+        }
+
+        return User.fromJson(doc.data()!);
+      }
       return null;
-    }
-
-    final userId = uid ?? authUser.uid;
-    final doc = await _firebaseFirestore.collection('users').doc(userId).get();
-
-    return User.fromJson(doc.data()!);
+    });
   }
 
   @override
@@ -285,5 +313,33 @@ class UserRepositoryImpl implements UserRepository {
       'hostPhone': host['hostPhone'],
       if (url != null) 'hostAvatar': url,
     });
+  }
+
+  @override
+  Future<void> sendVerificationEmail() async {
+    await _firebaseAuth.currentUser!.sendEmailVerification();
+  }
+
+  @override
+  Future<User?> getUserFromCollection({String? id}) async {
+    if (!await _connectionChecker.hasConnection) {
+      throw Exception('No internet connection');
+    }
+
+    final authUser = _firebaseAuth.currentUser;
+
+    if (authUser == null) {
+      return null;
+    }
+
+    final doc =
+        await _firebaseFirestore.collection('users').doc(authUser.uid).get();
+
+    return User.fromJson(doc.data()!);
+  }
+
+  @override
+  Future<void> reloadUser() async {
+    await _firebaseAuth.currentUser?.reload();
   }
 }

@@ -34,7 +34,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
 
   FutureOr<void> _onLoadHost(LoadHost event, emit) async {
     try {
-      final user = await _repository.getUser();
+      final user = await _repository.getUserFromCollection();
       emit(state.copyWith(status: HostStatus.loaded, user: user));
     } on Exception catch (err) {
       emit(state.copyWith(

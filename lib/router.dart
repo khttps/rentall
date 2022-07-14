@@ -45,6 +45,8 @@ MaterialPageRoute<dynamic> onGenerateRoute(RouteSettings settings) {
           return const AutofillScreen();
         case MapScreen.routeName:
           return const MapScreen();
+        case VerifyEmailScreen.routeName:
+          return VerifyEmailScreen(first: settings.arguments as bool);
         default:
           return const SizedBox.shrink();
       }
