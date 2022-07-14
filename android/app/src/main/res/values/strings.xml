@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rentall</string>
+    <string name="facebook_app_id">820565118933532</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">dc625f68e9572f5687c1e27e4241da0c</string>
+</resources>

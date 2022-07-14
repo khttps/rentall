@@ -69,5 +69,20 @@
 			<string>googlechromes</string>
 			<string>comgooglemaps</string>
 		</array>
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>820565118933532</string>
+				</array>
+			</dict>
+		</array>
+		<key>FacebookAppID</key>
+		<string>820565118933532</string>
+		<key>FacebookClientToken</key>
+		<string>dc625f68e9572f5687c1e27e4241da0c</string>
+		<key>FacebookDisplayName</key>
+		<string>Rentall</string>
 	</dict>
 </plist>

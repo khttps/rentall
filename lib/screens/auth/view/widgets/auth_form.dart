@@ -70,18 +70,7 @@ class _AuthFormState extends State<AuthForm> {
                 }
                 return null;
               },
-              decoration: InputDecoration(
-                hintText: 'Password',
-                // prefixIcon: const Icon(Icons.lock),
-                // suffixIcon: IconButton(
-                //   icon: const Icon(Icons.remove_red_eye),
-                //   onPressed: () {
-                //     setState(() {
-                //       _obscureText = !_obscureText;
-                //     });
-                //   },
-                // ),
-              ),
+              decoration: const InputDecoration(hintText: 'Password'),
             ),
             const SizedBox(height: 8.0),
             SizedBox(
@@ -109,12 +98,16 @@ class _AuthFormState extends State<AuthForm> {
                 BlocProvider.of<AuthBloc>(context).add(const SignInByGoogle());
               },
             ),
-            // SocialButton(
-            //   text: '${widget.label} with Facebook',
-            //   color: Colors.blue,
-            //   asset: 'assets/images/facebook.png',
-            //   onPressed: () {},
-            // ),
+            SocialButton(
+              text: 'Continue with Facebook',
+              color: Colors.blue,
+              asset: 'assets/images/facebook.svg',
+              onPressed: () {
+                BlocProvider.of<AuthBloc>(context).add(
+                  const SignInByFacebook(),
+                );
+              },
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: widget.actions,
