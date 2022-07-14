@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_place/google_place.dart';
 
@@ -22,7 +23,7 @@ class AddLocationScreen extends StatefulWidget {
 class _AddLocationScreenState extends State<AddLocationScreen> {
   final _controller = Completer<GoogleMapController>();
 
-  var _markers = <Marker>[];
+  LatLng? _position;
 
   static const _initalCamera = CameraPosition(
     target: LatLng(27, 29),
@@ -32,13 +33,9 @@ class _AddLocationScreenState extends State<AddLocationScreen> {
   @override
   void initState() {
     super.initState();
+    _checkPermission();
     if (widget.initialPosition != null) {
-      _markers = [
-        Marker(
-          markerId: const MarkerId('1'),
-          position: widget.initialPosition!,
-        )
-      ];
+      _position = widget.initialPosition!;
     }
   }
 
@@ -64,15 +61,7 @@ class _AddLocationScreenState extends State<AddLocationScreen> {
                 if (result != null) {
                   final coordinates = await _getLatLng(result);
                   await _animateToPosition(coordinates);
-                  setState(() {
-                    _markers = [
-                      Marker(
-                        markerId: const MarkerId('1'),
-                        draggable: true,
-                        position: coordinates,
-                      )
-                    ];
-                  });
+                  setState(() => _position = coordinates);
                 }
               },
             ),
@@ -88,7 +77,20 @@ class _AddLocationScreenState extends State<AddLocationScreen> {
           zoomControlsEnabled: false,
           compassEnabled: false,
           myLocationEnabled: true,
-          markers: _markers.toSet(),
+          markers: {
+            if (_position != null)
+              Marker(
+                markerId: const MarkerId('2'),
+                position: _position!,
+                draggable: true,
+                onDrag: (latlng) => setState(() {
+                  _position = latlng;
+                }),
+              )
+          },
+          onLongPress: (latlng) {
+            setState(() => _position = latlng);
+          },
           myLocationButtonEnabled: false,
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
@@ -104,14 +106,16 @@ class _AddLocationScreenState extends State<AddLocationScreen> {
                 Icons.gps_fixed,
                 color: Colors.blueGrey,
               ),
-              onPressed: () {},
+              onPressed: () async {
+                await _getCurrentLocation();
+              },
             ),
             const SizedBox(height: 8.0),
             FloatingActionButton(
               heroTag: 'submit',
               child: const Icon(Icons.check),
               onPressed: () {
-                Navigator.of(context).pop(_markers[0]);
+                Navigator.of(context).pop(_position);
               },
             ),
           ],
@@ -137,5 +141,21 @@ class _AddLocationScreenState extends State<AddLocationScreen> {
         .first;
 
     return LatLng(coord.latitude, coord.longitude);
+  }
+
+  void _checkPermission() async {
+    await Geolocator.checkPermission();
+  }
+
+  Future<void> _getCurrentLocation() async {
+    final GoogleMapController controller = await _controller.future;
+    final p = await Geolocator.getCurrentPosition();
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(p.latitude, p.longitude),
+        zoom: 18.0,
+      ),
+    ));
   }
 }

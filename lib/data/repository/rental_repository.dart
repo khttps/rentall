@@ -150,11 +150,11 @@ class RentalRepositoryImpl implements RentalRepository {
 
     final doc = _firestore.collection('rentals').doc(id);
     final updates = {
+      ...rental.toJson(),
       'images': [
         ...(await doc.get()).get('images'),
         ...imageUrls,
       ],
-      ...rental.toJson(),
     };
 
     await doc.update(updates);

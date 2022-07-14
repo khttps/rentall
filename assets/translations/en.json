@@ -38,7 +38,8 @@
     "2": "Vacation Home",
     "3": "Retail Store",
     "4": "Villa",
-    "5" : "Other"
+    "5" : "Hotel",
+    "6" : "Other"
 },
 "rentPeriod" : {
     "null" : "Period",

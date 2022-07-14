@@ -548,7 +548,7 @@ class _PublishScreenState extends State<PublishScreen> {
                                 }
                               },
                             ),
-                            const SizedBox(height: 20.0),
+                            const SizedBox(height: 10.0),
                             if (updating)
                               ArchiveButton(
                                 isArchived: widget.rental!.publishStatus ==
@@ -565,7 +565,8 @@ class _PublishScreenState extends State<PublishScreen> {
                                         );
                                   },
                                 ),
-                              )
+                              ),
+                            const SizedBox(height: 10.0),
                           ],
                         ),
                       ),

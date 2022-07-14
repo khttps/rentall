@@ -156,11 +156,7 @@ class _HomeScreenState extends State<HomeScreen>
                   icon: const Icon(Icons.map, color: Colors.white),
                   onPressed: () {
                     _animationController.reset();
-                    if (state is NoUser) {
-                      Navigator.pushNamed(context, AuthScreen.routeName);
-                    } else if (state is UserOnly || state is UserWithHost) {
-                      Navigator.pushNamed(context, AlertScreen.routeName);
-                    }
+                    Navigator.pushNamed(context, MapScreen.routeName);
                   },
                 ),
                 FloatingItem(

@@ -27,25 +27,17 @@ class _AddMapButtonState extends State<AddMapButton> {
     zoom: 3.0,
   );
 
-  LatLng? _initialPosition;
-
-  var _markers = <Marker>[];
+  LatLng? _position;
 
   @override
   void initState() {
     super.initState();
+
     if (widget.initialPosition != null) {
-      _initialPosition = LatLng(
+      _position = LatLng(
         widget.initialPosition!.latitude,
         widget.initialPosition!.longitude,
       );
-
-      _markers = [
-        Marker(
-          markerId: const MarkerId('1'),
-          position: _initialPosition!,
-        )
-      ];
     }
   }
 
@@ -57,16 +49,29 @@ class _AddMapButtonState extends State<AddMapButton> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4.0),
         color: Colors.grey,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black38,
+            offset: Offset(0.0, 1.0),
+            blurRadius: 1.0,
+          )
+        ],
       ),
       child: Stack(children: [
         GoogleMap(
-          initialCameraPosition: _initialPosition != null
+          initialCameraPosition: _position != null
               ? CameraPosition(
-                  target: _initialPosition!,
+                  target: _position!,
                   zoom: 18,
                 )
               : _initialCamera,
-          markers: _markers.toSet(),
+          markers: {
+            if (_position != null)
+              Marker(
+                markerId: const MarkerId('1'),
+                position: _position!,
+              )
+          },
           zoomControlsEnabled: false,
           zoomGesturesEnabled: true,
           mapType: MapType.normal,
@@ -78,30 +83,27 @@ class _AddMapButtonState extends State<AddMapButton> {
           alignment: Alignment.bottomCenter,
           child: OutlinedButton(
             onPressed: () async {
-              final marker = await Navigator.of(context).pushNamed(
+              final position = await Navigator.of(context).pushNamed(
                 AddLocationScreen.routeName,
-                arguments: _initialPosition,
-              ) as Marker?;
+                arguments: _position,
+              ) as LatLng?;
 
-              if (marker != null) {
+              if (position != null) {
                 final controller = await _controller.future;
                 controller.moveCamera(
                   CameraUpdate.newCameraPosition(
                     CameraPosition(
-                      target: marker.position,
+                      target: position,
                       zoom: 18,
                     ),
                   ),
                 );
-                setState(() {
-                  _markers = [marker];
-                });
-                widget.onLocationChanged(marker.position);
+                setState(() => _position = position);
+                widget.onLocationChanged(_position);
               }
             },
             style: OutlinedButton.styleFrom(
               side: const BorderSide(color: Colors.black54),
-              onSurface: Colors.blueGrey,
               backgroundColor: Colors.white,
             ),
             child: const Text('Add Location'),

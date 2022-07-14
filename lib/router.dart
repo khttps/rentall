@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rentall/screens/screens.dart';
 import 'data/models/models.dart';
 
@@ -33,13 +34,17 @@ MaterialPageRoute<dynamic> onGenerateRoute(RouteSettings settings) {
         case AlertsScreen.routeName:
           return const AlertsScreen();
         case AddLocationScreen.routeName:
-          return const AddLocationScreen();
+          return AddLocationScreen(
+            initialPosition: settings.arguments as LatLng?,
+          );
         case DetailsScreen.routeName:
           return DetailsScreen(
             rental: settings.arguments as Rental,
           );
         case AutofillScreen.routeName:
           return const AutofillScreen();
+        case MapScreen.routeName:
+          return const MapScreen();
         default:
           return const SizedBox.shrink();
       }

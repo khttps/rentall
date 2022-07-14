@@ -2,12 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rentall/screens/details/bloc/details_bloc.dart';
-import 'package:rentall/screens/details/view/widgets/top_shadow.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../data/models/models.dart';
 import '../../../widgets/widgets.dart';
+import '../../blocs.dart';
 import '../../screens.dart';
 import 'widgets/widgets.dart';
 
@@ -88,9 +87,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       );
                     }
                   },
-                  icon: Icon(state.isFavorited
-                      ? Icons.favorite
-                      : Icons.favorite_border),
+                  icon: Icon(
+                    state.isFavorited ? Icons.favorite : Icons.favorite_border,
+                  ),
                 )
             ],
           ),
@@ -233,6 +232,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               ),
                             ),
                           Text(rental.description ?? ''),
+                          const SizedBox(height: 4.0),
+                          if (widget.rental.location != null) ...[
+                            const Divider(thickness: 1),
+                            const SizedBox(height: 8.0),
+                            MapPreview(position: widget.rental.location!)
+                          ],
+                          const SizedBox(height: 28.0),
                         ],
                       ),
                     ),

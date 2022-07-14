@@ -11,8 +11,9 @@ export 'password_sent/password_sent.dart'; // Done
 export 'alert/alert.dart'; // Done
 export 'alerts/alerts.dart'; // Done
 export 'list/list.dart'; // Done
-export 'host/host.dart'; // (Small) UI Done
+export 'host/host.dart'; // DONE
 export 'notifications/notifications.dart'; // UI Done
 export 'on_boarding/on_boarding.dart'; // TODO (Small)
-export 'add_location/add_location.dart'; // TODO
-export 'autofill/autofill.dart';
+export 'add_location/add_location.dart'; // DONE
+export 'autofill/autofill.dart'; // DONE
+export 'map/map.dart'; // TODO
