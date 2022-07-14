@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -49,7 +50,7 @@ class ImagePickerBottomSheet extends StatelessWidget {
                 onImagesPicked(images);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  ErrorSnackbar(message: 'Failed to retrieve images.'),
+                  ErrorSnackbar(message: tr('error_image')),
                 );
               }
             },

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:phone_number/phone_number.dart';
 import 'package:rentall/widgets/widgets.dart';
@@ -56,7 +55,7 @@ class _PublishScreenState extends State<PublishScreen> {
         child: NestedScrollView(
           headerSliverBuilder: (c, i) => [
             PostAppBar(
-              title: !updating ? 'New Rental' : 'Update Rental',
+              title: tr(!updating ? 'new_rental' : 'update_rental'),
               onSave: () async {
                 _validPhone = await PhoneNumberUtil()
                     .validate(_phoneController.text, 'EG');
@@ -94,7 +93,8 @@ class _PublishScreenState extends State<PublishScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                        'Rental was successfully ${updating ? 'updated' : 'published'}.'),
+                      updating ? 'rental_added' : 'rental_updated',
+                    ).tr(),
                     backgroundColor: Colors.green,
                   ),
                 );
@@ -109,7 +109,9 @@ class _PublishScreenState extends State<PublishScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      'Rental was successfully ${state.status.name}.',
+                      state.status == PublishLoadStatus.archived
+                          ? 'rental_unarchived'
+                          : 'rental_archived',
                     ),
                     backgroundColor: Colors.green,
                   ),
@@ -223,18 +225,19 @@ class _PublishScreenState extends State<PublishScreen> {
                             CustomValidator(
                               validator: (_) {
                                 if (_images.length < 3) {
-                                  return 'Please add at least 3 images of your rental.';
+                                  return tr('required_images');
                                 }
                                 if (_images.length > 10) {
-                                  return 'Maximum number of images is 10';
+                                  return tr('max10');
                                 }
                                 return null;
                               },
                             ),
                             const SizedBox(height: 8.0),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 8.0, bottom: 3.0),
-                              child: Text('Title'),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, bottom: 3.0),
+                              child: const Text('title').tr(),
                             ),
                             FormBuilderTextField(
                               name: 'title',
@@ -244,9 +247,10 @@ class _PublishScreenState extends State<PublishScreen> {
                                     errorText: tr('required')),
                               ]),
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 8.0, bottom: 3.0),
-                              child: Text('Property Type'),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, bottom: 3.0),
+                              child: const Text('property_type').tr(),
                             ),
                             FormBuilderDropdown(
                               name: 'propertyType',
@@ -268,36 +272,43 @@ class _PublishScreenState extends State<PublishScreen> {
                                   ).tr(),
                                 ),
                               ),
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(
-                                    errorText: tr('required')),
-                              ]),
+                              validator: FormBuilderValidators.required(
+                                errorText: tr('required'),
+                              ),
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 8.0, bottom: 3.0),
-                              child: Text('Address'),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 8.0,
+                                bottom: 3.0,
+                              ),
+                              child: const Text('address').tr(),
                             ),
                             FormBuilderTextField(
                               name: 'address',
                               minLines: 3,
                               maxLines: 3,
                               textInputAction: TextInputAction.next,
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(
-                                    errorText: tr('required')),
-                              ]),
+                              validator: FormBuilderValidators.required(
+                                errorText: tr('required'),
+                              ),
                             ),
                             Padding(
                               padding:
                                   const EdgeInsets.only(top: 8.0, bottom: 3.0),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
-                                children: const [
-                                  Expanded(child: Text('Governorate')),
-                                  SizedBox(width: 8.0),
-                                  Expanded(child: Text('Region')),
-                                  SizedBox(width: 8.0),
-                                  Expanded(child: Text('Period'))
+                                children: [
+                                  Expanded(
+                                    child: const Text('governorate').tr(),
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  Expanded(
+                                    child: const Text('region').tr(),
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  Expanded(
+                                    child: const Text('period').tr(),
+                                  )
                                 ],
                               ),
                             ),
@@ -377,10 +388,10 @@ class _PublishScreenState extends State<PublishScreen> {
                                   const EdgeInsets.only(top: 8.0, bottom: 3.0),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
-                                children: const [
-                                  Expanded(child: Text('Area')),
-                                  SizedBox(width: 8.0),
-                                  Expanded(child: Text('Price')),
+                                children: [
+                                  Expanded(child: const Text('area').tr()),
+                                  const SizedBox(width: 8.0),
+                                  Expanded(child: const Text('price').tr()),
                                 ],
                               ),
                             ),
@@ -443,12 +454,12 @@ class _PublishScreenState extends State<PublishScreen> {
                                   const EdgeInsets.only(top: 8.0, bottom: 3.0),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
-                                children: const [
-                                  Expanded(child: Text('Floor')),
-                                  SizedBox(width: 8.0),
-                                  Expanded(child: Text('Rooms')),
-                                  SizedBox(width: 8.0),
-                                  Expanded(child: Text('Bathrooms')),
+                                children: [
+                                  Expanded(child: const Text('floor').tr()),
+                                  const SizedBox(width: 8.0),
+                                  Expanded(child: const Text('rooms').tr()),
+                                  const SizedBox(width: 8.0),
+                                  Expanded(child: const Text('bathrooms').tr()),
                                 ],
                               ),
                             ),
@@ -496,9 +507,12 @@ class _PublishScreenState extends State<PublishScreen> {
                                 ),
                               ],
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 8.0, bottom: 3.0),
-                              child: Text('Phone'),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 8.0,
+                                bottom: 3.0,
+                              ),
+                              child: const Text('phone_number').tr(),
                             ),
                             FormBuilderTextField(
                               name: 'hostPhone',
@@ -514,23 +528,25 @@ class _PublishScreenState extends State<PublishScreen> {
                                 FormBuilderValidators.numeric(),
                                 (_) {
                                   if (!_validPhone) {
-                                    return 'Invalid phone number.';
+                                    return tr('invalid_phone');
                                   }
                                   return null;
                                 }
                               ]),
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 8.0, bottom: 3.0),
-                              child: Text('Description'),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 8.0,
+                                bottom: 3.0,
+                              ),
+                              child: const Text('description').tr(),
                             ),
                             FormBuilderTextField(
                               name: 'description',
                               minLines: 3,
                               maxLines: 3,
-                              decoration: const InputDecoration(
-                                hintText:
-                                    'Write any other details about your rental...',
+                              decoration: InputDecoration(
+                                hintText: tr('details_hint'),
                               ),
                               textInputAction: TextInputAction.done,
                             ),
@@ -556,7 +572,8 @@ class _PublishScreenState extends State<PublishScreen> {
                                 onPressed: (isArchived) async =>
                                     await _showAlertDialog(
                                   context,
-                                  title: isArchived ? 'Unarchive' : 'Archive',
+                                  title:
+                                      tr(isArchived ? 'unarchive' : 'archive'),
                                   onPositive: () {
                                     context.read<PublishBloc>().add(
                                           ArchiveRental(
@@ -589,7 +606,7 @@ class _PublishScreenState extends State<PublishScreen> {
       builder: (context) {
         return ConfirmationDialog(
           title: const Text(
-            'Remove this image?',
+            'remove_image',
           ),
           onPositive: () {
             setState(() {
@@ -609,9 +626,8 @@ class _PublishScreenState extends State<PublishScreen> {
     return showDialog(
       context: context,
       builder: (context) => ConfirmationDialog(
-        title: Text('$title Rental'),
-        content: Text(
-            'Are you sure you want to ${title.toLowerCase()} this rental?'),
+        title: Text('$title ${tr('rental')}'),
+        content: const Text('archive_content').tr(args: [title.toLowerCase()]),
         onPositive: onPositive,
       ),
     );

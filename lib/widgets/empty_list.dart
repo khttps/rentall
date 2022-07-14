@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class EmptyList extends StatelessWidget {
@@ -10,7 +11,7 @@ class EmptyList extends StatelessWidget {
     return Stack(
       children: [
         ListView(),
-        const Center(child: Text('Nothing to see here.')),
+        Center(child: const Text('nothing').tr()),
       ],
     );
   }

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -25,7 +26,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
       body: NestedScrollView(
         headerSliverBuilder: (c, _) => [
           PostAppBar(
-            title: 'Update Password',
+            title: tr('update_password'),
             onSave: () {
               if (_formKey.currentState!.saveAndValidate()) {
                 final value = _formKey.currentState!.value;
@@ -47,8 +48,8 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
             }
             if (state.status == UpdatePasswordStatus.success) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Password changed successfully!'),
+                SnackBar(
+                  content: const Text('password_changed').tr(),
                   backgroundColor: Colors.green,
                 ),
               );
@@ -69,7 +70,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Current Password'),
+                        const Text('current_password').tr(),
                         const SizedBox(height: 6.0),
                         FormBuilderTextField(
                           name: 'current',
@@ -80,7 +81,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                           ]),
                         ),
                         const SizedBox(height: 16.0),
-                        const Text('New Password'),
+                        const Text('new_password').tr(),
                         const SizedBox(height: 6.0),
                         FormBuilderTextField(
                           name: 'new',

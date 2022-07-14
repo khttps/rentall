@@ -14,7 +14,7 @@ class AlertsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Alerts')),
+      appBar: AppBar(title: const Text('alerts').tr()),
       body: RefreshIndicator(
         onRefresh: () async {
           final bloc = context.read<AlertsBloc>()..add(const LoadAlerts());

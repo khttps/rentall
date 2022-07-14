@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,7 +32,7 @@ class ProfileCard extends StatelessWidget {
             Expanded(
               child: RichText(
                 text: TextSpan(
-                  text: signedIn ? 'Logged in as ' : null,
+                  text: signedIn ? tr('logged_as') : null,
                   style: const TextStyle(
                     fontSize: 16.0,
                     color: Colors.black87,
@@ -57,13 +58,15 @@ class ProfileCard extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            child: Text(signedIn ? 'Sign Out' : 'Sign In / Sign Up'),
+            child: Text(
+              signedIn ? tr('sign_out') : '${tr('Sign In')} / ${tr('Sign Up')}',
+            ),
             onPressed: () {
               if (signedIn) {
                 showDialog(
                   context: context,
                   builder: (context) => ConfirmationDialog(
-                    title: const Text('Are you sure you want to sign out?'),
+                    title: const Text('sign_out_title').tr(),
                     onPositive: () {
                       BlocProvider.of<UserBloc>(context).add(
                         const UserSignOut(),

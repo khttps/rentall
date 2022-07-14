@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class ConfirmationDialog extends StatelessWidget {
@@ -22,13 +23,13 @@ class ConfirmationDialog extends StatelessWidget {
             onPositive();
             Navigator.pop(context);
           },
-          child: const Text('Yes'),
+          child: const Text('yes').tr(),
         ),
         TextButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const Text('No'),
+          child: const Text('no').tr(),
         )
       ],
     );

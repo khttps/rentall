@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
@@ -39,13 +40,13 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Map'),
+          title: const Text('map').tr(),
         ),
         body: BlocConsumer<RentalsBloc, RentalsState>(
           listener: (context, state) {
             if (state.status == RentalsLoadStatus.failed) {
               ScaffoldMessenger.of(context).showSnackBar(
-                ErrorSnackbar(message: 'Couldn\'t laod map'),
+                ErrorSnackbar(message: tr('map_error')),
               );
               Navigator.pop(context);
             }
@@ -85,7 +86,7 @@ class _MapScreenState extends State<MapScreen> {
                                     infoWindow: InfoWindow(
                                       title: r.title,
                                       snippet:
-                                          '${r.price}EGP/${r.rentPeriod!.name}',
+                                          '${r.price}EGP/${tr('rentPeriod.${r.rentPeriod!.index}')}',
                                       onTap: () {
                                         Navigator.pushNamed(
                                           context,

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentall/screens/home/home.dart';
@@ -15,7 +16,7 @@ class VerifyEmailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Verify Email'),
+        title: const Text('verify_email').tr(),
       ),
       body: BlocBuilder<VerifyEmailCubit, VerifyEmailState>(
         builder: (context, state) {
@@ -24,9 +25,7 @@ class VerifyEmailScreen extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  first
-                      ? 'Sign up successful, please check your email for verification'
-                      : 'Please verify your email before posting new rentals',
+                  first ? 'verify_first' : 'verift_second',
                   style: const TextStyle(fontSize: 18.0),
                 ),
                 const SizedBox(height: 16.0),
@@ -37,7 +36,7 @@ class VerifyEmailScreen extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         primary: state is ResendLoading ? Colors.grey : null,
                       ),
-                      child: const Text('Resend Email'),
+                      child: const Text('resend_email').tr(),
                       onPressed: () async {
                         if (state is! ResendLoading) {
                           await BlocProvider.of<VerifyEmailCubit>(context)
@@ -47,7 +46,7 @@ class VerifyEmailScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 16.0),
                     ElevatedButton(
-                      child: const Text('Proceed'),
+                      child: const Text('proceed').tr(),
                       onPressed: () {
                         Navigator.pushNamedAndRemoveUntil(
                           context,

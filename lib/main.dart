@@ -8,7 +8,6 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rentall/screens/update_email/bloc/update_email_bloc.dart';
 import 'package:rentall/screens/update_password/bloc/update_password_bloc.dart';
-import 'package:rentall/screens/verify_email/cubit/verify_email_cubit.dart';
 import 'firebase_options.dart';
 import 'screens/blocs.dart';
 import 'injector.dart' as di;
@@ -71,6 +70,8 @@ class RentallApp extends StatelessWidget {
         localizationsDelegates: context.localizationDelegates
           ..add(FormBuilderLocalizations.delegate),
         theme: theme.themeData,
+        themeMode: ThemeMode.light,
+        darkTheme: theme.darkThemeData,
         initialRoute: HomeScreen.routeName,
         onGenerateRoute: router.onGenerateRoute,
       ),

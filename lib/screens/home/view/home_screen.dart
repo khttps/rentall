@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentall/screens/home/bloc/home_bloc.dart';
@@ -134,9 +135,9 @@ class _HomeScreenState extends State<HomeScreen>
               items: [
                 FloatingItem(
                   title: const Text(
-                    'Create Alert',
+                    'create_alert',
                     style: TextStyle(color: Colors.white),
-                  ),
+                  ).tr(),
                   icon: const Icon(Icons.notification_add, color: Colors.white),
                   onPressed: () {
                     _animationController.reset();
@@ -151,9 +152,9 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
                 FloatingItem(
                   title: const Text(
-                    'Map',
+                    'map',
                     style: TextStyle(color: Colors.white),
-                  ),
+                  ).tr(),
                   icon: const Icon(Icons.map, color: Colors.white),
                   onPressed: () {
                     _animationController.reset();
@@ -162,9 +163,9 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
                 FloatingItem(
                   title: const Text(
-                    'New Rental',
+                    'new_rental',
                     style: TextStyle(color: Colors.white),
-                  ),
+                  ).tr(),
                   icon: const Icon(Icons.add, color: Colors.white),
                   onPressed: () {
                     _animationController.reset();

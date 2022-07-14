@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -106,7 +107,7 @@ class _AddMapButtonState extends State<AddMapButton> {
               side: const BorderSide(color: Colors.black54),
               backgroundColor: Colors.white,
             ),
-            child: const Text('Add Location'),
+            child: const Text('add_location').tr(),
           ),
         )
       ]),

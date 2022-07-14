@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class SearchBar extends StatefulWidget {
@@ -32,7 +33,7 @@ class _SearchBarState extends State<SearchBar> {
       autofocus: widget.autofocus,
       onChanged: widget.onChanged,
       decoration: InputDecoration(
-        hintText: 'Search...',
+        hintText: tr('search'),
         enabled: widget.enabled,
         prefixIcon: widget.enabled
             ? InkWell(

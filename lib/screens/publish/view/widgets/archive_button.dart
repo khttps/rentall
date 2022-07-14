@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class ArchiveButton extends StatelessWidget {
@@ -15,7 +16,7 @@ class ArchiveButton extends StatelessWidget {
       icon: Icon(
         isArchived ? Icons.unarchive : Icons.archive,
       ),
-      label: Text(isArchived ? 'Unarchive' : 'Archive'),
+      label: Text(isArchived ? 'unarchive' : 'archive').tr(),
       style: TextButton.styleFrom(
         primary: Colors.red,
       ),

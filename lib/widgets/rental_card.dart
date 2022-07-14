@@ -83,7 +83,7 @@ class RentalCard extends StatelessWidget {
                     ),
                     const Spacer(),
                     Text(
-                      '${rental.price} EGP / ${rental.rentPeriod?.name}',
+                      '${rental.price} EGP / ${tr('rentPeriod.${rental.rentPeriod!.index}')}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(fontSize: 16.0),

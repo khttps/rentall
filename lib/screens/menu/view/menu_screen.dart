@@ -21,7 +21,7 @@ class MenuScreen extends StatelessWidget {
             (route) => false,
           );
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Logged out successfully.')),
+            SnackBar(content: const Text('logged_out').tr()),
           );
         }
       },
@@ -35,16 +35,16 @@ class MenuScreen extends StatelessWidget {
                 const Divider(thickness: 1.0),
                 if (state is Authenticated) ...[
                   const Text(
-                    'Account',
+                    'account',
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                       color: Colors.blueGrey,
                     ),
-                  ),
+                  ).tr(),
                   ListTile(
                     leading: const Icon(Icons.mail),
-                    title: const Text('Email'),
+                    title: const Text('email').tr(),
                     subtitle: Text(state.user.email!),
                     dense: true,
                     onTap: () => Navigator.pushNamed(
@@ -55,7 +55,7 @@ class MenuScreen extends StatelessWidget {
                   ),
                   ListTile(
                     leading: const Icon(Icons.lock),
-                    title: const Text('Update Password'),
+                    title: const Text('update_password').tr(),
                     dense: true,
                     onTap: () => Navigator.pushNamed(
                       context,
@@ -65,17 +65,17 @@ class MenuScreen extends StatelessWidget {
                   ),
                   ListTile(
                     leading: const Icon(Icons.favorite),
-                    title: const Text('Favorites'),
+                    title: const Text('favorites').tr(),
                     dense: true,
                     onTap: () => Navigator.pushNamed(
                       context,
                       ListScreen.routeName,
-                      arguments: 'Favorites',
+                      arguments: 'favorites',
                     ),
                   ),
                   ListTile(
                     leading: const Icon(Icons.circle_notifications),
-                    title: const Text('My Alerts'),
+                    title: const Text('my_alerts').tr(),
                     dense: true,
                     onTap: () => Navigator.pushNamed(
                       context,
@@ -84,16 +84,16 @@ class MenuScreen extends StatelessWidget {
                   ),
                   const Divider(thickness: 1.0),
                   const Text(
-                    'Host Settings',
+                    'host',
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                       color: Colors.blueGrey,
                     ),
-                  ),
+                  ).tr(),
                   ListTile(
                     leading: const Icon(Icons.corporate_fare),
-                    title: const Text('Host Profile'),
+                    title: const Text('profile').tr(),
                     dense: true,
                     onTap: () => Navigator.pushNamed(
                       context,
@@ -102,19 +102,19 @@ class MenuScreen extends StatelessWidget {
                   ),
                   ListTile(
                     leading: const Icon(Icons.house),
-                    title: const Text('My Rentals'),
+                    title: const Text('my_rentals').tr(),
                     dense: true,
                     onTap: () => Navigator.pushNamed(
                         context, ListScreen.routeName,
-                        arguments: 'Rentals'),
+                        arguments: 'rentals'),
                   ),
                   const Divider(thickness: 1.0),
                 ],
                 ListTile(
                   leading: const Icon(Icons.language),
-                  title: const Text('Language'),
+                  title: const Text('language').tr(),
                   subtitle: Text(
-                    context.locale.languageCode == 'en' ? 'English' : 'Arabic',
+                    context.locale.languageCode == 'en' ? 'English' : 'العربية',
                   ),
                   dense: true,
                   onTap: () async {
@@ -128,8 +128,8 @@ class MenuScreen extends StatelessWidget {
                 ),
                 ListTile(
                   leading: const Icon(Icons.light_mode),
-                  title: const Text('Dark Mode'),
-                  subtitle: Text('Off'),
+                  title: const Text('dark_mode').tr(),
+                  subtitle: const Text('off').tr(),
                   trailing: Switch(value: false, onChanged: (value) {}),
                   dense: true,
                 ),

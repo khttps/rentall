@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:rentall/screens/home/home.dart';
 
 class LanguageDialog extends StatelessWidget {
   const LanguageDialog({
@@ -9,7 +10,7 @@ class LanguageDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Language'),
+      title: const Text('language').tr(),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -20,8 +21,12 @@ class LanguageDialog extends StatelessWidget {
               groupValue: context.locale,
               onChanged: (locale) {
                 if (locale != null) {
-                  Navigator.pop(context);
                   context.setLocale(locale);
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    HomeScreen.routeName,
+                    (route) => false,
+                  );
                 }
               },
             ),
@@ -34,12 +39,16 @@ class LanguageDialog extends StatelessWidget {
               groupValue: context.locale,
               onChanged: (locale) {
                 if (locale != null) {
-                  Navigator.pop(context);
                   context.setLocale(locale);
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    HomeScreen.routeName,
+                    (route) => false,
+                  );
                 }
               },
             ),
-            title: const Text('Arabic'),
+            title: const Text('العربية'),
           ),
         ],
       ),

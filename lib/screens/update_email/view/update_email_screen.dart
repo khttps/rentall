@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,7 +31,7 @@ class _UpdateEmailScreenState extends State<UpdateEmailScreen> {
       body: NestedScrollView(
         headerSliverBuilder: (context, _) => [
           PostAppBar(
-            title: 'Update Email',
+            title: tr('update_email'),
             onSave: () {
               if (_formKey.currentState!.saveAndValidate()) {
                 final value = _formKey.currentState!.value;
@@ -52,8 +53,8 @@ class _UpdateEmailScreenState extends State<UpdateEmailScreen> {
             }
             if (state.status == UpdateEmailStatus.success) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Email changed successfully!'),
+                SnackBar(
+                  content: const Text('email_changed').tr(),
                   backgroundColor: Colors.green,
                 ),
               );
@@ -74,7 +75,7 @@ class _UpdateEmailScreenState extends State<UpdateEmailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Email Address'),
+                        const Text('email').tr(),
                         const SizedBox(height: 6.0),
                         FormBuilderTextField(
                           name: 'email',
@@ -86,7 +87,7 @@ class _UpdateEmailScreenState extends State<UpdateEmailScreen> {
                           ]),
                         ),
                         const SizedBox(height: 16.0),
-                        const Text('Current Password'),
+                        const Text('current_password').tr(),
                         const SizedBox(height: 6.0),
                         FormBuilderTextField(
                           name: 'password',

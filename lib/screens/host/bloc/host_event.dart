@@ -23,3 +23,10 @@ class LoadHost extends HostEvent {
   @override
   List<Object?> get props => [];
 }
+
+// class VerifyPhone extends HostEvent {
+//   const VerifyPhone();
+
+//   @override
+//   List<Object?> get props => [];
+// }

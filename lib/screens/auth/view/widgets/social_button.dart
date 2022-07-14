@@ -27,9 +27,9 @@ class SocialButton extends StatelessWidget {
         ),
         label: Text(text),
         style: OutlinedButton.styleFrom(
-            primary: color, side: BorderSide(color: color)
-            // backgroundColor: color,
-            ),
+          primary: color,
+          side: BorderSide(color: color),
+        ),
       ),
     );
   }

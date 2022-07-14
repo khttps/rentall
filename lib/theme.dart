@@ -16,7 +16,15 @@ const _inputDecoration = InputDecorationTheme(
 
 get themeData {
   return ThemeData(
-    primarySwatch: _primarySwatch,
+      primarySwatch: _primarySwatch,
+      inputDecorationTheme: _inputDecoration,
+      brightness: Brightness.light);
+}
+
+get darkThemeData {
+  return ThemeData(
+    primarySwatch: Colors.grey,
     inputDecorationTheme: _inputDecoration,
+    brightness: Brightness.dark,
   );
 }

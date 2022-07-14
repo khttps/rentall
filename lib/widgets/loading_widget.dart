@@ -29,7 +29,7 @@ class LoadingWidget extends StatelessWidget {
                 children: [
                   const CircularProgressIndicator(),
                   const SizedBox(width: 16.0),
-                  const Text('Loading').tr(),
+                  const Text('loading').tr(),
                 ],
               ),
             ),

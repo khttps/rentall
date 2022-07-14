@@ -169,7 +169,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '${rental.price} EGP / ${rental.rentPeriod?.name}',
+                                '${rental.price} EGP / ${tr('rentPeriod.${rental.rentPeriod!.index}')}',
                                 style: const TextStyle(fontSize: 22.0),
                               ),
                               Text(
@@ -191,46 +191,57 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                          Text(
-                            'Posted ${DateFormat('MMM d, h:mma').format(rental.createdAt!.toDate())}',
-                          ),
+                          const Text(
+                            'posted',
+                          ).tr(args: [
+                            DateFormat('MMM d, h:mma')
+                                .format(rental.createdAt!.toDate())
+                          ]),
                           const Divider(thickness: 1),
                           if (rental.rooms != null)
-                            Text('Rooms: ${rental.rooms}'),
+                            const Text('rooms:').tr(args: [
+                              rental.rooms.toString(),
+                            ]),
                           if (rental.bathrooms != null)
-                            Text('Bathrooms: ${rental.bathrooms}'),
+                            const Text('bathrooms:').tr(args: [
+                              rental.bathrooms.toString(),
+                            ]),
                           if (rental.furnished != null)
-                            Text(
-                              'Furnished: ${rental.furnished == true ? 'Yes' : 'No'}',
-                            ),
+                            const Text('furnished:').tr(args: [
+                              rental.furnished == true ? tr('yes') : tr('no'),
+                            ]),
                           if (rental.floorNumber != null)
-                            Text('Floor: ${rental.floorNumber}'),
+                            const Text('floor:').tr(args: [
+                              rental.floorNumber.toString(),
+                            ]),
                           RichText(
                             text: TextSpan(
-                              text: 'Area: ${rental.area}m\u00b3',
+                              text: tr('area:').tr(args: [
+                                rental.area.toString(),
+                              ]),
                               style: const TextStyle(color: Colors.black87),
                             ),
                           ),
                           const Divider(thickness: 1),
                           Text(
-                            'Address',
+                            'address',
                             style: TextStyle(
                               color: Colors.blueGrey.shade400,
                               fontSize: 18.0,
                               fontWeight: FontWeight.w500,
                             ),
-                          ),
+                          ).tr(),
                           Text(rental.address),
                           if (hasDescription) const Divider(thickness: 1),
                           if (hasDescription)
                             Text(
-                              'Description',
+                              'description',
                               style: TextStyle(
                                 color: Colors.blueGrey.shade400,
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.w500,
                               ),
-                            ),
+                            ).tr(),
                           Text(rental.description ?? ''),
                           const SizedBox(height: 4.0),
                           if (widget.rental.location != null) ...[

@@ -46,14 +46,17 @@ class RentalsState extends Equatable {
 
   String get priceText {
     if (priceFrom != null && priceTo != null) {
-      return 'Price: LE$priceFrom - $priceTo';
+      return tr(
+        'price_from_to',
+        args: [priceFrom.toString(), priceTo.toString()],
+      );
     } else if (priceFrom != null && priceTo == null) {
-      return 'Price: From LE$priceFrom';
+      return tr('price_from').tr(args: [priceFrom.toString()]);
     }
     if (priceFrom == null && priceTo != null) {
-      return 'Price: To LE$priceTo';
+      return tr('price_to').tr(args: [priceTo.toString()]);
     }
-    return 'Price';
+    return tr('price');
   }
 
   Map<String, dynamic> get filters => {

@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rentall/screens/auth/bloc/auth_bloc.dart';
 import 'widgets.dart';
 
@@ -31,46 +33,41 @@ class _AuthFormState extends State<AuthForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '${widget.label} to Rentall',
-              style: const TextStyle(
+            const Text(
+              'to_rental',
+              style: TextStyle(
                 fontSize: 28.0,
                 fontWeight: FontWeight.bold,
               ),
-            ),
+            ).tr(args: [widget.label]),
             const SizedBox(height: 8.0),
             const Text(
-              'Join our community, post your rentals, setup alerts for new rentals, save your favorite rentals',
+              'auth_header',
               style: TextStyle(fontSize: 14.0),
-            ),
+            ).tr(),
             const SizedBox(height: 16.0),
             FormBuilderTextField(
               name: 'email',
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(
-                hintText: 'Email',
-                // prefixIcon: Icon(Icons.email),
+              decoration: InputDecoration(
+                hintText: tr('email'),
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Required field.';
-                }
-                return null;
-              },
+              validator: FormBuilderValidators.required(
+                errorText: tr('required'),
+              ),
             ),
             const SizedBox(height: 8.0),
             FormBuilderTextField(
               name: 'password',
               keyboardType: TextInputType.visiblePassword,
               obscureText: true,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Required field.';
-                }
-                return null;
-              },
-              decoration: const InputDecoration(hintText: 'Password'),
+              decoration: InputDecoration(
+                hintText: tr('password'),
+              ),
+              validator: FormBuilderValidators.required(
+                errorText: tr('required'),
+              ),
             ),
             const SizedBox(height: 8.0),
             SizedBox(
@@ -91,7 +88,7 @@ class _AuthFormState extends State<AuthForm> {
             ),
             const Divider(thickness: 1.0),
             SocialButton(
-              text: 'Continue with Google',
+              text: tr('continue_with', args: ['Google']),
               color: Colors.red,
               asset: 'assets/images/google.svg',
               onPressed: () {
@@ -99,7 +96,7 @@ class _AuthFormState extends State<AuthForm> {
               },
             ),
             SocialButton(
-              text: 'Continue with Facebook',
+              text: tr('continue_with', args: ['Facebook']),
               color: Colors.blue,
               asset: 'assets/images/facebook.svg',
               onPressed: () {

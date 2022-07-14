@@ -35,6 +35,7 @@ abstract class UserRepository {
   Future<bool> isFavorited(String id);
   Future<void> updateHost(Map<String, dynamic> host, File? image);
   Future<void> sendVerificationEmail();
+  Future<void> verifyPhoneNumber(String phone);
 }
 
 class UserRepositoryImpl implements UserRepository {
@@ -341,5 +342,21 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<void> reloadUser() async {
     await _firebaseAuth.currentUser?.reload();
+  }
+
+  @override
+  Future<void> verifyPhoneNumber(String phone) async {
+    await _firebaseAuth.verifyPhoneNumber(
+      phoneNumber: phone,
+      verificationCompleted: (credential) async {
+        await _firebaseAuth.currentUser!.linkWithCredential(credential);
+      },
+      verificationFailed: (exception) {
+        throw exception;
+      },
+      timeout: const Duration(seconds: 60),
+      codeSent: (verificationId, resendToken) {},
+      codeAutoRetrievalTimeout: (verificationId) {},
+    );
   }
 }

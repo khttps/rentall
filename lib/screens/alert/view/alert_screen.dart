@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -42,16 +43,15 @@ class _AlertScreenState extends State<AlertScreen> {
           } else if (state.status == AlertStatus.success) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content:
-                    Text('Alert successfully ${isNew ? 'added' : 'updated'}.'),
+                content: Text(isNew ? 'alert_added' : 'alert_updated').tr(),
                 backgroundColor: Colors.green,
               ),
             );
             Navigator.pop(context);
           } else if (state.status == AlertStatus.deleted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Rental was successfully deleted.'),
+              SnackBar(
+                content: const Text('alert_deleted').tr(),
                 backgroundColor: Colors.green,
               ),
             );
@@ -64,7 +64,7 @@ class _AlertScreenState extends State<AlertScreen> {
               NestedScrollView(
                 headerSliverBuilder: (c, i) => [
                   PostAppBar(
-                    title: 'Create Alert',
+                    title: tr('create_alert'),
                     onSave: () {
                       if (_formKey.currentState!.saveAndValidate()) {
                         final value = _formKey.currentState!.value;
@@ -97,17 +97,17 @@ class _AlertScreenState extends State<AlertScreen> {
                     padding: const EdgeInsets.all(16.0),
                     children: [
                       const Text(
-                        'Setup alerts to stay up-to-date and discover rentals matching your preference',
+                        'alert_header',
                         style: TextStyle(fontSize: 16.0),
-                      ),
+                      ).tr(),
                       const SizedBox(height: 16.0),
                       Row(
                         children: [
                           Expanded(
                             child: TextFormField(
                               controller: _controller,
-                              decoration: const InputDecoration(
-                                hintText: 'New Keyword',
+                              decoration: InputDecoration(
+                                hintText: tr('new_keyword'),
                               ),
                               onChanged: (_) {
                                 if (_controller.text.endsWith(' ') &&
@@ -130,12 +130,12 @@ class _AlertScreenState extends State<AlertScreen> {
                                 });
                               }
                             },
-                            child: const Text('Add'),
+                            child: const Text('add').tr(),
                           ),
                         ],
                       ),
                       const SizedBox(height: 16.0),
-                      const Text('Keywords'),
+                      const Text('keywords').tr(),
                       const SizedBox(height: 4.0),
                       Wrap(
                         spacing: 4.0,
@@ -155,10 +155,10 @@ class _AlertScreenState extends State<AlertScreen> {
                       CustomValidator(
                         validator: (_) {
                           if (_keywords.isEmpty) {
-                            return 'Keywords can\'t be empty';
+                            return tr('keywords_required');
                           }
                           if (_keywords.length > 15) {
-                            return 'Maximum number of keywords is 15';
+                            return tr('max15');
                           }
                           return null;
                         },
@@ -168,14 +168,14 @@ class _AlertScreenState extends State<AlertScreen> {
                         const Spacer(),
                         Center(
                           child: TextButton.icon(
-                            label: const Text('Delete'),
+                            label: const Text('delete').tr(),
                             icon: const Icon(Icons.delete),
                             style: TextButton.styleFrom(primary: Colors.red),
                             onPressed: () => _showAlertDialog(
                               context,
-                              title: const Text('Delete Alert'),
+                              title: const Text('delete_alert').tr(),
                               content: const Text(
-                                'Are you sure you want to delete this alert?',
+                                'delete_alert_content',
                               ),
                               onPositive: () {
                                 BlocProvider.of<AlertBloc>(context).add(

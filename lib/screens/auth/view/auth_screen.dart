@@ -1,7 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:rentall/screens/blocs.dart';
 import 'package:rentall/widgets/error_snackbar.dart';
 import 'package:rentall/widgets/loading_widget.dart';
@@ -46,12 +46,12 @@ class _AuthScreenState extends State<AuthScreen> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is SignInSuccess) {
-            _showSuccessSnackbar(context, message: 'Signed in successfully!');
+            _showSuccessSnackbar(context, message: tr('signin_success'));
           }
           if (state is SignUpSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Sign up successful!'),
+              SnackBar(
+                content: const Text('signup_success').tr(),
                 backgroundColor: Colors.green,
               ),
             );
@@ -93,7 +93,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
                         AuthForm(
-                          label: 'Sign In',
+                          label: tr('sign_in'),
                           onSubmit: (value) {
                             BlocProvider.of<AuthBloc>(context).add(
                               SignInPressed(
@@ -117,11 +117,11 @@ class _AuthScreenState extends State<AuthScreen> {
                                 );
                               },
                               child: const Text(
-                                'Forgot Pasword',
+                                'forgot_password',
                                 style: TextStyle(
                                   decoration: TextDecoration.underline,
                                 ),
-                              ),
+                              ).tr(),
                             ),
                             TextButton(
                               onPressed: () {
@@ -137,7 +137,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 );
                               },
                               child: const Text(
-                                'Create Account',
+                                'create_account',
                                 style: TextStyle(
                                     decoration: TextDecoration.underline),
                               ),
@@ -145,7 +145,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           ],
                         ),
                         AuthForm(
-                          label: 'Sign Up',
+                          label: tr('sign_up'),
                           onSubmit: (value) {
                             BlocProvider.of<AuthBloc>(context).add(
                               SignUpPressed(
@@ -169,10 +169,10 @@ class _AuthScreenState extends State<AuthScreen> {
                                 );
                               },
                               child: const Text(
-                                'Sign In',
+                                'sign_in',
                                 style: TextStyle(
                                     decoration: TextDecoration.underline),
-                              ),
+                              ).tr(),
                             ),
                           ],
                         ),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentall/widgets/widgets.dart';
@@ -21,14 +22,14 @@ class _ListScreenState extends State<ListScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<ListBloc>(context).add(
-      LoadList(collection: widget.listName.toLowerCase()),
+      LoadList(collection: widget.listName),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.listName)),
+      appBar: AppBar(title: Text(widget.listName).tr()),
       body: BlocBuilder<ListBloc, ListState>(
         builder: (context, state) {
           if (state.status == FavouritesStatus.loading) {

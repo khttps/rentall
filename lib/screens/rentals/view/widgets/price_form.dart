@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -48,8 +49,8 @@ class _PriceFormState extends State<PriceForm> {
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.numeric(),
                     ]),
-                    decoration: const InputDecoration(
-                      hintText: 'From',
+                    decoration: InputDecoration(
+                      hintText: tr('from'),
                     ),
                   ),
                 ),
@@ -58,8 +59,8 @@ class _PriceFormState extends State<PriceForm> {
                   child: FormBuilderTextField(
                     name: 'to',
                     controller: _toController,
-                    decoration: const InputDecoration(
-                      hintText: 'To',
+                    decoration: InputDecoration(
+                      hintText: tr('to'),
                     ),
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.numeric(),
@@ -85,7 +86,7 @@ class _PriceFormState extends State<PriceForm> {
                 final from = int.tryParse(_fromController.text);
 
                 if (to != null && from != null && to < from) {
-                  return 'Start value can\'t be larger than end value.';
+                  return tr('Start value can\'t be larger than end value.');
                 }
                 return null;
               },
@@ -103,9 +104,9 @@ class _PriceFormState extends State<PriceForm> {
                         color: Colors.red,
                       ),
                       label: const Text(
-                        'Clear',
+                        'clear',
                         style: TextStyle(color: Colors.red),
-                      ),
+                      ).tr(),
                       onPressed: () {
                         widget.onApply(0, 0);
                         Navigator.pop(context);
@@ -115,7 +116,7 @@ class _PriceFormState extends State<PriceForm> {
                 const SizedBox(width: 8.0),
                 Flexible(
                   child: ElevatedButton(
-                    child: const Text('Apply'),
+                    child: const Text('apply').tr(),
                     onPressed: () {
                       if (_formKey.currentState!.saveAndValidate()) {
                         final values = _formKey.currentState!.value;

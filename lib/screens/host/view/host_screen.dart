@@ -11,7 +11,7 @@ import '../../blocs.dart';
 import '../../screens.dart';
 
 class HostScreen extends StatefulWidget {
-  static const routeName = '/organization';
+  static const routeName = '/host';
   const HostScreen({Key? key}) : super(key: key);
 
   @override
@@ -28,7 +28,7 @@ class _HostScreenState extends State<HostScreen> {
       body: NestedScrollView(
         headerSliverBuilder: (c, i) => [
           PostAppBar(
-            title: 'Host',
+            title: tr('host'),
             onSave: () {
               if (_formKey.currentState!.saveAndValidate()) {
                 BlocProvider.of<HostBloc>(context).add(
@@ -50,8 +50,8 @@ class _HostScreenState extends State<HostScreen> {
                 (route) => false,
               );
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Host updated successfully!'),
+                SnackBar(
+                  content: const Text('host_updated').tr(),
                   backgroundColor: Colors.green,
                 ),
               );
@@ -82,12 +82,12 @@ class _HostScreenState extends State<HostScreen> {
                       ),
                       const SizedBox(height: 20.0),
                       const Text(
-                        'Setup your host profile, to be able to post your rentals and allow users to reach you',
+                        'host_header',
                         style: TextStyle(fontSize: 16.0),
                         textAlign: TextAlign.center,
-                      ),
+                      ).tr(),
                       const SizedBox(height: 20.0),
-                      const Text('Host/Organization'),
+                      const Text('h/o').tr(),
                       const SizedBox(height: 6.0),
                       FormBuilderTextField(
                         name: 'hostName',
@@ -96,7 +96,7 @@ class _HostScreenState extends State<HostScreen> {
                         textInputAction: TextInputAction.next,
                       ),
                       const SizedBox(height: 16.0),
-                      const Text('Phone Number'),
+                      const Text('phone_number').tr(),
                       const SizedBox(height: 6.0),
                       FormBuilderTextField(
                         name: 'hostPhone',
@@ -109,7 +109,9 @@ class _HostScreenState extends State<HostScreen> {
                           FormBuilderValidators.required(
                             errorText: tr('required'),
                           ),
-                          FormBuilderValidators.numeric(),
+                          FormBuilderValidators.numeric(
+                            errorText: tr('numeric'),
+                          ),
                         ]),
                       ),
                     ],
