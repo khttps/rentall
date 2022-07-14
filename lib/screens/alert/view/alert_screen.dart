@@ -164,35 +164,6 @@ class _AlertScreenState extends State<AlertScreen> {
                         },
                       ),
                       const SizedBox(height: 16.0),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text('Repeat every'),
-                          const SizedBox(width: 10.0),
-                          SizedBox(
-                            width: 100.0,
-                            child: FormBuilderTextField(
-                              name: 'repeat',
-                              keyboardType: TextInputType.number,
-                              valueTransformer: (String? value) {
-                                if (value != null) {
-                                  return int.tryParse(value);
-                                }
-                              },
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(
-                                  errorText: 'Required',
-                                ),
-                                FormBuilderValidators.notEqual(0),
-                                FormBuilderValidators.max(14),
-                              ]),
-                            ),
-                          ),
-                          const SizedBox(width: 10.0),
-                          const Text('day'),
-                        ],
-                      ),
-                      const SizedBox(height: 16.0),
                       if (widget.alert != null) ...[
                         const Spacer(),
                         Center(

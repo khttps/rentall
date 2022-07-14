@@ -48,9 +48,6 @@ class AlertsScreen extends StatelessWidget {
                         alert.createdAt!.toDate(),
                       ),
                     ),
-                    trailing: Text(
-                      'every ${alert.repeat} ${alert.repeat == 1 ? 'day' : 'days'}',
-                    ),
                     onTap: () {
                       Navigator.pushNamed(
                         context,
