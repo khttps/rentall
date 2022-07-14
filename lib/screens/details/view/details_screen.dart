@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../data/models/models.dart';
@@ -63,6 +64,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
             ),
             backgroundColor: Colors.transparent,
             actions: [
+              IconButton(
+                icon: const Icon(Icons.share),
+                onPressed: () async {
+                  await _shareExternally();
+                },
+              ),
               if (state.status == DetailsStatus.owned)
                 IconButton(
                   icon: const Icon(Icons.drive_file_rename_outline_sharp),
@@ -273,5 +280,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
     if (canLaunch) {
       await launchUrl(url);
     }
+  }
+
+  Future<void> _shareExternally() async {
+    final r = widget.rental;
+    await Share.share(
+      '''${r.title}
+      ${r.images[0]} 
+      ${r.address}
+      ${tr('governorates.${r.governorate.index}')}, ${r.price}EGP/${tr('rentPeriod.${r.rentPeriod!.index}')}''',
+    );
   }
 }
