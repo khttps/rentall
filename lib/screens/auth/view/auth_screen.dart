@@ -1,3 +1,4 @@
+import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -68,127 +69,125 @@ class _AuthScreenState extends State<AuthScreen> {
             return Stack(
               children: [
                 ListView(
+                  shrinkWrap: true,
                   controller: _screenController,
                   children: [
                     Image.asset(
                       'assets/images/sign_in.png',
-                      fit: BoxFit.cover,
-                      height: constraints.maxWidth / 2,
-                    ),
-                    SizedBox(
+                      fit: BoxFit.contain,
+                      height: constraints.maxWidth / 1.223,
                       width: constraints.maxWidth,
-                      height: constraints.maxHeight,
-                      child: PageView(
-                        controller: _pageController,
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: [
-                          AuthForm(
-                            label: 'Sign In',
-                            onSubmit: (value) {
-                              BlocProvider.of<AuthBloc>(context).add(
-                                SignInPressed(
-                                  email: value['email'],
-                                  password: value['password'],
-                                ),
-                              );
-                            },
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  _pageController.animateToPage(
-                                    3,
-                                    duration: const Duration(milliseconds: 200),
-                                    curve: Curves.easeIn,
-                                  );
-                                  _screenController.animateTo(
-                                    0,
-                                    duration: const Duration(milliseconds: 200),
-                                    curve: Curves.easeIn,
-                                  );
-                                },
-                                child: const Text(
-                                  'Forgot Pasword',
-                                  style: TextStyle(
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                ),
+                    ),
+                    ExpandablePageView(
+                      controller: _pageController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        AuthForm(
+                          label: 'Sign In',
+                          onSubmit: (value) {
+                            BlocProvider.of<AuthBloc>(context).add(
+                              SignInPressed(
+                                email: value['email'],
+                                password: value['password'],
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  _pageController.animateToPage(
-                                    1,
-                                    duration: const Duration(milliseconds: 200),
-                                    curve: Curves.easeIn,
-                                  );
-                                  _screenController.animateTo(
-                                    0,
-                                    duration: const Duration(milliseconds: 200),
-                                    curve: Curves.easeIn,
-                                  );
-                                },
-                                child: const Text(
-                                  'Create Account',
-                                  style: TextStyle(
-                                      decoration: TextDecoration.underline),
-                                ),
-                              )
-                            ],
-                          ),
-                          AuthForm(
-                            label: 'Sign Up',
-                            onSubmit: (value) {
-                              BlocProvider.of<AuthBloc>(context).add(
-                                SignUpPressed(
-                                  email: value['email'],
-                                  password: value['password'],
-                                ),
-                              );
-                            },
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  _pageController.animateToPage(
-                                    0,
-                                    duration: const Duration(milliseconds: 200),
-                                    curve: Curves.easeIn,
-                                  );
-                                  _screenController.animateTo(
-                                    0,
-                                    duration: const Duration(milliseconds: 200),
-                                    curve: Curves.easeIn,
-                                  );
-                                },
-                                child: const Text(
-                                  'Sign In',
-                                  style: TextStyle(
-                                      decoration: TextDecoration.underline),
-                                ),
-                              ),
-                            ],
-                          ),
-                          ForgotPasswordForm(
-                            onSubmit: (email) {
-                              if (email != null) {
-                                BlocProvider.of<AuthBloc>(context).add(
-                                  ForgotPassword(
-                                    email: email,
-                                  ),
+                            );
+                          },
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                _pageController.animateToPage(
+                                  3,
+                                  duration: const Duration(milliseconds: 200),
+                                  curve: Curves.easeIn,
                                 );
-                              }
-                              _pageController.animateToPage(
-                                0,
-                                duration: const Duration(milliseconds: 200),
-                                curve: Curves.easeIn,
+                                _screenController.animateTo(
+                                  0,
+                                  duration: const Duration(milliseconds: 200),
+                                  curve: Curves.easeIn,
+                                );
+                              },
+                              child: const Text(
+                                'Forgot Pasword',
+                                style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                _pageController.animateToPage(
+                                  1,
+                                  duration: const Duration(milliseconds: 200),
+                                  curve: Curves.easeIn,
+                                );
+                                _screenController.animateTo(
+                                  0,
+                                  duration: const Duration(milliseconds: 200),
+                                  curve: Curves.easeIn,
+                                );
+                              },
+                              child: const Text(
+                                'Create Account',
+                                style: TextStyle(
+                                    decoration: TextDecoration.underline),
+                              ),
+                            )
+                          ],
+                        ),
+                        AuthForm(
+                          label: 'Sign Up',
+                          onSubmit: (value) {
+                            BlocProvider.of<AuthBloc>(context).add(
+                              SignUpPressed(
+                                email: value['email'],
+                                password: value['password'],
+                              ),
+                            );
+                          },
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                _pageController.animateToPage(
+                                  0,
+                                  duration: const Duration(milliseconds: 200),
+                                  curve: Curves.easeIn,
+                                );
+                                _screenController.animateTo(
+                                  0,
+                                  duration: const Duration(milliseconds: 200),
+                                  curve: Curves.easeIn,
+                                );
+                              },
+                              child: const Text(
+                                'Sign In',
+                                style: TextStyle(
+                                    decoration: TextDecoration.underline),
+                              ),
+                            ),
+                          ],
+                        ),
+                        ForgotPasswordForm(
+                          onSubmit: (email) {
+                            if (email != null) {
+                              BlocProvider.of<AuthBloc>(context).add(
+                                ForgotPassword(
+                                  email: email,
+                                ),
                               );
-                              _screenController.animateTo(
-                                0,
-                                duration: const Duration(milliseconds: 200),
-                                curve: Curves.easeIn,
-                              );
-                            },
-                          )
-                        ],
-                      ),
+                            }
+                            _pageController.animateToPage(
+                              0,
+                              duration: const Duration(milliseconds: 200),
+                              curve: Curves.easeIn,
+                            );
+                            _screenController.animateTo(
+                              0,
+                              duration: const Duration(milliseconds: 200),
+                              curve: Curves.easeIn,
+                            );
+                          },
+                        )
+                      ],
                     ),
                   ],
                 ),

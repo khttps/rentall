@@ -26,58 +26,60 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
-      child: ListView(
+      child: Padding(
         padding: const EdgeInsets.all(16.0),
-        children: [
-          const Text(
-            'Enter the email associated with your account',
-            style: TextStyle(fontSize: 16.0),
-          ),
-          const SizedBox(height: 8.0),
-          TextFormField(
-            controller: _controller,
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.next,
-            onFieldSubmitted: (String value) {},
-            onChanged: (String value) {},
-            decoration: const InputDecoration(
-              hintText: 'Email',
-              // prefixIcon: Icon(Icons.email),
+        child: Column(
+          children: [
+            const Text(
+              'Enter the email associated with your account',
+              style: TextStyle(fontSize: 16.0),
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Required field.';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 8.0),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              child: const Text(
-                'Submit',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
+            const SizedBox(height: 8.0),
+            TextFormField(
+              controller: _controller,
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (String value) {},
+              onChanged: (String value) {},
+              decoration: const InputDecoration(
+                hintText: 'Email',
+                // prefixIcon: Icon(Icons.email),
               ),
-              onPressed: () {
-                widget.onSubmit(_controller.text);
-                _controller.clear();
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Required field.';
+                }
+                return null;
               },
             ),
-          ),
-          TextButton(
-            onPressed: () {
-              widget.onSubmit(null);
-              _controller.clear();
-            },
-            child: const Text(
-              'Sign In',
-              style: TextStyle(decoration: TextDecoration.underline),
+            const SizedBox(height: 8.0),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                child: const Text(
+                  'Submit',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () {
+                  widget.onSubmit(_controller.text);
+                  _controller.clear();
+                },
+              ),
             ),
-          )
-        ],
+            TextButton(
+              onPressed: () {
+                widget.onSubmit(null);
+                _controller.clear();
+              },
+              child: const Text(
+                'Sign In',
+                style: TextStyle(decoration: TextDecoration.underline),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
