@@ -23,11 +23,13 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   final _controller = Completer<GoogleMapController>();
   var _mapType = MapType.normal;
+  late LatLng _currentLocation;
 
   @override
   void initState() {
     super.initState();
     _checkPermission();
+    _getCurrentLocation();
   }
 
   @override
@@ -62,15 +64,21 @@ class _MapScreenState extends State<MapScreen> {
                         return const LoadingWidget();
                       }
                       return GoogleMap(
-                        initialCameraPosition: const CameraPosition(
-                          target: LatLng(27, 29),
-                          zoom: 5,
+                        initialCameraPosition: CameraPosition(
+                          target: _currentLocation,
+                          zoom: 10,
                         ),
                         zoomControlsEnabled: false,
                         mapType: _mapType,
                         compassEnabled: false,
                         myLocationEnabled: true,
                         myLocationButtonEnabled: false,
+                        cameraTargetBounds: CameraTargetBounds(
+                          LatLngBounds(
+                            southwest: const LatLng(20.000109, 22.003512),
+                            northeast: const LatLng(33.600013, 35.221769),
+                          ),
+                        ),
                         onMapCreated: (GoogleMapController controller) {
                           _controller.complete(controller);
                         },
@@ -130,7 +138,7 @@ class _MapScreenState extends State<MapScreen> {
               heroTag: 'current',
               child: const Icon(Icons.gps_fixed),
               onPressed: () async {
-                await _getCurrentLocation();
+                await _moveCameraToCurrentLocation();
               },
             ),
           ],
@@ -163,14 +171,21 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _getCurrentLocation() async {
-    final GoogleMapController controller = await _controller.future;
     final p = await Geolocator.getCurrentPosition();
-    controller.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(
-        bearing: 0,
-        target: LatLng(p.latitude, p.longitude),
-        zoom: 18.0,
+    _currentLocation = LatLng(p.latitude, p.longitude);
+  }
+
+  Future<void> _moveCameraToCurrentLocation() async {
+    await _getCurrentLocation();
+    final controller = await _controller.future;
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          bearing: 0,
+          target: _currentLocation,
+          zoom: 16.0,
+        ),
       ),
-    ));
+    );
   }
 }

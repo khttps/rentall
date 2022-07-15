@@ -93,6 +93,12 @@ class _AddLocationScreenState extends State<AddLocationScreen> {
             setState(() => _position = latlng);
           },
           myLocationButtonEnabled: false,
+          cameraTargetBounds: CameraTargetBounds(
+            LatLngBounds(
+              southwest: const LatLng(20.000109, 22.003512),
+              northeast: const LatLng(33.600013, 35.221769),
+            ),
+          ),
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
           },
