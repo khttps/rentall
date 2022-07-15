@@ -67,8 +67,10 @@ class RentalCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${rental.region}, '
-                      '${tr('governorates.${rental.governorate.index}')}',
+                      rental.region != null
+                          ? '${rental.region}, '
+                          : ''
+                              '${tr('governorates.${rental.governorate.index}')}',
                       style: const TextStyle(
                         fontWeight: FontWeight.w400,
                       ),

@@ -24,7 +24,7 @@ Rental _$RentalFromJson(Map<String, dynamic> json) => Rental(
       furnished: json['furnished'] as bool?,
       area: json['area'] as int,
       governorate: $enumDecode(_$GovernorateEnumMap, json['governorate']),
-      region: json['region'] as int?,
+      region: json['region'] as String?,
       price: json['price'] as int,
       hostPhone: json['hostPhone'] as String,
       createdAt:

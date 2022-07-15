@@ -31,7 +31,7 @@ class Rental extends Equatable {
   final int area;
   final Governorate governorate;
   @JsonKey(includeIfNull: false)
-  final int? region;
+  final String? region;
   final int price;
   final String hostPhone;
   @TimestampConverter()

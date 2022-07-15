@@ -337,21 +337,23 @@ class _PublishScreenState extends State<PublishScreen> {
                                         ).tr(),
                                       ),
                                     ),
-                                    validator: FormBuilderValidators.compose([
-                                      FormBuilderValidators.required(
-                                        errorText: tr('required'),
-                                      ),
-                                    ]),
+                                    validator: FormBuilderValidators.required(
+                                      errorText: tr('required'),
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(width: 8.0),
                                 Flexible(
                                   child: FormBuilderTextField(
-                                    readOnly: true,
-                                    name: 'region',
-                                    enabled: false,
-                                    textInputAction: TextInputAction.next,
-                                  ),
+                                      name: 'region',
+                                      textInputAction: TextInputAction.next,
+                                      validator: FormBuilderValidators.compose([
+                                        FormBuilderValidators.required(
+                                          errorText: tr('required'),
+                                        ),
+                                        FormBuilderValidators.maxLength(15,
+                                            errorText: 'max15')
+                                      ])),
                                 ),
                                 const SizedBox(width: 8.0),
                                 Flexible(

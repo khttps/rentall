@@ -140,7 +140,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       child: ListView(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 4.0,
+                          horizontal: 10.0,
+                        ),
                         children: [
                           PageIndicator(
                             items: widget.rental.images,
@@ -202,7 +205,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 style: const TextStyle(fontSize: 22.0),
                               ),
                               Text(
-                                '${rental.region}, ${tr('governorates.${rental.governorate.index}')}',
+                                rental.region != null
+                                    ? '${rental.region}, '
+                                    : ''
+                                        '${tr('governorates.${rental.governorate.index}')}',
                                 style: TextStyle(
                                   color: Colors.blueGrey.shade400,
                                   fontSize: 18.0,

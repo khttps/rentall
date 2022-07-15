@@ -60,7 +60,15 @@ class _HostCardState extends State<HostCard> {
               ),
               if (state is OwnerLoaded) ...[
                 const SizedBox(height: 8.0),
-                Text(state.owner.hostName!)
+                Text(
+                  state.owner.hostName!,
+                  style: const TextStyle(
+                    decoration: TextDecoration.underline,
+                    color: Colors.blueGrey,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  ),
+                )
               ]
             ],
           ),
