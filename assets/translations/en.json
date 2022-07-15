@@ -75,7 +75,7 @@
     "auth_header" : "Join our community, post your rentals, setup alerts for new rentals, save your favorite rentals",
     "email" : "Email Address",
     "password" : "Password",
-    "continue_with" : "'Continue with {}",
+    "continue_with" : "Continue with {}",
     "enter_email" : "Enter the email associated with your account",
     "submit" : "Submit",
     "posted" : "Posted {}",
@@ -157,5 +157,7 @@
     "clear" : "Clear",
     "price_to" : "Price: To LE{}",
     "price_from" : "Price: From LE{}",
-    "price_from_to" : "Price: {} - {}"
+    "price_from_to" : "Price: {} - {}",
+    "area" : "Area",
+    "owned_by" : "Owned By"
 }

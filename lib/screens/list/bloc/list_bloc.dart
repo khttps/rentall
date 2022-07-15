@@ -17,14 +17,17 @@ class ListBloc extends Bloc<ListEvent, ListState> {
     on<LoadList>(_onLoadList);
   }
   FutureOr<void> _onLoadList(LoadList event, emit) async {
-    emit(const ListState(status: FavouritesStatus.loading));
+    emit(const ListState(status: ListStatus.loading));
     try {
-      final favourits = await _repository.getList(event.collection);
-      emit(ListState(status: FavouritesStatus.success, favourites: favourits));
+      final rentals = await _repository.getList(
+        collection: event.collection,
+        userId: event.userId,
+      );
+      emit(ListState(status: ListStatus.success, rentals: rentals));
     } on Exception catch (err) {
       emit(
         ListState(
-          status: FavouritesStatus.failed,
+          status: ListStatus.failed,
           message: (err as dynamic).message,
         ),
       );

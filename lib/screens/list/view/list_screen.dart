@@ -5,11 +5,22 @@ import 'package:rentall/widgets/widgets.dart';
 
 import '../bloc/list_bloc.dart';
 
+class ListArguments {
+  final String listName;
+  final String? userId;
+
+  const ListArguments({
+    required this.listName,
+    this.userId,
+  });
+}
+
 class ListScreen extends StatefulWidget {
   static const routeName = '/list';
-  final String listName;
+  final ListArguments args;
+
   const ListScreen({
-    required this.listName,
+    required this.args,
     Key? key,
   }) : super(key: key);
 
@@ -22,21 +33,21 @@ class _ListScreenState extends State<ListScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<ListBloc>(context).add(
-      LoadList(collection: widget.listName),
+      LoadList(collection: widget.args.listName, userId: widget.args.userId),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.listName).tr()),
+      appBar: AppBar(title: Text(widget.args.listName).tr()),
       body: BlocBuilder<ListBloc, ListState>(
         builder: (context, state) {
-          if (state.status == FavouritesStatus.loading) {
+          if (state.status == ListStatus.loading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state.status == FavouritesStatus.success &&
-              state.favourites!.isNotEmpty) {
-            return RentalsList(rentals: state.favourites!);
+          } else if (state.status == ListStatus.success &&
+              state.rentals!.isNotEmpty) {
+            return RentalsList(rentals: state.rentals!);
           } else {
             return const EmptyList();
           }

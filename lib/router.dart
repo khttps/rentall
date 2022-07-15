@@ -24,7 +24,7 @@ MaterialPageRoute<dynamic> onGenerateRoute(RouteSettings settings) {
         case AuthScreen.routeName:
           return const AuthScreen();
         case ListScreen.routeName:
-          return ListScreen(listName: settings.arguments as String);
+          return ListScreen(args: settings.arguments as ListArguments);
         case HostScreen.routeName:
           return const HostScreen();
         case PasswordSentScreen.routeName:

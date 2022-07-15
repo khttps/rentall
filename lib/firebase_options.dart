@@ -16,9 +16,6 @@ import 'package:flutter/foundation.dart'
 /// ```
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
-    if (kIsWeb) {
-      return web;
-    }
     // ignore: missing_enum_constant_in_switch
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -37,15 +34,6 @@ class DefaultFirebaseOptions {
     );
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCxYNDEjPxpPyUYyKI4VxfM6xrIpSwxbe4',
-    appId: '1:518118589601:web:ddef87d4fd39eb9ead9ce0',
-    messagingSenderId: '518118589601',
-    projectId: 'rentall-0451',
-    authDomain: 'rentall-0451.firebaseapp.com',
-    storageBucket: 'rentall-0451.appspot.com',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBvX6nQXQlviOjjft7dCGX0bXrOYL0-pug',
     appId: '1:518118589601:android:1daa58ab5552cd05ad9ce0',
@@ -60,7 +48,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '518118589601',
     projectId: 'rentall-0451',
     storageBucket: 'rentall-0451.appspot.com',
-    iosClientId: '518118589601-c70epua8u44uqvj4oo905j9r39fh4kjd.apps.googleusercontent.com',
+    iosClientId:
+        '518118589601-c70epua8u44uqvj4oo905j9r39fh4kjd.apps.googleusercontent.com',
     iosBundleId: 'com.example.rentall',
   );
 }

@@ -59,7 +59,7 @@ class ProfileCard extends StatelessWidget {
           width: double.infinity,
           child: ElevatedButton(
             child: Text(
-              signedIn ? tr('sign_out') : '${tr('Sign In')} / ${tr('Sign Up')}',
+              signedIn ? tr('sign_out') : '${tr('sign_in')} / ${tr('sign_up')}',
             ),
             onPressed: () {
               if (signedIn) {

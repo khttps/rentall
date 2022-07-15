@@ -1,15 +1,18 @@
 part of 'list_bloc.dart';
 
-enum FavouritesStatus { initial, loading, success, failed }
+enum ListStatus { initial, loading, success, failed }
 
 class ListState extends Equatable {
-  final FavouritesStatus status;
-  final List<Rental>? favourites;
+  final ListStatus status;
+  final List<Rental>? rentals;
   final String? message;
 
-  const ListState(
-      {this.status = FavouritesStatus.initial, this.favourites, this.message});
+  const ListState({
+    this.status = ListStatus.initial,
+    this.rentals,
+    this.message,
+  });
 
   @override
-  List<Object?> get props => [status, favourites, message];
+  List<Object?> get props => [status, rentals, message];
 }

@@ -55,12 +55,15 @@ class RentallApp extends StatelessWidget {
         BlocProvider<SearchBloc>(create: (context) => di.sl()),
         BlocProvider<AlertBloc>(create: (context) => di.sl()),
         BlocProvider<AlertsBloc>(
-            create: (context) => di.sl()..add(const LoadAlerts())),
+          create: (context) => di.sl()..add(const LoadAlerts()),
+        ),
         BlocProvider<DetailsBloc>(create: (context) => di.sl()),
         BlocProvider<HostBloc>(
-            create: (context) => di.sl()..add(const LoadHost())),
+          create: (context) => di.sl()..add(const LoadHost()),
+        ),
         BlocProvider<ListBloc>(create: (context) => di.sl()),
         BlocProvider<VerifyEmailCubit>(create: (context) => di.sl()),
+        BlocProvider<OwnerCubit>(create: (context) => di.sl()),
       ],
       child: MaterialApp(
         title: 'Rentall',

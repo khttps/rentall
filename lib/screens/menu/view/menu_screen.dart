@@ -70,7 +70,7 @@ class MenuScreen extends StatelessWidget {
                     onTap: () => Navigator.pushNamed(
                       context,
                       ListScreen.routeName,
-                      arguments: 'favorites',
+                      arguments: const ListArguments(listName: 'favorites'),
                     ),
                   ),
                   ListTile(
@@ -105,8 +105,10 @@ class MenuScreen extends StatelessWidget {
                     title: const Text('my_rentals').tr(),
                     dense: true,
                     onTap: () => Navigator.pushNamed(
-                        context, ListScreen.routeName,
-                        arguments: 'rentals'),
+                      context,
+                      ListScreen.routeName,
+                      arguments: const ListArguments(listName: 'rentals'),
+                    ),
                   ),
                   const Divider(thickness: 1.0),
                 ],

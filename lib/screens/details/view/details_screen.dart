@@ -168,7 +168,29 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     color: rental.publishStatus!.color,
                                     fontWeight: FontWeight.bold,
                                   ),
+                                ),
+                              if (rental.publishStatus ==
+                                  PublishStatus.rejected) ...[
+                                const SizedBox(width: 8.0),
+                                InkWell(
+                                  onTap: () async {
+                                    await showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        content: Text(rental.rejectReason!),
+                                      ),
+                                    );
+                                  },
+                                  child: const CircleAvatar(
+                                    radius: 8.0,
+                                    backgroundColor: Colors.blueGrey,
+                                    child: Icon(
+                                      Icons.question_mark,
+                                      size: 16.0,
+                                    ),
+                                  ),
                                 )
+                              ]
                             ],
                           ),
                           const SizedBox(height: 4.0),
@@ -256,6 +278,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             const SizedBox(height: 8.0),
                             MapPreview(position: widget.rental.location!)
                           ],
+                          const SizedBox(height: 16.0),
+                          HostCard(userId: rental.userId!),
                           const SizedBox(height: 28.0),
                         ],
                       ),
@@ -285,10 +309,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
   Future<void> _shareExternally() async {
     final r = widget.rental;
     await Share.share(
-      '''${r.title}
-      ${r.images[0]} 
-      ${r.address}
-      ${tr('governorates.${r.governorate.index}')}, ${r.price}EGP/${tr('rentPeriod.${r.rentPeriod!.index}')}''',
+      '${r.title}\n${r.images[0]}\n${r.address}\n${tr('governorates.${r.governorate.index}')}, ${r.price}EGP/${tr('rentPeriod.${r.rentPeriod!.index}')}',
     );
   }
 }

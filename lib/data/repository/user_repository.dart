@@ -253,7 +253,7 @@ class UserRepositoryImpl implements UserRepository {
         var doc =
             await _firebaseFirestore.collection('users').doc(user.uid).get();
 
-        if (user.emailVerified && !doc.data()!['verified']) {
+        if (user.emailVerified && !doc.data()?['verified'] == false) {
           await doc.reference.update({'verified': true});
           doc = await doc.reference.get();
         }
@@ -327,14 +327,12 @@ class UserRepositoryImpl implements UserRepository {
       throw Exception('No internet connection');
     }
 
-    final authUser = _firebaseAuth.currentUser;
-
-    if (authUser == null) {
+    final userId = id ?? _firebaseAuth.currentUser?.uid;
+    if (userId == null) {
       return null;
     }
 
-    final doc =
-        await _firebaseFirestore.collection('users').doc(authUser.uid).get();
+    final doc = await _firebaseFirestore.collection('users').doc(userId).get();
 
     return User.fromJson(doc.data()!);
   }

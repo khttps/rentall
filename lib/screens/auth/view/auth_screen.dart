@@ -140,7 +140,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 'create_account',
                                 style: TextStyle(
                                     decoration: TextDecoration.underline),
-                              ),
+                              ).tr(),
                             )
                           ],
                         ),

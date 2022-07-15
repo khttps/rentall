@@ -36,6 +36,7 @@ Rental _$RentalFromJson(Map<String, dynamic> json) => Rental(
           $enumDecodeNullable(_$PropertyTypeEnumMap, json['propertyType']),
       publishStatus:
           $enumDecodeNullable(_$PublishStatusEnumMap, json['publishStatus']),
+      rejectReason: json['rejectReason'] as String?,
     );
 
 Map<String, dynamic> _$RentalToJson(Rental instance) {
@@ -68,6 +69,7 @@ Map<String, dynamic> _$RentalToJson(Rental instance) {
   writeNotNull('rentPeriod', _$RentPeriodEnumMap[instance.rentPeriod]);
   writeNotNull('propertyType', _$PropertyTypeEnumMap[instance.propertyType]);
   writeNotNull('publishStatus', _$PublishStatusEnumMap[instance.publishStatus]);
+  writeNotNull('rejectReason', instance.rejectReason);
   return val;
 }
 

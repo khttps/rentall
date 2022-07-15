@@ -41,6 +41,9 @@ Future<void> init() async {
   sl.registerFactory<VerifyEmailCubit>(
     () => VerifyEmailCubit(repository: sl()),
   );
+  sl.registerFactory<OwnerCubit>(
+    () => OwnerCubit(repository: sl()),
+  );
 
   //! Repositories
   sl.registerLazySingleton<RentalRepository>(

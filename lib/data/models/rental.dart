@@ -43,6 +43,8 @@ class Rental extends Equatable {
   final PropertyType? propertyType;
   @JsonKey(includeIfNull: false)
   final PublishStatus? publishStatus;
+  @JsonKey(includeIfNull: false)
+  final String? rejectReason;
 
   const Rental({
     this.id,
@@ -65,6 +67,7 @@ class Rental extends Equatable {
     this.rentPeriod = RentPeriod.month,
     required this.propertyType,
     this.publishStatus,
+    this.rejectReason,
   });
 
   factory Rental.fromJson(Map<String, dynamic> json) => _$RentalFromJson(json);
@@ -90,5 +93,6 @@ class Rental extends Equatable {
         createdAt,
         rentPeriod,
         propertyType,
+        rejectReason
       ];
 }
