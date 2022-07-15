@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:phone_number/phone_number.dart';
 import 'package:rentall/widgets/widgets.dart';
 
 import '../../../data/models/models.dart';
@@ -33,12 +32,15 @@ class _PublishScreenState extends State<PublishScreen> {
 
   late final updating = widget.rental != null;
   late final _images = <dynamic>[...?widget.rental?.images];
-  late final _phoneController = TextEditingController(
-    text: widget.rental?.hostPhone,
-  );
+  late final _phoneController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<PublishBloc>(context).add(const LoadPhoneNumber());
+  }
 
   var _currentPage = 0;
-  bool _validPhone = false;
   GeoPoint? _location;
 
   @override
@@ -57,9 +59,6 @@ class _PublishScreenState extends State<PublishScreen> {
             PostAppBar(
               title: tr(!updating ? 'new_rental' : 'update_rental'),
               onSave: () async {
-                _validPhone = await PhoneNumberUtil()
-                    .validate(_phoneController.text, 'EG');
-
                 if (_formKey.currentState!.saveAndValidate()) {
                   BlocProvider.of<PublishBloc>(context).add(
                     !updating
@@ -124,6 +123,7 @@ class _PublishScreenState extends State<PublishScreen> {
               }
             },
             builder: (context, state) {
+              _phoneController.text = state.phoneNumber ?? '';
               return Stack(
                 children: [
                   ListView(
@@ -339,7 +339,8 @@ class _PublishScreenState extends State<PublishScreen> {
                                     ),
                                     validator: FormBuilderValidators.compose([
                                       FormBuilderValidators.required(
-                                          errorText: tr('required')),
+                                        errorText: tr('required'),
+                                      ),
                                     ]),
                                   ),
                                 ),
@@ -517,22 +518,23 @@ class _PublishScreenState extends State<PublishScreen> {
                             FormBuilderTextField(
                               name: 'hostPhone',
                               controller: _phoneController,
-                              decoration:
-                                  const InputDecoration(prefix: Text('+20  ')),
-                              keyboardType: TextInputType.phone,
-                              textInputAction: TextInputAction.next,
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(
-                                  errorText: tr('required'),
+                              focusNode: DisabledFocusNode(),
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                fillColor: Colors.grey.shade300,
+                                prefix: const Text('+20  '),
+                                suffixIcon: TextButton(
+                                  child: const Text('change').tr(),
+                                  onPressed: () async {
+                                    await Navigator.of(context).pushNamed(
+                                      HostScreen.routeName,
+                                    );
+                                    BlocProvider.of<PublishBloc>(context).add(
+                                      const LoadPhoneNumber(),
+                                    );
+                                  },
                                 ),
-                                FormBuilderValidators.numeric(),
-                                (_) {
-                                  if (!_validPhone) {
-                                    return tr('invalid_phone');
-                                  }
-                                  return null;
-                                }
-                              ]),
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
@@ -643,4 +645,9 @@ class _PublishScreenState extends State<PublishScreen> {
       ),
     );
   }
+}
+
+class DisabledFocusNode extends FocusNode {
+  @override
+  bool get hasFocus => false;
 }

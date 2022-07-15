@@ -58,9 +58,7 @@ class RentallApp extends StatelessWidget {
           create: (context) => di.sl()..add(const LoadAlerts()),
         ),
         BlocProvider<DetailsBloc>(create: (context) => di.sl()),
-        BlocProvider<HostBloc>(
-          create: (context) => di.sl()..add(const LoadHost()),
-        ),
+        BlocProvider<HostBloc>(create: (context) => di.sl()),
         BlocProvider<ListBloc>(create: (context) => di.sl()),
         BlocProvider<VerifyEmailCubit>(create: (context) => di.sl()),
         BlocProvider<OwnerCubit>(create: (context) => di.sl()),

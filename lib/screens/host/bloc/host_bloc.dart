@@ -22,7 +22,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
   FutureOr<void> _onSetupHost(SetupHost event, emit) async {
     emit(state.copyWith(status: HostStatus.saving));
     try {
-      await _repository.verifyPhoneNumber('+20${event.host['hostPhone']}');
+      // await _repository.verifyPhoneNumber('+20${event.host['hostPhone']}');
       await _repository.updateHost(event.host, event.image);
       emit(const HostState(status: HostStatus.saved));
     } on Exception catch (err) {
@@ -34,6 +34,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
   }
 
   FutureOr<void> _onLoadHost(LoadHost event, emit) async {
+    emit(state.copyWith(status: HostStatus.loading));
     try {
       final user = await _repository.getUserFromCollection();
       emit(state.copyWith(status: HostStatus.loaded, user: user));

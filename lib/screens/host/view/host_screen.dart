@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:phone_number/phone_number.dart';
 
 import '../../../widgets/widgets.dart';
 import '../../blocs.dart';
@@ -21,6 +22,22 @@ class HostScreen extends StatefulWidget {
 class _HostScreenState extends State<HostScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   File? _image;
+  bool _validPhone = false;
+  final _phoneController = TextEditingController();
+  final _nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<HostBloc>(context).add(const LoadHost());
+  }
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    _nameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +46,10 @@ class _HostScreenState extends State<HostScreen> {
         headerSliverBuilder: (c, i) => [
           PostAppBar(
             title: tr('host'),
-            onSave: () {
+            onSave: () async {
+              _validPhone =
+                  await PhoneNumberUtil().validate(_phoneController.text, 'EG');
+
               if (_formKey.currentState!.saveAndValidate()) {
                 BlocProvider.of<HostBloc>(context).add(
                   SetupHost(
@@ -44,11 +64,7 @@ class _HostScreenState extends State<HostScreen> {
         body: BlocConsumer<HostBloc, HostState>(
           listener: (context, state) {
             if (state.status == HostStatus.saved) {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                HomeScreen.routeName,
-                (route) => false,
-              );
+              Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: const Text('host_updated').tr(),
@@ -62,6 +78,8 @@ class _HostScreenState extends State<HostScreen> {
             }
           },
           builder: (context, state) {
+            _nameController.text = state.user?.hostName ?? '';
+            _phoneController.text = state.user?.hostPhone ?? '';
             return Stack(
               children: [
                 FormBuilder(
@@ -91,8 +109,7 @@ class _HostScreenState extends State<HostScreen> {
                       const SizedBox(height: 6.0),
                       FormBuilderTextField(
                         name: 'hostName',
-                        initialValue: state.user?.hostName,
-                        keyboardType: TextInputType.emailAddress,
+                        controller: _nameController,
                         textInputAction: TextInputAction.next,
                       ),
                       const SizedBox(height: 16.0),
@@ -100,7 +117,7 @@ class _HostScreenState extends State<HostScreen> {
                       const SizedBox(height: 6.0),
                       FormBuilderTextField(
                         name: 'hostPhone',
-                        initialValue: state.user?.hostPhone,
+                        controller: _phoneController,
                         decoration:
                             const InputDecoration(prefix: Text('+20  ')),
                         keyboardType: TextInputType.phone,
@@ -109,15 +126,21 @@ class _HostScreenState extends State<HostScreen> {
                           FormBuilderValidators.required(
                             errorText: tr('required'),
                           ),
-                          FormBuilderValidators.numeric(
-                            errorText: tr('numeric'),
-                          ),
+                          FormBuilderValidators.numeric(),
+                          (_) {
+                            if (!_validPhone) {
+                              return tr('invalid_phone');
+                            }
+                            return null;
+                          }
                         ]),
                       ),
                     ],
                   ),
                 ),
-                if (state.status == HostStatus.saving) const LoadingWidget()
+                if (state.status == HostStatus.saving ||
+                    state.status == HostStatus.loading)
+                  const LoadingWidget()
               ],
             );
           },

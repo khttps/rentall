@@ -5,6 +5,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rentall/data/models/models.dart';
+import 'package:rentall/data/repository/user_repository.dart';
+import 'package:rentall/screens/blocs.dart';
 
 import '../../../data/repository/rental_repository.dart';
 
@@ -13,16 +15,21 @@ part 'publish_event.dart';
 
 class PublishBloc extends Bloc<PublishEvent, PublishState> {
   final RentalRepository _repository;
-  PublishBloc({required RentalRepository repository})
-      : _repository = repository,
+  final UserRepository _userRepository;
+  PublishBloc({
+    required RentalRepository repository,
+    required UserRepository userRepository,
+  })  : _repository = repository,
+        _userRepository = userRepository,
         super(const PublishState()) {
     on<PublishRental>(_onPublishRental);
     on<UpdateRental>(_onUpdateRental);
     on<ArchiveRental>(_onArchiveRental);
+    on<LoadPhoneNumber>(_onLoadPhoneNumber);
   }
 
   FutureOr<void> _onPublishRental(PublishRental event, emit) async {
-    emit(const PublishState(
+    emit(state.copyWith(
       status: PublishLoadStatus.loading,
     ));
     try {
@@ -31,12 +38,12 @@ class PublishBloc extends Bloc<PublishEvent, PublishState> {
         event.images.map((img) => File(img.path)).toList(),
       );
 
-      emit(PublishState(
+      emit(state.copyWith(
         status: PublishLoadStatus.published,
         rental: rental,
       ));
     } on Exception catch (err) {
-      emit(PublishState(
+      emit(state.copyWith(
         status: PublishLoadStatus.failed,
         error: (err as dynamic).message,
       ));
@@ -44,7 +51,7 @@ class PublishBloc extends Bloc<PublishEvent, PublishState> {
   }
 
   FutureOr<void> _onUpdateRental(UpdateRental event, emit) async {
-    emit(const PublishState(
+    emit(state.copyWith(
       status: PublishLoadStatus.loading,
     ));
     try {
@@ -54,12 +61,12 @@ class PublishBloc extends Bloc<PublishEvent, PublishState> {
         event.images?.map((img) => File(img.path)).toList(),
       );
 
-      emit(PublishState(
+      emit(state.copyWith(
         status: PublishLoadStatus.published,
         rental: rental,
       ));
     } on Exception catch (err) {
-      emit(PublishState(
+      emit(state.copyWith(
         status: PublishLoadStatus.failed,
         error: (err as dynamic).message,
       ));
@@ -67,22 +74,40 @@ class PublishBloc extends Bloc<PublishEvent, PublishState> {
   }
 
   FutureOr<void> _onArchiveRental(ArchiveRental event, emit) async {
-    emit(const PublishState(
+    emit(state.copyWith(
       status: PublishLoadStatus.loading,
     ));
 
     try {
       if (event.rental.publishStatus == PublishStatus.archived) {
         await _repository.unarchiveRental(event.rental.id!);
-        emit(const PublishState(status: PublishLoadStatus.unachived));
+        emit(state.copyWith(status: PublishLoadStatus.unachived));
       } else {
         await _repository.archiveRental(event.rental.id!);
-        emit(const PublishState(status: PublishLoadStatus.archived));
+        emit(state.copyWith(status: PublishLoadStatus.archived));
       }
     } on Exception catch (err) {
-      emit(PublishState(
+      emit(state.copyWith(
         status: PublishLoadStatus.failed,
         error: (err as dynamic).message,
+      ));
+    }
+  }
+
+  FutureOr<void> _onLoadPhoneNumber(LoadPhoneNumber event, emit) async {
+    try {
+      final user = await _userRepository.getUserFromCollection();
+      if (user != null) {
+        emit(state.copyWith(
+            phoneNumber: user.hostPhone!,
+            status: PublishLoadStatus.phoneLoaded));
+      } else {
+        throw Exception('Couldn\'t load phone');
+      }
+    } on Exception catch (err) {
+      emit(state.copyWith(
+        error: (err as dynamic).message,
+        status: PublishLoadStatus.failed,
       ));
     }
   }

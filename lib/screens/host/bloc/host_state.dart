@@ -1,6 +1,6 @@
 part of 'host_bloc.dart';
 
-enum HostStatus { saving, saved, initial, error, loaded }
+enum HostStatus { saving, saved, initial, error, loaded, loading }
 
 class HostState extends Equatable {
   final HostStatus status;

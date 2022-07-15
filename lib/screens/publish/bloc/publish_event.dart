@@ -39,3 +39,10 @@ class ArchiveRental extends PublishEvent {
   @override
   List<Object?> get props => [rental];
 }
+
+class LoadPhoneNumber extends PublishEvent {
+  const LoadPhoneNumber();
+
+  @override
+  List<Object?> get props => [];
+}
