@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentall/data/repository/user_repository.dart';
 
 import '../../../data/models/models.dart';
@@ -22,8 +22,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   FutureOr<void> _onLoadUser(LoadUser event, emit) async {
+    final user = event.user ?? await _repository.getUserFromCollection();
     try {
-      final user = event.user;
       if (user == null) {
         emit(NoUser());
       } else if (user.hostName != null) {

@@ -10,7 +10,7 @@ abstract class HomeEvent extends Equatable {
 class LoadUser extends HomeEvent {
   final User? user;
 
-  const LoadUser({required this.user});
+  const LoadUser({this.user});
 
   @override
   List<Object?> get props => [user];

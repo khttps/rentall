@@ -9,6 +9,7 @@ import Flutter
   ) -> Bool {
     GMSServices.provideAPIKey("AIzaSyBhx6ri_9UQuGXNQDeSsalYau0YIuk0XNo")
     GeneratedPluginRegistrant.register(with: self)
+    WorkmanagerPlugin.registerTask(withIdentifier: "alert-task")
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

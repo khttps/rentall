@@ -9,12 +9,19 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rentall/screens/update_email/bloc/update_email_bloc.dart';
 import 'package:rentall/screens/update_password/bloc/update_password_bloc.dart';
+import 'package:workmanager/workmanager.dart';
 import 'firebase_options.dart';
 import 'screens/blocs.dart';
 import 'injector.dart' as di;
 import 'router.dart' as router;
 import 'theme.dart' as theme;
 import 'screens/screens.dart';
+
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) {
+    return Future.value(true);
+  });
+}
 
 void main() async {
   if (defaultTargetPlatform == TargetPlatform.android) {
@@ -24,6 +31,7 @@ void main() async {
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await di.init();
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: Colors.blueGrey),
   );
@@ -72,7 +80,9 @@ class RentallApp extends StatelessWidget {
         locale: context.locale,
         supportedLocales: context.supportedLocales,
         localizationsDelegates: context.localizationDelegates
-          ..add(FormBuilderLocalizations.delegate),
+          ..add(
+            FormBuilderLocalizations.delegate,
+          ),
         theme: theme.themeData,
         themeMode: ThemeMode.light,
         darkTheme: theme.darkThemeData,

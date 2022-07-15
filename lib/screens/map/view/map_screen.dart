@@ -8,8 +8,7 @@ import 'package:rentall/data/models/models.dart';
 import 'package:rentall/screens/blocs.dart';
 import 'package:rentall/widgets/error_snackbar.dart';
 import 'package:rentall/widgets/loading_widget.dart';
-
-import '../../../core/map_utils.dart' as map_utils;
+import '../../../core/map_utils.dart';
 import '../../screens.dart';
 
 class MapScreen extends StatefulWidget {
@@ -27,7 +26,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-    map_utils.checkPermission();
+    MapUtils.checkPermission();
     _moveCameraToCurrentLocation(zoom: 8.0);
   }
 
@@ -166,7 +165,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _moveCameraToCurrentLocation({double? zoom}) async {
-    final current = await map_utils.currentLocation();
+    final current = await MapUtils.currentLocation();
     final controller = await _controller.future;
     controller.animateCamera(
       CameraUpdate.newCameraPosition(

@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:rentall/screens/home/home.dart';
-import 'package:rentall/screens/verify_email/cubit/verify_email_cubit.dart';
+
+import '../../blocs.dart';
 
 class VerifyEmailScreen extends StatelessWidget {
   final bool first;
@@ -26,7 +26,7 @@ class VerifyEmailScreen extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  first ? 'verify_first' : 'verift_second',
+                  first ? 'verify_first' : 'verify_second',
                   style: const TextStyle(fontSize: 16.0),
                 ).tr(),
                 const SizedBox(height: 16.0),
@@ -49,7 +49,13 @@ class VerifyEmailScreen extends StatelessWidget {
                     ElevatedButton(
                       child: const Text('proceed').tr(),
                       onPressed: () {
-                        Phoenix.rebirth(context);
+                        BlocProvider.of<HomeBloc>(context)
+                            .add(const ReloadUser());
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          HomeScreen.routeName,
+                          (route) => false,
+                        );
                       },
                     ),
                   ],

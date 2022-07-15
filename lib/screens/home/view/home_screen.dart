@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<HomeBloc>(context).add(const ReloadUser());
+    BlocProvider.of<HomeBloc>(context).add(const LoadUser());
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 260),

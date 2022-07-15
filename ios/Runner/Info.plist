@@ -84,5 +84,13 @@
 		<string>dc625f68e9572f5687c1e27e4241da0c</string>
 		<key>FacebookDisplayName</key>
 		<string>Rentall</string>
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>processing</string>
+		</array>
+		<key>BGTaskSchedulerPermittedIdentifiers</key>
+		<array>
+			<string>alert-task</string>
+		</array>
 	</dict>
 </plist>

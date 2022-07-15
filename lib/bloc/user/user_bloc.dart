@@ -15,11 +15,13 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       : _repository = repository,
         super(const UserInitial()) {
     _repository.userChanges.listen((user) {
+      add(const CheckVerification());
       add(UserChanged(user: user));
     });
 
     on<UserChanged>(_onUserChanged);
     on<UserSignOut>(_onUserSignOut);
+    on<CheckVerification>(_onCheckVerification);
   }
 
   _onUserChanged(UserChanged event, emit) {
@@ -44,5 +46,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     } on Exception {
       emit(const UserError());
     }
+  }
+
+  FutureOr<void> _onCheckVerification(CheckVerification event, emit) async {
+    try {
+      await _repository.checkEmailVerification();
+    } catch (err) {}
   }
 }

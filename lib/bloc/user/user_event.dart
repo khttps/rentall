@@ -21,3 +21,10 @@ class UserSignOut extends UserEvent {
   @override
   List<Object?> get props => [];
 }
+
+class CheckVerification extends UserEvent {
+  const CheckVerification();
+
+  @override
+  List<Object?> get props => [];
+}

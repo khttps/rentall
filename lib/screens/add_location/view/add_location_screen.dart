@@ -6,7 +6,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_place/google_place.dart';
 
-import '../../../core/map_utils.dart' as map_utils;
+import '../../../core/map_utils.dart';
 import '../../autofill/view/autofill_screen.dart';
 
 class AddLocationScreen extends StatefulWidget {
@@ -26,14 +26,14 @@ class _AddLocationScreenState extends State<AddLocationScreen> {
   LatLng? _position;
 
   static const _initalCamera = CameraPosition(
-    target: map_utils.egyptCenter,
+    target: MapUtils.egyptCenter,
     zoom: 3.0,
   );
 
   @override
   void initState() {
     super.initState();
-    map_utils.checkPermission();
+    MapUtils.checkPermission();
     if (widget.initialPosition != null) {
       _position = widget.initialPosition!;
     } else {
@@ -94,8 +94,8 @@ class _AddLocationScreenState extends State<AddLocationScreen> {
         myLocationButtonEnabled: false,
         cameraTargetBounds: CameraTargetBounds(
           LatLngBounds(
-            southwest: map_utils.egyptSouthwest,
-            northeast: map_utils.egyptNortheast,
+            southwest: MapUtils.egyptSouthwest,
+            northeast: MapUtils.egyptNortheast,
           ),
         ),
         onMapCreated: (GoogleMapController controller) {
@@ -145,11 +145,11 @@ class _AddLocationScreenState extends State<AddLocationScreen> {
     ))
         .first;
 
-    return map_utils.getLatLngfrom(p);
+    return MapUtils.getLatLngfrom(p);
   }
 
   Future<void> _moveCameraToCurrentLocation() async {
-    final p = await map_utils.currentLocation();
+    final p = await MapUtils.currentLocation();
     await _animateToPosition(p);
   }
 }
