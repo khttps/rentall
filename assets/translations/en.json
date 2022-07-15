@@ -146,7 +146,7 @@
     "verify_email" : "Verify Email",
     "resend_email" : "Resend Email",
     "proceed" : "Proceed",
-    "verify_first" : "Sign up successful, please check your email for verification",
+    "verify_first" : "Sign up successful! please check your email for verification",
     "verify_second" : "Please verify your email before posting new rentals",
     "nothing" : "Nothing to see here",
     "error_image" : "Failed to retrieve images",

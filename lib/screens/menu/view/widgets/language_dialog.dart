@@ -19,13 +19,18 @@ class LanguageDialog extends StatelessWidget {
             leading: Radio<Locale>(
               value: const Locale('en'),
               groupValue: context.locale,
-              onChanged: (locale) {
+              onChanged: (locale) async {
                 if (locale != null) {
-                  context.setLocale(locale);
-                  Navigator.pushNamedAndRemoveUntil(
+                  await _changeLocaleAndRestart(
                     context,
-                    HomeScreen.routeName,
-                    (route) => false,
+                    locale: locale,
+                    onDone: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        HomeScreen.routeName,
+                        (route) => false,
+                      );
+                    },
                   );
                 }
               },
@@ -37,13 +42,18 @@ class LanguageDialog extends StatelessWidget {
             leading: Radio<Locale>(
               value: const Locale('ar'),
               groupValue: context.locale,
-              onChanged: (locale) {
+              onChanged: (locale) async {
                 if (locale != null) {
-                  context.setLocale(locale);
-                  Navigator.pushNamedAndRemoveUntil(
+                  await _changeLocaleAndRestart(
                     context,
-                    HomeScreen.routeName,
-                    (route) => false,
+                    locale: locale,
+                    onDone: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        HomeScreen.routeName,
+                        (route) => false,
+                      );
+                    },
                   );
                 }
               },
@@ -53,5 +63,14 @@ class LanguageDialog extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _changeLocaleAndRestart(
+    BuildContext context, {
+    required Locale locale,
+    required VoidCallback onDone,
+  }) async {
+    await context.setLocale(locale);
+    onDone();
   }
 }

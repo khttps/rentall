@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rentall/data/models/models.dart';
 import 'package:rentall/screens/blocs.dart';
 import 'package:rentall/widgets/error_snackbar.dart';
 import 'package:rentall/widgets/loading_widget.dart';
 
+import '../../../core/map_utils.dart' as map_utils;
 import '../../screens.dart';
 
 class MapScreen extends StatefulWidget {
@@ -23,13 +23,12 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   final _controller = Completer<GoogleMapController>();
   var _mapType = MapType.normal;
-  late LatLng _currentLocation;
 
   @override
   void initState() {
     super.initState();
-    _checkPermission();
-    _getCurrentLocation();
+    map_utils.checkPermission();
+    _moveCameraToCurrentLocation(zoom: 8.0);
   }
 
   @override
@@ -64,9 +63,9 @@ class _MapScreenState extends State<MapScreen> {
                         return const LoadingWidget();
                       }
                       return GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                          target: _currentLocation,
-                          zoom: 10,
+                        initialCameraPosition: const CameraPosition(
+                          target: LatLng(27, 29),
+                          zoom: 6,
                         ),
                         zoomControlsEnabled: false,
                         mapType: _mapType,
@@ -166,24 +165,15 @@ class _MapScreenState extends State<MapScreen> {
     return icons;
   }
 
-  void _checkPermission() async {
-    await Geolocator.checkPermission();
-  }
-
-  Future<void> _getCurrentLocation() async {
-    final p = await Geolocator.getCurrentPosition();
-    _currentLocation = LatLng(p.latitude, p.longitude);
-  }
-
-  Future<void> _moveCameraToCurrentLocation() async {
-    await _getCurrentLocation();
+  Future<void> _moveCameraToCurrentLocation({double? zoom}) async {
+    final current = await map_utils.currentLocation();
     final controller = await _controller.future;
     controller.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
           bearing: 0,
-          target: _currentLocation,
-          zoom: 16.0,
+          target: current,
+          zoom: zoom ?? 16.0,
         ),
       ),
     );

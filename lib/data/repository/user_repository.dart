@@ -278,7 +278,6 @@ class UserRepositoryImpl implements UserRepository {
     }
 
     final user = _firebaseAuth.currentUser;
-
     if (user == null) return false;
 
     final doc = await _firebaseFirestore

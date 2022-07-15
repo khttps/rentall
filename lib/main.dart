@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rentall/screens/update_email/bloc/update_email_bloc.dart';
@@ -28,10 +29,12 @@ void main() async {
   );
 
   runApp(
-    EasyLocalization(
-      path: 'assets/translations',
-      supportedLocales: const [Locale('en'), Locale('ar')],
-      child: const RentallApp(),
+    Phoenix(
+      child: EasyLocalization(
+        path: 'assets/translations',
+        supportedLocales: const [Locale('en'), Locale('ar')],
+        child: const RentallApp(),
+      ),
     ),
   );
 }

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:rentall/screens/home/home.dart';
 import 'package:rentall/screens/verify_email/cubit/verify_email_cubit.dart';
 
@@ -26,8 +27,8 @@ class VerifyEmailScreen extends StatelessWidget {
               children: [
                 Text(
                   first ? 'verify_first' : 'verift_second',
-                  style: const TextStyle(fontSize: 18.0),
-                ),
+                  style: const TextStyle(fontSize: 16.0),
+                ).tr(),
                 const SizedBox(height: 16.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -48,11 +49,7 @@ class VerifyEmailScreen extends StatelessWidget {
                     ElevatedButton(
                       child: const Text('proceed').tr(),
                       onPressed: () {
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          HomeScreen.routeName,
-                          (route) => false,
-                        );
+                        Phoenix.rebirth(context);
                       },
                     ),
                   ],
