@@ -38,7 +38,6 @@ class AlertRepositoryImpl implements AlertRepository {
       ...alert.toJson(),
       'createdAt': Timestamp.now(),
     });
-
     await result.update({'id': result.id});
   }
 
@@ -50,7 +49,6 @@ class AlertRepositoryImpl implements AlertRepository {
     if (!await _connectionChecker.hasConnection) {
       throw Exception('No internet connection');
     }
-
     final user = _firebaseAuth.currentUser;
     await _firestore
         .collection('users')

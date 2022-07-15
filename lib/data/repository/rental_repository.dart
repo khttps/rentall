@@ -91,36 +91,48 @@ class RentalRepositoryImpl implements RentalRepository {
       throw Exception('No internet connection');
     }
     final uid = _firebaseAuth.currentUser!.uid;
-    final imageUrls = <String>[];
-    final ref = await _firestore.collection('rentals').add({
-      ...rental.toJson(),
-      'createdAt': Timestamp.now(),
-      'userId': uid,
-      'publishStatus': 'pending'
-    });
+    final doc = _firestore.collection('rentals').doc();
 
-    for (var f in imageFiles) {
+    final imageUrls = <String>[];
+    for (final f in imageFiles) {
       if (f != null) {
-        final url =
-            await (await _storage.ref('${ref.id}/${f.hashCode}.png').putFile(f))
-                .ref
-                .getDownloadURL();
+        final task = await _storage
+            .ref(
+              '${doc.id}/${f.hashCode}.png',
+            )
+            .putFile(f);
+
+        final url = await task.ref.getDownloadURL();
         imageUrls.add(url);
       }
     }
 
-    await ref.update({'id': ref.id, 'images': imageUrls});
-    final map = (await ref.get()).data();
-    throwIf(map == null, Exception('Failed to retrieve rental.'));
+    final data = {
+      ...rental.toJson(),
+      'id': doc.id,
+      'images': imageUrls,
+      'userId': uid,
+      'createdAt': Timestamp.now(),
+      'publishStatus': PublishStatus.pending.name,
+    };
 
-    await _firestore
+    final batch = _firestore.batch();
+    batch.set(doc, data);
+
+    final userDoc = _firestore
         .collection('users')
         .doc(uid)
         .collection('rentals')
-        .doc(ref.id)
-        .set(map!);
+        .doc(doc.id);
 
-    return Rental.fromJson(map);
+    batch.set(userDoc, data);
+
+    batch.commit().then((_) async {
+      final data = (await doc.get()).data();
+      return Rental.fromJson(data!);
+    });
+
+    throw Exception('Failed to save rental.');
   }
 
   @override
@@ -134,44 +146,47 @@ class RentalRepositoryImpl implements RentalRepository {
     }
 
     final imageUrls = <String>[];
-
     if (imageFiles != null) {
-      for (var f in imageFiles) {
+      for (final f in imageFiles) {
         if (f != null) {
-          final url = await (await _storage
-                  .ref('${rental.id}/${f.hashCode}.png')
-                  .putFile(f))
-              .ref
-              .getDownloadURL();
+          final task = await _storage
+              .ref(
+                '${rental.id}/${f.hashCode}.png',
+              )
+              .putFile(f);
+
+          final url = await task.ref.getDownloadURL();
           imageUrls.add(url);
         }
       }
     }
 
     final doc = _firestore.collection('rentals').doc(id);
-    final updates = {
+    imageUrls.addAll((await doc.get()).get('images'));
+
+    final data = {
       ...rental.toJson(),
-      'images': [
-        ...(await doc.get()).get('images'),
-        ...imageUrls,
-      ],
-      'publishStatus': 'pending',
-      'rejectReason': null
+      'rejectReason': null,
+      'publishStatus': PublishStatus.pending.name,
+      'images': imageUrls,
     };
 
-    await doc.update(updates);
-    final uid = _firebaseAuth.currentUser!.uid;
+    final batch = _firestore.batch();
+    batch.update(doc, data);
 
-    await _firestore
+    final userDoc = _firestore
         .collection('users')
-        .doc(uid)
+        .doc(rental.userId)
         .collection('rentals')
-        .doc(id)
-        .update(updates);
+        .doc(id);
+    batch.update(userDoc, data);
 
-    final map = (await doc.get()).data();
-    throwIf(map == null, Exception('Failed to update rental.'));
-    return Rental.fromJson(map!);
+    batch.commit().then((_) async {
+      final data = (await doc.get()).data();
+      return Rental.fromJson(data!);
+    });
+
+    throw Exception('Failed to save rental.');
   }
 
   @override
@@ -179,18 +194,19 @@ class RentalRepositoryImpl implements RentalRepository {
     if (!await _connectionChecker.hasConnection) {
       throw Exception('No internet connection');
     }
-    await _firestore
-        .collection('rentals')
-        .doc(id)
-        .update({'publishStatus': PublishStatus.archived.name});
 
     final uid = _firebaseAuth.currentUser!.uid;
-    await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('rentals')
-        .doc(id)
-        .update({'publishStatus': PublishStatus.archived.name});
+    final doc = _firestore.collection('rentals').doc(id);
+
+    final batch = _firestore.batch();
+    final data = {'publishStatus': PublishStatus.archived.name};
+    batch.update(doc, data);
+
+    final userDoc =
+        _firestore.collection('users').doc(uid).collection('rentals').doc(id);
+    batch.update(userDoc, data);
+
+    await batch.commit();
   }
 
   @override
@@ -198,18 +214,18 @@ class RentalRepositoryImpl implements RentalRepository {
     if (!await _connectionChecker.hasConnection) {
       throw Exception('No internet connection');
     }
-    await _firestore
-        .collection('rentals')
-        .doc(id)
-        .update({'publishStatus': PublishStatus.approved.name});
-
     final uid = _firebaseAuth.currentUser!.uid;
-    await _firestore
-        .collection('users')
-        .doc(uid)
-        .collection('rentals')
-        .doc(id)
-        .update({'publishStatus': PublishStatus.approved.name});
+    final doc = _firestore.collection('rentals').doc(id);
+
+    final batch = _firestore.batch();
+    final data = {'publishStatus': PublishStatus.approved.name};
+    batch.update(doc, data);
+
+    final userDoc =
+        _firestore.collection('users').doc(uid).collection('rentals').doc(id);
+    batch.update(userDoc, data);
+
+    await batch.commit();
   }
 
   @override
@@ -220,14 +236,14 @@ class RentalRepositoryImpl implements RentalRepository {
     final snap =
         await _aloglia.instance.index('rentals').query(keyword).getObjects();
 
-    return (snap.toMap()['hits'] as List)
-        .map(
-          (e) => Rental.fromJson(e
-            ..['createdAt'] = Timestamp.fromMillisecondsSinceEpoch(
-              e['createdAt'],
-            )),
-        )
-        .toList();
+    return (snap.toMap()['hits'] as List).map((e) {
+      return Rental.fromJson(
+        e
+          ..['createdAt'] = Timestamp.fromMillisecondsSinceEpoch(
+            e['createdAt'],
+          ),
+      );
+    }).toList();
   }
 
   @override
@@ -244,7 +260,6 @@ class RentalRepositoryImpl implements RentalRepository {
   @override
   Future<void> removeFavorited(Rental rental) async {
     final user = _firebaseAuth.currentUser;
-
     await _firestore
         .collection('users')
         .doc(user!.uid)
@@ -259,12 +274,14 @@ class RentalRepositoryImpl implements RentalRepository {
     String? userId,
   }) async {
     final uid = userId ?? _firebaseAuth.currentUser!.uid;
-
     final snap = await _firestore
         .collection('users')
         .doc(uid)
         .collection(collection)
-        .where('publishStatus', isEqualTo: userId != null ? 'approved' : null)
+        .where(
+          'publishStatus',
+          isEqualTo: userId != null ? PublishStatus.approved.name : null,
+        )
         .get();
     return snap.docs.map((doc) => Rental.fromJson(doc.data())).toList();
   }

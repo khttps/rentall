@@ -141,7 +141,7 @@ class UserRepositoryImpl implements UserRepository {
     if (user != null) {
       await _firebaseFirestore.collection('users').doc(user.uid).get().then(
         (doc) {
-          if (doc.exists) {
+          if (!doc.exists) {
             doc.reference.set({
               'uid': user.uid,
               'displayName': user.displayName,
@@ -177,7 +177,7 @@ class UserRepositoryImpl implements UserRepository {
     if (user != null) {
       await _firebaseFirestore.collection('users').doc(user.uid).get().then(
         (doc) {
-          if (doc.exists) {
+          if (!doc.exists) {
             doc.reference.set({
               'uid': user.uid,
               'displayName': user.displayName,
@@ -214,6 +214,13 @@ class UserRepositoryImpl implements UserRepository {
       await newCredential.user!.updateEmail(newEmail);
       success = true;
     }
+
+    await _firebaseFirestore.collection('users').doc(user.uid).get().then(
+      (doc) {
+        doc.reference.update({'email': user.email});
+      },
+    );
+
     return success;
   }
 
