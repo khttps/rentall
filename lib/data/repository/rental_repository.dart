@@ -4,7 +4,6 @@ import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import '../models/models.dart';
 
@@ -30,7 +29,7 @@ abstract class RentalRepository {
 class RentalRepositoryImpl implements RentalRepository {
   final InternetConnectionChecker _connectionChecker;
   final FirebaseFirestore _firestore;
-  final FirebaseAuth _firebaseAuth;
+  final FirebaseAuth _auth;
   final FirebaseStorage _storage;
   final Algolia _aloglia;
 
@@ -41,7 +40,7 @@ class RentalRepositoryImpl implements RentalRepository {
     required InternetConnectionChecker connectionChecker,
     required Algolia algolia,
   })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
+        _auth = firebaseAuth ?? FirebaseAuth.instance,
         _storage = storage ?? FirebaseStorage.instance,
         _connectionChecker = connectionChecker,
         _aloglia = algolia;
@@ -90,7 +89,7 @@ class RentalRepositoryImpl implements RentalRepository {
     if (!await _connectionChecker.hasConnection) {
       throw Exception('No internet connection');
     }
-    final uid = _firebaseAuth.currentUser!.uid;
+    final uid = _auth.currentUser!.uid;
     final doc = _firestore.collection('rentals').doc();
 
     final imageUrls = <String>[];
@@ -127,12 +126,12 @@ class RentalRepositoryImpl implements RentalRepository {
 
     batch.set(userDoc, data);
 
-    batch.commit().then((_) async {
+    final result = batch.commit().then((_) async {
       final data = (await doc.get()).data();
       return Rental.fromJson(data!);
     });
 
-    throw Exception('Failed to save rental.');
+    return result;
   }
 
   @override
@@ -145,13 +144,15 @@ class RentalRepositoryImpl implements RentalRepository {
       throw Exception('No internet connection');
     }
 
+    final user = _auth.currentUser!;
+
     final imageUrls = <String>[];
     if (imageFiles != null) {
       for (final f in imageFiles) {
         if (f != null) {
           final task = await _storage
               .ref(
-                '${rental.id}/${f.hashCode}.png',
+                '$id/${f.hashCode}.png',
               )
               .putFile(f);
 
@@ -162,7 +163,10 @@ class RentalRepositoryImpl implements RentalRepository {
     }
 
     final doc = _firestore.collection('rentals').doc(id);
-    imageUrls.addAll((await doc.get()).get('images'));
+    final oldImages = ((await doc.get()).get('images') as List).map(
+      (e) => e as String,
+    );
+    imageUrls.addAll(oldImages);
 
     final data = {
       ...rental.toJson(),
@@ -176,17 +180,17 @@ class RentalRepositoryImpl implements RentalRepository {
 
     final userDoc = _firestore
         .collection('users')
-        .doc(rental.userId)
+        .doc(user.uid)
         .collection('rentals')
         .doc(id);
     batch.update(userDoc, data);
 
-    batch.commit().then((_) async {
+    final result = await batch.commit().then((_) async {
       final data = (await doc.get()).data();
       return Rental.fromJson(data!);
     });
 
-    throw Exception('Failed to save rental.');
+    return result;
   }
 
   @override
@@ -195,7 +199,7 @@ class RentalRepositoryImpl implements RentalRepository {
       throw Exception('No internet connection');
     }
 
-    final uid = _firebaseAuth.currentUser!.uid;
+    final uid = _auth.currentUser!.uid;
     final doc = _firestore.collection('rentals').doc(id);
 
     final batch = _firestore.batch();
@@ -214,7 +218,7 @@ class RentalRepositoryImpl implements RentalRepository {
     if (!await _connectionChecker.hasConnection) {
       throw Exception('No internet connection');
     }
-    final uid = _firebaseAuth.currentUser!.uid;
+    final uid = _auth.currentUser!.uid;
     final doc = _firestore.collection('rentals').doc(id);
 
     final batch = _firestore.batch();
@@ -248,7 +252,7 @@ class RentalRepositoryImpl implements RentalRepository {
 
   @override
   Future<void> setFavorited(Rental rental) async {
-    final user = _firebaseAuth.currentUser;
+    final user = _auth.currentUser;
     await _firestore
         .collection('users')
         .doc(user!.uid)
@@ -259,7 +263,7 @@ class RentalRepositoryImpl implements RentalRepository {
 
   @override
   Future<void> removeFavorited(Rental rental) async {
-    final user = _firebaseAuth.currentUser;
+    final user = _auth.currentUser;
     await _firestore
         .collection('users')
         .doc(user!.uid)
@@ -273,7 +277,7 @@ class RentalRepositoryImpl implements RentalRepository {
     required String collection,
     String? userId,
   }) async {
-    final uid = userId ?? _firebaseAuth.currentUser!.uid;
+    final uid = userId ?? _auth.currentUser!.uid;
     final snap = await _firestore
         .collection('users')
         .doc(uid)

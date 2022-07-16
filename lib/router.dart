@@ -18,7 +18,7 @@ MaterialPageRoute<dynamic> onGenerateRoute(RouteSettings settings) {
         case UpdateEmailScreen.routeName:
           return UpdateEmailScreen(user: settings.arguments as auth.User?);
         case UpdatePasswordScreen.routeName:
-          return const UpdatePasswordScreen();
+          return UpdatePasswordScreen(user: settings.arguments as auth.User);
         case SearchScreen.routeName:
           return const SearchScreen();
         case AuthScreen.routeName:

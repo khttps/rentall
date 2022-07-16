@@ -113,6 +113,7 @@ class _AddLocationScreenState extends State<AddLocationScreen> {
               color: Colors.blueGrey,
             ),
             onPressed: () async {
+              MapUtils.checkPermission();
               await _moveCameraToCurrentLocation();
             },
           ),

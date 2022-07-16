@@ -8,12 +8,12 @@ import 'widgets.dart';
 
 class ImageCircleAvatar extends StatefulWidget {
   final double radius;
-  final IconData icon;
+  final IconData? icon;
   final Function(XFile? image) onAdded;
   final String? initialImage;
   const ImageCircleAvatar({
     required this.radius,
-    required this.icon,
+    this.icon,
     required this.onAdded,
     this.initialImage,
     Key? key,

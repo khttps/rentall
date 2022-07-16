@@ -93,100 +93,102 @@ class _AlertScreenState extends State<AlertScreen> {
                                 ? MapEntry(key, '$value')
                                 : MapEntry(key, value),
                           ),
-                  child: ListView(
+                  child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    children: [
-                      const Text(
-                        'alert_header',
-                        style: TextStyle(fontSize: 16.0),
-                      ).tr(),
-                      const SizedBox(height: 16.0),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: _controller,
-                              decoration: InputDecoration(
-                                hintText: tr('new_keyword'),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'alert_header',
+                          style: TextStyle(fontSize: 16.0),
+                        ).tr(),
+                        const SizedBox(height: 16.0),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _controller,
+                                decoration: InputDecoration(
+                                  hintText: tr('new_keyword'),
+                                ),
+                                onChanged: (_) {
+                                  if (_controller.text.endsWith(' ') &&
+                                      _controller.text.trim().isNotEmpty) {
+                                    setState(() {
+                                      _keywords.add(_controller.text.trim());
+                                      _controller.clear();
+                                    });
+                                  }
+                                },
                               ),
-                              onChanged: (_) {
-                                if (_controller.text.endsWith(' ') &&
-                                    _controller.text.trim().isNotEmpty) {
+                            ),
+                            const SizedBox(width: 10.0),
+                            ElevatedButton(
+                              onPressed: () {
+                                if (_controller.text.trim().isNotEmpty) {
                                   setState(() {
                                     _keywords.add(_controller.text.trim());
                                     _controller.clear();
                                   });
                                 }
                               },
+                              child: const Text('add').tr(),
                             ),
-                          ),
-                          const SizedBox(width: 10.0),
-                          ElevatedButton(
-                            onPressed: () {
-                              if (_controller.text.trim().isNotEmpty) {
-                                setState(() {
-                                  _keywords.add(_controller.text.trim());
-                                  _controller.clear();
-                                });
-                              }
+                          ],
+                        ),
+                        const SizedBox(height: 16.0),
+                        const Text('keywords').tr(),
+                        const SizedBox(height: 4.0),
+                        Wrap(
+                          spacing: 4.0,
+                          children: _keywords.asMap().entries.map(
+                            (e) {
+                              return Chip(
+                                label: Text(e.value),
+                                onDeleted: () => setState(() {
+                                  _keywords.removeAt(e.key);
+                                }),
+                              );
                             },
-                            child: const Text('add').tr(),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16.0),
-                      const Text('keywords').tr(),
-                      const SizedBox(height: 4.0),
-                      Wrap(
-                        spacing: 4.0,
-                        children: _keywords.asMap().entries.map(
-                          (e) {
-                            return Chip(
-                              label: Text(e.value),
-                              onDeleted: () => setState(() {
-                                _keywords.removeAt(e.key);
-                              }),
-                            );
+                          ).toList(),
+                        ),
+                        const SizedBox(height: 8.0),
+                        CustomValidator(
+                          validator: (_) {
+                            if (_keywords.isEmpty) {
+                              return tr('keywords_required');
+                            }
+                            if (_keywords.length > 15) {
+                              return tr('max15');
+                            }
+                            return null;
                           },
-                        ).toList(),
-                      ),
-                      const SizedBox(height: 4.0),
-                      const SizedBox(height: 6.0),
-                      CustomValidator(
-                        validator: (_) {
-                          if (_keywords.isEmpty) {
-                            return tr('keywords_required');
-                          }
-                          if (_keywords.length > 15) {
-                            return tr('max15');
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16.0),
-                      if (widget.alert != null) ...[
-                        const Spacer(),
-                        Center(
-                          child: TextButton.icon(
-                            label: const Text('delete').tr(),
-                            icon: const Icon(Icons.delete),
-                            style: TextButton.styleFrom(primary: Colors.red),
-                            onPressed: () => _showAlertDialog(
-                              context,
-                              title: const Text('delete_alert').tr(),
-                              content: const Text(
-                                'delete_alert_content',
+                        ),
+                        const SizedBox(height: 16.0),
+                        if (widget.alert != null) ...[
+                          const Spacer(),
+                          Center(
+                            child: TextButton.icon(
+                              label: const Text('delete').tr(),
+                              icon: const Icon(Icons.delete),
+                              style: TextButton.styleFrom(primary: Colors.red),
+                              onPressed: () => _showAlertDialog(
+                                context,
+                                title: const Text('delete_alert').tr(),
+                                content: const Text(
+                                  'delete_alert_content',
+                                ),
+                                onPositive: () {
+                                  BlocProvider.of<AlertBloc>(context).add(
+                                    DeleteAlert(id: widget.alert!.id!),
+                                  );
+                                },
                               ),
-                              onPositive: () {
-                                BlocProvider.of<AlertBloc>(context).add(
-                                  DeleteAlert(id: widget.alert!.id!),
-                                );
-                              },
                             ),
-                          ),
-                        )
+                          )
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
               ),

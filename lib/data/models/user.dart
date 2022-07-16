@@ -23,6 +23,8 @@ class User extends Equatable {
   final List<Rental>? rentals;
   @JsonKey(defaultValue: false)
   final bool verified;
+  @JsonKey(includeIfNull: false)
+  final String? provider;
 
   const User({
     required this.uid,
@@ -34,6 +36,7 @@ class User extends Equatable {
     this.rentals,
     this.favorites,
     required this.verified,
+    this.provider,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -56,6 +59,7 @@ class User extends Equatable {
         hostPhone,
         hostName,
         hostAvatar,
-        verified
+        verified,
+        provider,
       ];
 }

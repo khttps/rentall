@@ -5,10 +5,11 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import '../models/alert.dart';
 
 abstract class AlertRepository {
-  Future<void> addAlert(Alert alert);
+  Future<String> addAlert(Alert alert);
   Future<List<Alert>> getAlerts();
   Future<void> removeAlert(String id);
   Future<void> updateAlert(String id, Alert alert);
+  Future<Alert?> getAlert(String id);
 }
 
 class AlertRepositoryImpl implements AlertRepository {
@@ -25,7 +26,7 @@ class AlertRepositoryImpl implements AlertRepository {
         _connectionChecker = connectionChecker;
 
   @override
-  Future<void> addAlert(Alert alert) async {
+  Future<String> addAlert(Alert alert) async {
     if (!await _connectionChecker.hasConnection) {
       throw Exception('No internet connection');
     }
@@ -39,6 +40,7 @@ class AlertRepositoryImpl implements AlertRepository {
       'createdAt': Timestamp.now(),
     });
     await result.update({'id': result.id});
+    return result.id;
   }
 
   @override
@@ -88,5 +90,26 @@ class AlertRepositoryImpl implements AlertRepository {
         .collection('alerts')
         .doc(id)
         .delete();
+  }
+
+  @override
+  Future<Alert?> getAlert(String id) async {
+    if (!await _connectionChecker.hasConnection) {
+      throw Exception('No internet connection');
+    }
+    final user = _firebaseAuth.currentUser;
+    final snap = await _firestore
+        .collection('users')
+        .doc(user!.uid)
+        .collection('alerts')
+        .doc(id)
+        .get();
+
+    final data = snap.data();
+
+    if (data != null) {
+      return Alert.fromJson(data);
+    }
+    return null;
   }
 }

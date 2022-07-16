@@ -161,5 +161,6 @@
     "price_from_to" : "Price: {} - {}",
     "area" : "Area",
     "owned_by" : "Owned By",
-    "change" : "Change"
+    "change" : "Change",
+    "keywords" : "Keywords"
 }

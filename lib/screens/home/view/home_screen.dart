@@ -171,7 +171,8 @@ class _HomeScreenState extends State<HomeScreen>
                     _animationController.reset();
                     if (state is UserWithHost) {
                       Navigator.pushNamed(context, PublishScreen.routeName);
-                    } else if (state is UserOnly) {
+                    } else if (state is UserOnly ||
+                        state is UserOnlyEmailUnverified) {
                       Navigator.pushNamed(
                         context,
                         HostScreen.routeName,
@@ -181,13 +182,14 @@ class _HomeScreenState extends State<HomeScreen>
                         context,
                         AuthScreen.routeName,
                       );
-                    } else if (state is UserOnlyEmailUnverified) {
-                      Navigator.pushNamed(
-                        context,
-                        VerifyEmailScreen.routeName,
-                        arguments: false,
-                      );
                     }
+                    // else if (state is UserOnlyEmailUnverified) {
+                    //   Navigator.pushNamed(
+                    //     context,
+                    //     VerifyEmailScreen.routeName,
+                    //     arguments: false,
+                    //   );
+                    // }
                   },
                 )
               ],

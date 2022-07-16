@@ -24,7 +24,7 @@ abstract class UserRepository {
   Future<auth.User?> signInWithGoogle();
   Future<auth.User?> signInWithFacebook();
   Future<bool> changeEmailAddress(String newEmail, String currentPassword);
-  Future<bool> changePassword(String currentPassword, String newPassword);
+  Future<bool> changePassword(String? currentPassword, String newPassword);
   bool get isSignedIn;
   auth.User? get currentUser;
   Stream<auth.User?> get userChanges;
@@ -148,6 +148,7 @@ class UserRepositoryImpl implements UserRepository {
               'displayName': user.displayName,
               'email': user.email,
               'verified': true,
+              'provider': 'Google'
             });
           }
         },
@@ -185,6 +186,7 @@ class UserRepositoryImpl implements UserRepository {
               'displayName': user.displayName,
               'email': user.email,
               'verified': true,
+              'provider': 'Facebook'
             });
           }
         },
@@ -229,7 +231,7 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<bool> changePassword(
-    String currentPassword,
+    String? currentPassword,
     String newPassword,
   ) async {
     if (!await _connectionChecker.hasConnection) {
@@ -237,18 +239,32 @@ class UserRepositoryImpl implements UserRepository {
     }
     bool success = false;
 
-    final user = _auth.currentUser;
-    final credential = auth.EmailAuthProvider.credential(
-      email: user!.email!,
-      password: currentPassword,
-    );
+    var user = _auth.currentUser;
 
-    final newCredential = await user.reauthenticateWithCredential(credential);
-    final newUser = newCredential.user;
+    final googleSignedIn = await GoogleSignIn().isSignedIn();
+    final facebookToken = await FacebookAuth.instance.accessToken;
 
-    if (newUser != null) {
-      await newCredential.user!.updatePassword(newPassword);
+    late final auth.AuthCredential credential;
+
+    if (googleSignedIn) {
+      await signInWithGoogle();
+    } else if (facebookToken != null) {
+      await signInWithFacebook();
+    } else {
+      credential = auth.EmailAuthProvider.credential(
+        email: user!.email!,
+        password: currentPassword!,
+      );
+      final newCredential = await user.reauthenticateWithCredential(credential);
+      user = newCredential.user;
+    }
+
+    if (user != null) {
+      await user.updatePassword(newPassword);
       success = true;
+      _firestore.collection('users').doc(user.uid).update({
+        'provider': null,
+      });
     }
     return success;
   }

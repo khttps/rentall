@@ -20,6 +20,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
           ?.map((e) => Rental.fromJson(e as Map<String, dynamic>))
           .toList(),
       verified: json['verified'] as bool? ?? false,
+      provider: json['provider'] as String?,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) {
@@ -41,5 +42,6 @@ Map<String, dynamic> _$UserToJson(User instance) {
   val['hostPhone'] = instance.hostPhone;
   writeNotNull('rentals', instance.rentals);
   val['verified'] = instance.verified;
+  writeNotNull('provider', instance.provider);
   return val;
 }

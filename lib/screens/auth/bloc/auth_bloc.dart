@@ -45,9 +45,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } else {
         throw Exception('Sign in failed.');
       }
+    } on FirebaseAuthException catch (err) {
+      emit(AuthFailed(message: err.message ?? 'Failed to log in'));
     } on Exception catch (err) {
       emit(AuthFailed(message: (err as dynamic).message ?? ''));
-      emit(AuthInitital());
     }
   }
 
@@ -60,6 +61,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } else {
         throw Exception('Sign in failed.');
       }
+    } on FirebaseAuthException catch (err) {
+      emit(AuthFailed(message: err.message ?? 'Failed to log in'));
     } on Exception catch (err) {
       emit(AuthFailed(message: (err as dynamic)).message);
     }

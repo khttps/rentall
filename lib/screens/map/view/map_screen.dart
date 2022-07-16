@@ -136,6 +136,7 @@ class _MapScreenState extends State<MapScreen> {
               heroTag: 'current',
               child: const Icon(Icons.gps_fixed),
               onPressed: () async {
+                MapUtils.checkPermission();
                 await _moveCameraToCurrentLocation();
               },
             ),

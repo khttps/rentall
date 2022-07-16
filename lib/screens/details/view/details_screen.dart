@@ -206,9 +206,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               ),
                               Text(
                                 rental.region != null
-                                    ? '${rental.region}, '
-                                    : ''
-                                        '${tr('governorates.${rental.governorate.index}')}',
+                                    ? '${rental.region}, ${tr('governorates.${rental.governorate.index}')}'
+                                    : '',
                                 style: TextStyle(
                                   color: Colors.blueGrey.shade400,
                                   fontSize: 18.0,

@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentall/screens/blocs.dart';
@@ -42,17 +43,18 @@ class MenuScreen extends StatelessWidget {
                       color: Colors.blueGrey,
                     ),
                   ).tr(),
-                  ListTile(
-                    leading: const Icon(Icons.mail),
-                    title: const Text('email').tr(),
-                    subtitle: Text(state.user.email!),
-                    dense: true,
-                    onTap: () => Navigator.pushNamed(
-                      context,
-                      UpdateEmailScreen.routeName,
-                      arguments: state.user,
+                  if (state.user.providerData.first.providerId == 'password')
+                    ListTile(
+                      leading: const Icon(Icons.mail),
+                      title: const Text('email').tr(),
+                      subtitle: Text(state.user.email!),
+                      dense: true,
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        UpdateEmailScreen.routeName,
+                        arguments: state.user,
+                      ),
                     ),
-                  ),
                   ListTile(
                     leading: const Icon(Icons.lock),
                     title: const Text('update_password').tr(),

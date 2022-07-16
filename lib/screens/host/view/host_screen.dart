@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -78,8 +79,12 @@ class _HostScreenState extends State<HostScreen> {
             }
           },
           builder: (context, state) {
-            _nameController.text = state.user?.hostName ?? '';
-            _phoneController.text = state.user?.hostPhone ?? '';
+            String? avatar;
+            if (state.status == HostStatus.loaded) {
+              _nameController.text = state.user!.hostName!;
+              _phoneController.text = state.user!.hostPhone!;
+              avatar = state.user!.hostAvatar;
+            }
             return Stack(
               children: [
                 FormBuilder(
@@ -88,16 +93,27 @@ class _HostScreenState extends State<HostScreen> {
                     padding: const EdgeInsets.all(16.0),
                     children: [
                       const SizedBox(height: 20.0),
-                      ImageCircleAvatar(
-                        radius: 62.0,
-                        icon: Icons.add,
-                        onAdded: (image) {
-                          if (image != null) {
-                            _image = File(image.path);
-                          }
-                        },
-                        initialImage: state.user?.hostAvatar,
-                      ),
+                      if (state.status == HostStatus.loaded &&
+                          state.user!.hostAvatar != null)
+                        ImageCircleAvatar(
+                          radius: 62.0,
+                          initialImage: state.user!.hostAvatar,
+                          onAdded: (image) {
+                            if (image != null) {
+                              _image = File(image.path);
+                            }
+                          },
+                        )
+                      else
+                        ImageCircleAvatar(
+                          radius: 62.0,
+                          icon: Icons.add,
+                          onAdded: (image) {
+                            if (image != null) {
+                              _image = File(image.path);
+                            }
+                          },
+                        ),
                       const SizedBox(height: 20.0),
                       const Text(
                         'host_header',

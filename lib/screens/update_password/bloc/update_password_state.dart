@@ -1,6 +1,6 @@
 part of 'update_password_bloc.dart';
 
-enum UpdatePasswordStatus { initial, loading, success, failed }
+enum UpdatePasswordStatus { initial, loading, success, failed, requiresLogin }
 
 class UpdatePasswordState extends Equatable {
   final UpdatePasswordStatus status;

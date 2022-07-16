@@ -13,7 +13,11 @@ class HostState extends Equatable {
   });
 
   @override
-  List<Object?> get props => [status, message, user];
+  List<Object?> get props => [
+        status,
+        message,
+        user,
+      ];
 
   HostState copyWith({
     HostStatus? status,
