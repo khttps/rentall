@@ -344,17 +344,12 @@ class _PublishScreenState extends State<PublishScreen> {
                                 ),
                                 const SizedBox(width: 8.0),
                                 Flexible(
-                                  child: FormBuilderTextField(
-                                      name: 'region',
-                                      textInputAction: TextInputAction.next,
-                                      validator: FormBuilderValidators.compose([
-                                        FormBuilderValidators.required(
-                                          errorText: tr('required'),
-                                        ),
-                                        FormBuilderValidators.maxLength(15,
-                                            errorText: 'max15')
-                                      ])),
-                                ),
+                                    child: FormBuilderTextField(
+                                        name: 'region',
+                                        textInputAction: TextInputAction.next,
+                                        validator:
+                                            FormBuilderValidators.maxLength(15,
+                                                errorText: 'max15'))),
                                 const SizedBox(width: 8.0),
                                 Flexible(
                                   child: FormBuilderDropdown(
@@ -477,6 +472,7 @@ class _PublishScreenState extends State<PublishScreen> {
                                       if (value != null) {
                                         return int.tryParse(value);
                                       }
+                                      return null;
                                     },
                                     keyboardType: TextInputType.number,
                                     textInputAction: TextInputAction.next,

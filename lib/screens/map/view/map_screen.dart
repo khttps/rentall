@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rentall/data/models/models.dart';
@@ -39,6 +40,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
           title: const Text('map').tr(),
         ),
@@ -101,7 +103,7 @@ class _MapScreenState extends State<MapScreen> {
                                         );
                                       },
                                     ),
-                                    icon: snap.data![r.propertyType!.index - 1],
+                                    icon: snap.data![r.propertyType!.index],
                                   ),
                                 )
                                 .toSet() ??
@@ -145,10 +147,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<List<BitmapDescriptor>> _getIcons() async {
-    final markers = PropertyType.values
-        .map((e) => e.markerRes)
-        .where((e) => e != null)
-        .toList();
+    final markers = PropertyType.values.map((e) => e.markerRes).toList();
 
     final icons = <BitmapDescriptor>[];
 
@@ -157,7 +156,7 @@ class _MapScreenState extends State<MapScreen> {
         const ImageConfiguration(
           size: Size(24.0, 24.0),
         ),
-        markers[i]!,
+        markers[i] ?? PropertyType.values.last.markerRes!,
       );
       icons.add(icon);
     }

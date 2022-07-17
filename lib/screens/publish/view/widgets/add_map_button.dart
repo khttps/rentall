@@ -47,10 +47,9 @@ class _AddMapButtonState extends State<AddMapButton> {
     return Container(
       height: 150.0,
       clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4.0),
+      decoration: const BoxDecoration(
         color: Colors.grey,
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
             color: Colors.black38,
             offset: Offset(0.0, 1.0),
