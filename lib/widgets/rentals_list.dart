@@ -10,7 +10,6 @@ class RentalsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.all(10.0),
       shrinkWrap: true,
       itemCount: rentals.length,

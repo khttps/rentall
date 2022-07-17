@@ -240,7 +240,9 @@ class RentalRepositoryImpl implements RentalRepository {
     final snap =
         await _aloglia.instance.index('rentals').query(keyword).getObjects();
 
-    return (snap.toMap()['hits'] as List).map((e) {
+    return (snap.toMap()['hits'] as List)
+        .where((element) => element['publishStatus'] == 'approved')
+        .map((e) {
       return Rental.fromJson(
         e
           ..['createdAt'] = Timestamp.fromMillisecondsSinceEpoch(
