@@ -79,11 +79,9 @@ class _HostScreenState extends State<HostScreen> {
             }
           },
           builder: (context, state) {
-            String? avatar;
             if (state.status == HostStatus.loaded) {
-              _nameController.text = state.user!.hostName!;
-              _phoneController.text = state.user!.hostPhone!;
-              avatar = state.user!.hostAvatar;
+              _nameController.text = state.user!.hostName ?? '';
+              _phoneController.text = state.user!.hostPhone ?? '';
             }
             return Stack(
               children: [

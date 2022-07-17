@@ -75,15 +75,6 @@ class MenuScreen extends StatelessWidget {
                       arguments: const ListArguments(listName: 'favorites'),
                     ),
                   ),
-                  ListTile(
-                    leading: const Icon(Icons.circle_notifications),
-                    title: const Text('my_alerts').tr(),
-                    dense: true,
-                    onTap: () => Navigator.pushNamed(
-                      context,
-                      AlertsScreen.routeName,
-                    ),
-                  ),
                   const Divider(thickness: 1.0),
                   const Text(
                     'host',
@@ -129,13 +120,6 @@ class MenuScreen extends StatelessWidget {
                       },
                     );
                   },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.light_mode),
-                  title: const Text('dark_mode').tr(),
-                  subtitle: const Text('off').tr(),
-                  trailing: Switch(value: false, onChanged: (value) {}),
-                  dense: true,
                 ),
               ],
             ),

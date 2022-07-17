@@ -46,7 +46,9 @@ class _HostCardState extends State<HostCard> {
           },
           child: Column(
             children: [
-              const Text('owned_by').tr(),
+              const Text('owned_by',
+                      style: TextStyle(fontWeight: FontWeight.bold))
+                  .tr(),
               const SizedBox(height: 8.0),
               CircleAvatar(
                 radius: 36.0,

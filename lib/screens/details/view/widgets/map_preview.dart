@@ -13,11 +13,10 @@ class MapPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     final latlng = LatLng(position.latitude, position.longitude);
     return Container(
-      height: 150.0,
+      height: 180.0,
       clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4.0),
-        boxShadow: const [
+      decoration: const BoxDecoration(
+        boxShadow: [
           BoxShadow(
             color: Colors.black38,
             offset: Offset(0.0, 1.0),

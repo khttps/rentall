@@ -22,14 +22,13 @@ class RentalCard extends StatelessWidget {
       ),
       child: Container(
         clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4.0),
+        decoration: const BoxDecoration(
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              offset: const Offset(0.0, 1.0),
-              blurRadius: 3.0,
-              color: Colors.grey.withOpacity(0.6),
+              offset: Offset(0.0, 1.0),
+              blurRadius: 1.0,
+              color: Colors.grey,
             )
           ],
         ),
@@ -59,7 +58,7 @@ class RentalCard extends StatelessWidget {
                   children: [
                     Text(
                       rental.title,
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 16.0,
@@ -87,7 +86,10 @@ class RentalCard extends StatelessWidget {
                       '${rental.price} EGP / ${tr('rentPeriod.${rental.rentPeriod!.index}')}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 16.0),
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),

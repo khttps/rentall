@@ -1,0 +1,245 @@
+@startuml
+set namespaceSeparator ::
+
+class "rentall::bloc::user::UserBloc" {
+  -UserRepository repository
+  -dynamic onUserChanged()
+  +void onUserSignOut()
+  +void onCheckVerification()
+}
+
+"rentall::bloc::user::UserBloc" o-- "rentall::repository::UserRepository"
+
+class "rentall::models::PropertyType" {
+  {static} +apartment
+  {static} +vacationHome
+  {static} +retailStore
+  {static} +villa
+  {static} +hotel
+  {static} +other
+}
+
+class "rentall::models::PublishStatus" {
+  {static} +pending
+  {static} +approved
+  {static} +rejected
+  {static} +archived
+  {static} +onHold
+}
+
+class "rentall::models::Rental" {
+  +String? id
+  +String? userId
+  +String title
+  +List<String> images
+  +String? description
+  +String address
+  +GeoPoint? location
+  +int? floorNumber
+  +int? rooms
+  +int? bathrooms
+  +bool? furnished
+  +int area
+  +Governorate governorate
+  +String? region
+  +int price
+  +String hostPhone
+  +Timestamp? createdAt
+  +RentPeriod? rentPeriod
+  +PropertyType? propertyType
+  +PublishStatus? publishStatus
+  +String? rejectReason
+
+}
+
+"rentall::models::Rental" o-- "rentall::models::RentPeriod"
+"rentall::models::Rental" o-- "rentall::models::PropertyType"
+"rentall::models::Rental" o-- "rentall::models::PublishStatus"
+
+class "rentall::models::RentPeriod" {
+  {static} +all
+  {static} +day
+  {static} +month
+  {static} +week
+  {static} +custom
+}
+
+class "rentall::models::User" {
+  +String uid
+  +String? displayName
+  +String email
+  +List<Rental>? favorites
+  +String? hostName
+  +String? hostAvatar
+  +String? hostPhone
+  +List<Rental>? rentals
+  +bool verified
+  +String? provider
+}
+
+abstract class "rentall::repository::RentalRepository" {
+  +List<Rental> getRentals()
+  +Rental addRental()
+  +Rental updateRental()
+  +void archiveRental()
+  +void unarchiveRental()
+  +List<Rental> getSearchResults()
+  +void setFavorited()
+  +void removeFavorited()
+  +List<Rental> getList()
+}
+
+class "rentall::repository::RentalRepositoryImpl" {
+  -FirebaseFirestore firestore
+  -FirebaseAuth auth
+  -FirebaseStorage storage
+  -Algolia aloglia
+}
+
+"rentall::repository::RentalRepositoryImpl" o-- "cloud_firestore::FirebaseFirestore"
+"rentall::repository::RentalRepositoryImpl" o-- "firebase_auth::FirebaseAuth"
+"rentall::repository::RentalRepositoryImpl" o-- "firebase_storage::FirebaseStorage"
+"rentall::repository::RentalRepositoryImpl" o-- "algolia::Algolia"
+"rentall::repository::RentalRepository" <|-- "rentall::repository::RentalRepositoryImpl"
+
+abstract class "rentall::repository::UserRepository" {
+  +bool isSignedIn
+  +User? currentUser
+  +Stream<User?> userChanges
+  +User? signInEmailAndPassword()
+  +User? signUpWithEmailAndPassword()
+  +void sendForgotPasswordEmail()
+  +void signOut()
+  +User? signInWithGoogle()
+  +User? signInWithFacebook()
+  +bool changeEmailAddress()
+  +bool changePassword()
+  +User? getUserFromCollection()
+  +User? watchUserFromCollection()
+  +void reloadUser()
+  +bool isOwned()
+  +bool isFavorited()
+  +void updateHost()
+  +void sendVerificationEmail()
+  +void verifyPhoneNumber()
+  +void checkEmailVerification()
+}
+
+"rentall::repository::UserRepository" o-- "firebase_auth::User"
+"rentall::repository::UserRepository" o-- "rentall::models::User"
+"rentall::repository::RentalRepository" o-- "rentall::models::Rental"
+
+
+class "rentall::repository::UserRepositoryImpl" {
+  -FirebaseAuth auth
+  -FirebaseFirestore firestore
+  -FirebaseStorage storage
+}
+
+"rentall::repository::UserRepositoryImpl" o-- "firebase_auth::FirebaseAuth"
+"rentall::repository::UserRepositoryImpl" o-- "cloud_firestore::FirebaseFirestore"
+"rentall::repository::UserRepositoryImpl" o-- "firebase_storage::FirebaseStorage"
+"rentall::repository::UserRepositoryImpl" o-- "firebase_auth::User"
+"rentall::repository::UserRepository" <|-- "rentall::repository::UserRepositoryImpl"
+
+class "rentall::main.dart::RentallApp" {
+  +Widget build()
+}
+
+class "rentall::auth::bloc::AuthBloc" {
+  +UserRepository repository
+  +void onSignInPressed()
+  +void onSignInByGoogle()
+  +void onSignInByFacebook()
+  +void onSignUpPressed()
+  +void onForgotPassword()
+}
+
+"rentall::auth::bloc::AuthBloc" o-- "rentall::repository::UserRepository"
+
+class "rentall::details::bloc::DetailsBloc" {
+  -UserRepository userRepository
+  -RentalRepository rentalRepository
+  +void onCheckCurrentUser()
+  +void onSetFavorited()
+  +void onRemoveFavorite()
+}
+
+"rentall::details::bloc::DetailsBloc" o-- "rentall::repository::UserRepository"
+"rentall::details::bloc::DetailsBloc" o-- "rentall::repository::RentalRepository"
+
+class "rentall::details::cubit::OwnerCubit" {
+  -UserRepository repository
+  +void getOwner()
+}
+
+"rentall::details::cubit::OwnerCubit" o-- "rentall::repository::UserRepository"
+
+class "rentall::home::bloc::HomeBloc" {
+  -UserRepository repository
+  +void onLoadUser()
+  +void onReloadUser()
+}
+
+"rentall::home::bloc::HomeBloc" o-- "rentall::repository::UserRepository"
+
+class "rentall::host::bloc::HostBloc" {
+  -UserRepository repository
+  +void onSetupHost()
+  +void onLoadHost()
+}
+
+"rentall::host::bloc::HostBloc" o-- "rentall::repository::UserRepository"
+
+class "rentall::list::bloc::ListBloc" {
+  -RentalRepository repository
+  +void onLoadList()
+}
+
+"rentall::list::bloc::ListBloc" o-- "rentall::repository::RentalRepository"
+
+class "rentall::publish::bloc::PublishBloc" {
+  -RentalRepository repository
+  -UserRepository userRepository
+  +void onPublishRental()
+  +void onUpdateRental()
+  +void onArchiveRental()
+  +void onLoadPhoneNumber()
+}
+
+"rentall::publish::bloc::PublishBloc" o-- "rentall::repository::RentalRepository"
+"rentall::publish::bloc::PublishBloc" o-- "rentall::repository::UserRepository"
+
+class "rentall::rentals::bloc::RentalsBloc" {
+  -RentalRepository repository
+  +void onGetRentals()
+  +void onSetRegionFilter()
+  +void onSetPropertyTypeFilter()
+  +void onSetPriceFilter()
+  +void onSetPeriodFilter()
+}
+
+"rentall::rentals::bloc::RentalsBloc" o-- "rentall::repository::RentalRepository"
+
+class "rentall::search::bloc::SearchBloc" {
+  -RentalRepository repository
+  +void onSearchStarted()
+}
+
+"rentall::search::bloc::SearchBloc" o-- "rentall::repository::RentalRepository"
+
+class "rentall::update_password::bloc::UpdatePasswordBloc" {
+  -UserRepository repository
+  +void onSavePasswordPressed()
+}
+
+"rentall::update_password::bloc::UpdatePasswordBloc" o-- "rentall::repository::UserRepository"
+
+class "rentall::verify_email::cubit::VerifyEmailCubit" {
+  -UserRepository repository
+  +void sendVerificationEmail()
+}
+
+"rentall::verify_email::cubit::VerifyEmailCubit" o-- "rentall::repository::UserRepository"
+
+@enduml

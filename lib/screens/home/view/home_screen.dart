@@ -16,30 +16,47 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
-  var _currentIndex = 0;
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final _screens = const [
     RentalsScreen(),
-    NotificationsScreen(),
     MenuScreen(),
   ];
 
   late Animation<double> _animation;
+  late Animation<Color?> _colorAnimation;
   late AnimationController _animationController;
+
+  var _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<HomeBloc>(context).add(const LoadUser());
+
+    BlocProvider.of<HomeBloc>(context).add(
+      const LoadUser(),
+    );
+
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 260),
+    )..addListener(() {
+        setState(() {});
+      });
+
+    final curvedAnimation = CurvedAnimation(
+      curve: Curves.easeInOut,
+      parent: _animationController,
     );
 
-    final curvedAnimation =
-        CurvedAnimation(curve: Curves.easeInOut, parent: _animationController);
-    _animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
+    _animation = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(curvedAnimation);
+
+    _colorAnimation = ColorTween(
+      begin: Colors.grey.shade600,
+      end: Colors.blueGrey,
+    ).animate(curvedAnimation);
   }
 
   @override
@@ -80,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen>
           child: Row(
             children: [
               Expanded(
-                flex: 4,
+                flex: 2,
                 child: BottomNavigationBar(
                   elevation: 0.0,
                   selectedFontSize: 0.0,
@@ -99,10 +116,6 @@ class _HomeScreenState extends State<HomeScreen>
                       label: '',
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.notifications),
-                      label: '',
-                    ),
-                    BottomNavigationBarItem(
                       icon: Icon(Icons.person),
                       label: '',
                     ),
@@ -111,12 +124,12 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               Expanded(
                 flex: 1,
-                child: FloatingActionButton(
-                  mini: true,
-                  elevation: 0,
-                  child: AnimatedIcon(
+                child: IconButton(
+                  icon: AnimatedIcon(
                     icon: AnimatedIcons.menu_close,
+                    color: _colorAnimation.value,
                     progress: _animation,
+                    size: 30.0,
                   ),
                   onPressed: () {
                     _animationController.isCompleted
@@ -133,23 +146,6 @@ class _HomeScreenState extends State<HomeScreen>
             return FloatingActionMenu(
               animation: _animation,
               items: [
-                FloatingItem(
-                  title: const Text(
-                    'create_alert',
-                    style: TextStyle(color: Colors.white),
-                  ).tr(),
-                  icon: const Icon(Icons.notification_add, color: Colors.white),
-                  onPressed: () {
-                    _animationController.reset();
-                    if (state is NoUser) {
-                      Navigator.pushNamed(context, AuthScreen.routeName);
-                    } else if (state is UserOnly ||
-                        state is UserWithHost ||
-                        state is UserOnlyEmailUnverified) {
-                      Navigator.pushNamed(context, AlertScreen.routeName);
-                    }
-                  },
-                ),
                 FloatingItem(
                   title: const Text(
                     'map',

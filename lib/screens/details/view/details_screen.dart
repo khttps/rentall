@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -49,6 +50,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
         return Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBar(
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.light,
+              statusBarBrightness: Brightness.light,
+            ),
             elevation: 0.0,
             flexibleSpace: Container(
               decoration: const BoxDecoration(
@@ -56,7 +62,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black,
+                    Colors.black87,
                     Colors.transparent,
                   ],
                 ),
@@ -272,12 +278,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               'description',
                               style: TextStyle(
                                 color: Colors.blueGrey.shade400,
-                                fontSize: 18.0,
+                                fontSize: 16.0,
                                 fontWeight: FontWeight.w500,
                               ),
                             ).tr(),
-                          Text(rental.description ?? ''),
-                          const SizedBox(height: 4.0),
+                          Text(
+                            rental.description ?? '',
+                          ),
                           if (widget.rental.location != null) ...[
                             const Divider(thickness: 1),
                             const SizedBox(height: 8.0),

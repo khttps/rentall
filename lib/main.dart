@@ -7,10 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:rentall/screens/update_email/bloc/update_email_bloc.dart';
-import 'package:rentall/screens/update_password/bloc/update_password_bloc.dart';
-import 'package:workmanager/workmanager.dart';
-import 'core/worker_utils.dart';
+
 import 'firebase_options.dart';
 import 'screens/blocs.dart';
 import 'injector.dart' as di;
@@ -19,22 +16,19 @@ import 'theme.dart' as theme;
 import 'screens/screens.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+  await di.init();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.blueGrey,
+    ),
+  );
   if (defaultTargetPlatform == TargetPlatform.android) {
     AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
   }
-  WidgetsFlutterBinding.ensureInitialized();
-  await EasyLocalization.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await di.init();
-  // Workmanager().initialize(WorkerUtils.callbackDispatcher, isInDebugMode: true);
-  // Workmanager().registerPeriodicTask(
-  //   "task-identifier",
-  //   "simpleTask",
-  //   frequency: const Duration(seconds: 10),
-  // );
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(statusBarColor: Colors.blueGrey),
-  );
 
   runApp(
     Phoenix(
@@ -64,10 +58,6 @@ class RentallApp extends StatelessWidget {
         BlocProvider<UserBloc>(create: (context) => di.sl()),
         BlocProvider<HomeBloc>(create: (context) => di.sl()),
         BlocProvider<SearchBloc>(create: (context) => di.sl()),
-        BlocProvider<AlertBloc>(create: (context) => di.sl()),
-        BlocProvider<AlertsBloc>(
-          create: (context) => di.sl()..add(const LoadAlerts()),
-        ),
         BlocProvider<DetailsBloc>(create: (context) => di.sl()),
         BlocProvider<HostBloc>(create: (context) => di.sl()),
         BlocProvider<ListBloc>(create: (context) => di.sl()),
