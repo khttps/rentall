@@ -12,7 +12,7 @@ class RentalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height / 6;
+    final height = MediaQuery.of(context).size.width / 3;
     final region = rental.region != null ? '${rental.region},' : '';
 
     return InkWell(
@@ -60,7 +60,7 @@ class RentalCard extends StatelessWidget {
                   children: [
                     Text(
                       rental.title,
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 16.0,

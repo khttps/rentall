@@ -22,10 +22,12 @@ class HostScreen extends StatefulWidget {
 
 class _HostScreenState extends State<HostScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
-  File? _image;
   bool _validPhone = false;
   final _phoneController = TextEditingController();
   final _nameController = TextEditingController();
+
+  String? _image;
+  File? _fileImage;
 
   @override
   void initState() {
@@ -55,7 +57,7 @@ class _HostScreenState extends State<HostScreen> {
                 BlocProvider.of<HostBloc>(context).add(
                   SetupHost(
                     host: _formKey.currentState!.value,
-                    image: _image,
+                    image: _fileImage,
                   ),
                 );
               }
@@ -79,9 +81,18 @@ class _HostScreenState extends State<HostScreen> {
             }
           },
           builder: (context, state) {
+            dynamic imageProvider;
+            bool hasImage = false;
             if (state.status == HostStatus.loaded) {
               _nameController.text = state.user!.hostName ?? '';
               _phoneController.text = state.user!.hostPhone ?? '';
+              _image = state.user!.hostAvatar;
+              imageProvider = _fileImage != null
+                  ? FileImage(_fileImage!)
+                  : (_image != null)
+                      ? CachedNetworkImageProvider(_image!)
+                      : null;
+              hasImage = imageProvider != null;
             }
             return Stack(
               children: [
@@ -91,14 +102,19 @@ class _HostScreenState extends State<HostScreen> {
                     padding: const EdgeInsets.all(16.0),
                     children: [
                       const SizedBox(height: 20.0),
-                      ImageCircleAvatar(
-                        radius: 62.0,
-                        initialImage: state.user?.hostAvatar,
-                        onAdded: (image) {
-                          if (image != null) {
-                            _image = image;
-                          }
-                        },
+                      Center(
+                        child: CircleAvatar(
+                          radius: 62.0,
+                          backgroundImage: imageProvider,
+                          child: InkWell(
+                            onTap: () async {
+                              await _showBottomSheet(context);
+                            },
+                            child: !hasImage
+                                ? const Icon(Icons.add, size: 62.0)
+                                : null,
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 20.0),
                       const Text(
@@ -148,6 +164,19 @@ class _HostScreenState extends State<HostScreen> {
             );
           },
         ),
+      ),
+    );
+  }
+
+  Future<dynamic> _showBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) => ImagePickerBottomSheet(
+        onImagesPicked: (images) {
+          setState(
+            () => _fileImage = File(images[0].path),
+          );
+        },
       ),
     );
   }

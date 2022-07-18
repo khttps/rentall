@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum PublishStatus { pending, approved, rejected, archived }
+enum PublishStatus { pending, approved, rejected, archived, deleted }
 
 extension PublishStatusX on PublishStatus {
   Color get color {

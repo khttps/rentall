@@ -162,7 +162,7 @@
     "area" : "المساحة",
     "owned_by" : "المضيف",
     "change" : "تغيير",
-    "keywords" : "الكلمات الدالة"
-
-
+    "keywords" : "الكلمات الدالة",
+    "reject_reason" : "سبب الرفض",
+    "rental_deleted" : "تم مسح العقار بنجاح"
 }

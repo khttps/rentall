@@ -40,6 +40,14 @@ class ArchiveRental extends PublishEvent {
   List<Object?> get props => [rental];
 }
 
+class DeleteRental extends PublishEvent {
+  final Rental rental;
+  const DeleteRental({required this.rental});
+
+  @override
+  List<Object?> get props => [rental];
+}
+
 class LoadPhoneNumber extends PublishEvent {
   const LoadPhoneNumber();
 

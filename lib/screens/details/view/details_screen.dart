@@ -187,6 +187,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     await showDialog(
                                       context: context,
                                       builder: (context) => AlertDialog(
+                                        title: const Text('reject_reason').tr(),
                                         content: Text(rental.rejectReason!),
                                       ),
                                     );

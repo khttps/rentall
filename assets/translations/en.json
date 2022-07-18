@@ -162,5 +162,7 @@
     "area" : "Area",
     "owned_by" : "Owned By",
     "change" : "Change",
-    "keywords" : "Keywords"
+    "keywords" : "Keywords",
+    "reject_reason" : "Reject Reason",
+    "rental_deleted" : "Rental successfully deleted."
 }

@@ -127,4 +127,5 @@ const _$PublishStatusEnumMap = {
   PublishStatus.approved: 'approved',
   PublishStatus.rejected: 'rejected',
   PublishStatus.archived: 'archived',
+  PublishStatus.deleted: 'deleted',
 };

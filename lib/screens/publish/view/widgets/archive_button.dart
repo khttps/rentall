@@ -18,7 +18,7 @@ class ArchiveButton extends StatelessWidget {
       ),
       label: Text(isArchived ? 'unarchive' : 'archive').tr(),
       style: TextButton.styleFrom(
-        primary: Colors.red,
+        primary: Colors.red.shade900,
       ),
       onPressed: () {
         onPressed(isArchived);

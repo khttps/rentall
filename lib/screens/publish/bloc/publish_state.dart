@@ -7,7 +7,8 @@ enum PublishLoadStatus {
   archived,
   published,
   failed,
-  unachived
+  unachived,
+  deleted,
 }
 
 class PublishState extends Equatable {

@@ -74,6 +74,7 @@ class _PublishScreenState extends State<PublishScreen> {
                             rental: {
                               ..._formKey.currentState!.value,
                               'location': _location,
+                              'images': _images.whereType<String>().toList(),
                             },
                             images: _images.whereType<XFile>().toList(),
                           ),
@@ -104,14 +105,17 @@ class _PublishScreenState extends State<PublishScreen> {
                   arguments: state.rental,
                 );
               } else if (state.status == PublishLoadStatus.archived ||
-                  state.status == PublishLoadStatus.unachived) {
+                  state.status == PublishLoadStatus.unachived ||
+                  state.status == PublishLoadStatus.deleted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
                       state.status == PublishLoadStatus.archived
-                          ? 'rental_unarchived'
-                          : 'rental_archived',
-                    ),
+                          ? 'rental_archived'
+                          : state.status == PublishLoadStatus.deleted
+                              ? 'rental_deleted'
+                              : 'rental_unarchived',
+                    ).tr(),
                     backgroundColor: Colors.green,
                   ),
                 );
@@ -566,22 +570,49 @@ class _PublishScreenState extends State<PublishScreen> {
                             ),
                             const SizedBox(height: 10.0),
                             if (updating)
-                              ArchiveButton(
-                                isArchived: widget.rental!.publishStatus ==
-                                    PublishStatus.archived,
-                                onPressed: (isArchived) async =>
-                                    await _showAlertDialog(
-                                  context,
-                                  title:
-                                      tr(isArchived ? 'unarchive' : 'archive'),
-                                  onPositive: () {
-                                    context.read<PublishBloc>().add(
-                                          ArchiveRental(
-                                            rental: widget.rental!,
-                                          ),
-                                        );
-                                  },
-                                ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  ArchiveButton(
+                                    isArchived: widget.rental!.publishStatus ==
+                                        PublishStatus.archived,
+                                    onPressed: (isArchived) async =>
+                                        await _showAlertDialog(
+                                      context,
+                                      title: tr(
+                                          isArchived ? 'unarchive' : 'archive'),
+                                      onPositive: () {
+                                        context.read<PublishBloc>().add(
+                                              ArchiveRental(
+                                                rental: widget.rental!,
+                                              ),
+                                            );
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10.0),
+                                  TextButton.icon(
+                                    icon: const Icon(Icons.delete),
+                                    label: const Text('delete').tr(),
+                                    style: TextButton.styleFrom(
+                                      primary: Colors.red,
+                                    ),
+                                    onPressed: () async {
+                                      await _showAlertDialog(
+                                        context,
+                                        title: tr('delete'),
+                                        onPositive: () {
+                                          context.read<PublishBloc>().add(
+                                                DeleteRental(
+                                                  rental: widget.rental!,
+                                                ),
+                                              );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ],
                               ),
                             const SizedBox(height: 10.0),
                           ],
@@ -607,7 +638,7 @@ class _PublishScreenState extends State<PublishScreen> {
         return ConfirmationDialog(
           title: const Text(
             'remove_image',
-          ),
+          ).tr(),
           onPositive: () {
             setState(() {
               _images.removeAt(index);

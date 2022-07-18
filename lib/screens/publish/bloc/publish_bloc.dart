@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rentall/data/models/models.dart';
 import 'package:rentall/data/repository/user_repository.dart';
-import 'package:rentall/screens/blocs.dart';
 
 import '../../../data/repository/rental_repository.dart';
 
@@ -25,6 +24,7 @@ class PublishBloc extends Bloc<PublishEvent, PublishState> {
     on<PublishRental>(_onPublishRental);
     on<UpdateRental>(_onUpdateRental);
     on<ArchiveRental>(_onArchiveRental);
+    on<DeleteRental>(_onDeleteRental);
     on<LoadPhoneNumber>(_onLoadPhoneNumber);
   }
 
@@ -87,6 +87,22 @@ class PublishBloc extends Bloc<PublishEvent, PublishState> {
         await _repository.archiveRental(event.rental.id!);
         emit(state.copyWith(status: PublishLoadStatus.archived));
       }
+    } on Exception catch (err) {
+      emit(state.copyWith(
+        status: PublishLoadStatus.failed,
+        error: (err as dynamic).message,
+      ));
+    }
+  }
+
+  FutureOr<void> _onDeleteRental(DeleteRental event, emit) async {
+    emit(state.copyWith(
+      status: PublishLoadStatus.loading,
+    ));
+
+    try {
+      await _repository.deleteRental(event.rental.id!);
+      emit(state.copyWith(status: PublishLoadStatus.deleted));
     } on Exception catch (err) {
       emit(state.copyWith(
         status: PublishLoadStatus.failed,

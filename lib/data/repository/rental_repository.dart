@@ -24,6 +24,7 @@ abstract class RentalRepository {
   Future<void> setFavorited(Rental rental);
   Future<void> removeFavorited(Rental rental);
   Future<List<Rental>> getList({required String collection, String? userId});
+  Future<void> deleteRental(String id);
 }
 
 class RentalRepositoryImpl implements RentalRepository {
@@ -151,7 +152,7 @@ class RentalRepositoryImpl implements RentalRepository {
 
     final user = _auth.currentUser!;
 
-    final imageUrls = <String>[];
+    final imageUrls = rental.images;
     if (imageFiles != null) {
       for (final f in imageFiles) {
         if (f != null) {
@@ -168,10 +169,6 @@ class RentalRepositoryImpl implements RentalRepository {
     }
 
     final doc = _firestore.collection('rentals').doc(id);
-    final oldImages = ((await doc.get()).get('images') as List).map(
-      (e) => e as String,
-    );
-    imageUrls.addAll(oldImages);
 
     final data = {
       ...rental.toJson(),
@@ -295,5 +292,25 @@ class RentalRepositoryImpl implements RentalRepository {
         )
         .get();
     return snap.docs.map((doc) => Rental.fromJson(doc.data())).toList();
+  }
+
+  @override
+  Future<void> deleteRental(String id) async {
+    if (!await _connectionChecker.hasConnection) {
+      throw Exception('No internet connection');
+    }
+
+    final uid = _auth.currentUser!.uid;
+    final doc = _firestore.collection('rentals').doc(id);
+
+    final batch = _firestore.batch();
+    final data = {'publishStatus': PublishStatus.deleted.name};
+    batch.update(doc, data);
+
+    final userDoc =
+        _firestore.collection('users').doc(uid).collection('rentals').doc(id);
+    batch.delete(userDoc);
+
+    await batch.commit();
   }
 }
