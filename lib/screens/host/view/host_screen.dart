@@ -91,27 +91,15 @@ class _HostScreenState extends State<HostScreen> {
                     padding: const EdgeInsets.all(16.0),
                     children: [
                       const SizedBox(height: 20.0),
-                      if (state.status == HostStatus.loaded &&
-                          state.user!.hostAvatar != null)
-                        ImageCircleAvatar(
-                          radius: 62.0,
-                          initialImage: state.user!.hostAvatar,
-                          onAdded: (image) {
-                            if (image != null) {
-                              _image = File(image.path);
-                            }
-                          },
-                        )
-                      else
-                        ImageCircleAvatar(
-                          radius: 62.0,
-                          icon: Icons.add,
-                          onAdded: (image) {
-                            if (image != null) {
-                              _image = File(image.path);
-                            }
-                          },
-                        ),
+                      ImageCircleAvatar(
+                        radius: 62.0,
+                        initialImage: state.user?.hostAvatar,
+                        onAdded: (image) {
+                          if (image != null) {
+                            _image = image;
+                          }
+                        },
+                      ),
                       const SizedBox(height: 20.0),
                       const Text(
                         'host_header',
@@ -125,6 +113,7 @@ class _HostScreenState extends State<HostScreen> {
                         name: 'hostName',
                         controller: _nameController,
                         textInputAction: TextInputAction.next,
+                        validator: FormBuilderValidators.required(),
                       ),
                       const SizedBox(height: 16.0),
                       const Text('phone_number').tr(),

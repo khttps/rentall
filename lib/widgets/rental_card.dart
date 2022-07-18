@@ -13,6 +13,7 @@ class RentalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height / 6;
+    final region = rental.region != null ? '${rental.region},' : '';
 
     return InkWell(
       onTap: () => Navigator.pushNamed(
@@ -22,13 +23,14 @@ class RentalCard extends StatelessWidget {
       ),
       child: Container(
         clipBehavior: Clip.hardEdge,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4.0),
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              offset: Offset(0.0, 1.0),
-              blurRadius: 1.0,
-              color: Colors.grey,
+              offset: const Offset(0.0, 1.0),
+              blurRadius: 3.0,
+              color: Colors.grey.withOpacity(0.6),
             )
           ],
         ),
@@ -58,7 +60,7 @@ class RentalCard extends StatelessWidget {
                   children: [
                     Text(
                       rental.title,
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 16.0,
@@ -66,9 +68,7 @@ class RentalCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      rental.region != null
-                          ? '${rental.region}, ${tr('governorates.${rental.governorate.index}')}'
-                          : '',
+                      '$region ${tr('governorates.${rental.governorate.index}')}',
                       style: const TextStyle(
                         fontWeight: FontWeight.w400,
                       ),
@@ -83,13 +83,10 @@ class RentalCard extends StatelessWidget {
                     ),
                     const Spacer(),
                     Text(
-                      '${rental.price} EGP / ${tr('rentPeriod.${rental.rentPeriod!.index}')}',
+                      '${rental.price} EGP / ${rental.rentPeriod?.name}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: const TextStyle(fontSize: 16.0),
                     ),
                   ],
                 ),

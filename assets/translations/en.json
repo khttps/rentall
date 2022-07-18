@@ -73,7 +73,7 @@
     "create_account" : "Create Account",
     "sign_up" : "Sign Up",
     "to_rental" : "{} to Rentall",
-    "auth_header" : "Join our community, post your rentals, setup alerts for new rentals, save your favorite rentals",
+    "auth_header" : "Join our community, post your rentals and save your favorite rentals",
     "email" : "Email Address",
     "password" : "Password",
     "continue_with" : "Continue with {}",

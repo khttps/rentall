@@ -51,7 +51,7 @@ class RentalRepositoryImpl implements RentalRepository {
       throw Exception('No internet connection');
     }
 
-    final query = _firestore
+    var query = _firestore
         .collection('rentals')
         .where('publishStatus', isEqualTo: PublishStatus.approved.name)
         .where(
@@ -66,14 +66,19 @@ class RentalRepositoryImpl implements RentalRepository {
           'rentPeriod',
           isEqualTo: (filters['rentPeriod'] as RentPeriod?)?.value,
         )
-        .where('region', isEqualTo: filters['region'])
-        .where(
-          'price',
-          isGreaterThanOrEqualTo: filters['priceFrom'],
-          isLessThanOrEqualTo: filters['priceTo'],
-        )
-        .orderBy('price', descending: true)
-        .orderBy('createdAt', descending: true);
+        .where('region', isEqualTo: filters['region']);
+
+    if (filters['priceTo'] != null || filters['priceFrom'] != null) {
+      query = query
+          .where(
+            'price',
+            isGreaterThanOrEqualTo: filters['priceFrom'],
+            isLessThanOrEqualTo: filters['priceTo'],
+          )
+          .orderBy('price');
+    }
+
+    query = query.orderBy('createdAt', descending: true);
 
     return (await query.get())
         .docs

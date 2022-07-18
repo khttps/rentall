@@ -46,6 +46,8 @@ class _PriceFormState extends State<PriceForm> {
                   child: FormBuilderTextField(
                     name: 'from',
                     controller: _fromController,
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.done,
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.numeric(),
                     ]),
@@ -58,6 +60,8 @@ class _PriceFormState extends State<PriceForm> {
                 Expanded(
                   child: FormBuilderTextField(
                     name: 'to',
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.done,
                     controller: _toController,
                     decoration: InputDecoration(
                       hintText: tr('to'),

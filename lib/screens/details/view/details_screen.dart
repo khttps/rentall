@@ -43,6 +43,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final rental = widget.rental;
+    final region = rental.region != null ? '${rental.region},' : '';
     final hasDescription =
         rental.description != null && rental.description!.isNotEmpty;
     return BlocBuilder<DetailsBloc, DetailsState>(
@@ -211,9 +212,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 style: const TextStyle(fontSize: 22.0),
                               ),
                               Text(
-                                rental.region != null
-                                    ? '${rental.region}, ${tr('governorates.${rental.governorate.index}')}'
-                                    : '',
+                                '$region ${tr('governorates.${rental.governorate.index}')}',
                                 style: TextStyle(
                                   color: Colors.blueGrey.shade400,
                                   fontSize: 18.0,
