@@ -2,9 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rentall/screens/blocs.dart';
-import 'package:rentall/widgets/error_snackbar.dart';
-import 'package:rentall/widgets/loading_widget.dart';
+import '../../blocs.dart';
+import '../../../widgets/error_snackbar.dart';
+import '../../../widgets/loading_widget.dart';
 
 import '../../screens.dart';
 import 'widgets/widgets.dart';
@@ -83,9 +83,9 @@ class _AuthScreenState extends State<AuthScreen> {
                   controller: _screenController,
                   children: [
                     Image.asset(
-                      'assets/images/sign_in.png',
-                      fit: BoxFit.contain,
-                      height: constraints.maxWidth / 1.223,
+                      'assets/images/rentall.png',
+                      fit: BoxFit.cover,
+                      height: constraints.maxWidth / 1.5,
                       width: constraints.maxWidth,
                     ),
                     ExpandablePageView(

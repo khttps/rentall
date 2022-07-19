@@ -9,11 +9,11 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'firebase_options.dart';
-import 'screens/blocs.dart';
 import 'injector.dart' as di;
 import 'router.dart' as router;
-import 'theme.dart' as theme;
+import 'screens/blocs.dart';
 import 'screens/screens.dart';
+import 'theme.dart' as theme;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

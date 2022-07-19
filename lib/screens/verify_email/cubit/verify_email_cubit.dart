@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rentall/data/repository/user_repository.dart';
+import '../../../data/repository/user_repository.dart';
 
 part 'verify_email_state.dart';
 

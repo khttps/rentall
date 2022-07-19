@@ -2,9 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rentall/bloc/user/user_bloc.dart';
-import 'package:rentall/screens/details/cubit/owner_cubit.dart';
-import 'package:rentall/widgets/no_image.dart';
+import '../../../../bloc/user/user_bloc.dart';
+import '../../cubit/owner_cubit.dart';
+import '../../../../widgets/no_image.dart';
 
 import '../../../list/view/list_screen.dart';
 

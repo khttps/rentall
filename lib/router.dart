@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:rentall/screens/screens.dart';
+import 'screens/screens.dart';
 import 'data/models/models.dart';
 
 MaterialPageRoute<dynamic> onGenerateRoute(RouteSettings settings) {

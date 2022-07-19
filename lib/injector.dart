@@ -1,7 +1,7 @@
 import 'package:algolia/algolia.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:rentall/data/repository/user_repository.dart';
+import 'data/repository/user_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'screens/blocs.dart';

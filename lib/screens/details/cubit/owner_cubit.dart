@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:rentall/data/repository/user_repository.dart';
+import '../../../data/repository/user_repository.dart';
 
 import '../../../data/models/models.dart';
 

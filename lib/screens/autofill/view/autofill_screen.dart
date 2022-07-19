@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_place/google_place.dart';
-import 'package:rentall/widgets/search_bar.dart';
+
+import '../../../widgets/search_bar.dart';
 
 class AutofillScreen extends StatefulWidget {
   static const routeName = '/autofill';

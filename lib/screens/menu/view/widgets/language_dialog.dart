@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:rentall/screens/home/home.dart';
+import '../../../home/home.dart';
 
 class LanguageDialog extends StatelessWidget {
   const LanguageDialog({

@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:rentall/data/models/models.dart';
-import 'package:rentall/screens/blocs.dart';
-import 'package:rentall/widgets/error_snackbar.dart';
-import 'package:rentall/widgets/loading_widget.dart';
+import '../../../data/models/models.dart';
+import '../../blocs.dart';
+import '../../../widgets/error_snackbar.dart';
+import '../../../widgets/loading_widget.dart';
 import '../../../core/map_utils.dart';
 import '../../screens.dart';
 

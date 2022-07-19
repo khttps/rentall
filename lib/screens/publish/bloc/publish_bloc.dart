@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:rentall/data/models/models.dart';
-import 'package:rentall/data/repository/user_repository.dart';
+import '../../../data/models/models.dart';
+import '../../../data/repository/user_repository.dart';
 
 import '../../../data/repository/rental_repository.dart';
 
