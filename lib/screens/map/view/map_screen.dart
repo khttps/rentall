@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../data/models/models.dart';
@@ -71,6 +70,7 @@ class _MapScreenState extends State<MapScreen> {
                         zoomControlsEnabled: false,
                         mapType: _mapType,
                         compassEnabled: false,
+                        mapToolbarEnabled: false,
                         myLocationEnabled: true,
                         myLocationButtonEnabled: false,
                         cameraTargetBounds: CameraTargetBounds(

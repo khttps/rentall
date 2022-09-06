@@ -42,7 +42,6 @@ dependencies:
   expandable_page_view: ^1.0.17
   share_plus: ^4.0.10
   flutter_phoenix: ^1.0.0
-  dcdg: ^4.0.1
   flutter_native_splash: ^2.2.5
   
   
